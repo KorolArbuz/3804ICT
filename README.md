@@ -137,14 +137,33 @@ Cross-validation selected `k=19`. The following values are from the included
 experiment result tables; prediction time is machine-dependent and varies
 between runs.
 
-Before future optimisation work, the unchanged custom implementation measured 33.288 seconds at batch size 256.
-Its compact baseline is in `results/custom_knn_baseline.csv`; no KNN performance optimisation has been applied.
-
 | Implementation | k | Accuracy | Precision | Recall | F1 | Balanced accuracy | ROC-AUC | Average precision | Prediction time (s) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Custom Python KNN | 19 | 0.8088 | 0.6253 | 0.3384 | 0.4391 | 0.6404 | 0.7353 | 0.4853 | 32.851 |
-| scikit-learn | 19 | 0.8092 | 0.6271 | 0.3384 | 0.4395 | 0.6406 | 0.7354 | 0.4855 | 0.416 |
-| Weka IBk | 19 | 0.8090 | 0.6262 | 0.3384 | 0.4393 | 0.6405 | 0.7353 | 0.4856 | 3.463 |
+| Custom Python KNN | 19 | 0.8088 | 0.6253 | 0.3384 | 0.4391 | 0.6404 | 0.7353 | 0.4853 | 2.480 |
+| scikit-learn | 19 | 0.8092 | 0.6271 | 0.3384 | 0.4395 | 0.6406 | 0.7354 | 0.4855 | 0.952 |
+| Weka IBk | 19 | 0.8090 | 0.6262 | 0.3384 | 0.4393 | 0.6405 | 0.7353 | 0.4856 | 5.928 |
+
+## Custom KNN Performance Improvement
+
+The original custom implementation used a straightforward feature-by-feature
+distance calculation and sorted every training row. The optimised version
+precomputes training-vector norms, calculates exact squared Euclidean distances
+with NumPy matrix operations, and uses partial top-k selection. Square roots are
+only calculated when `kneighbors()` requests actual distances. It remains an
+exact brute-force KNN classifier with deterministic tie handling.
+
+The second optimisation pass reuses one distance workspace and partitions one
+query row at a time, avoiding a large temporary index matrix. Its exact fallback
+also uses partial selection instead of sorting all training rows. Benchmarking
+selected batch size 128 because it had the fastest median and used half the
+workspace memory of the effectively tied batch size 256.
+
+On the same processed data, the five-run single-thread median decreased from
+1.980 seconds for v1 to 1.505 seconds for v2, with a range of 1.496–1.512
+seconds. This is 1.32x faster than v1 and 22.11x faster than the original
+33.281-second baseline. Predicted classes and class-1 probabilities matched v1
+for all 6,000 test rows. The measured comparison is stored in
+`results/custom_knn_optimization.csv`.
 
 Detailed values are stored in `results/metrics_comparison.csv`, while confusion
 counts and pairwise agreement are in their corresponding compact CSV files.
