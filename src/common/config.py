@@ -1,0 +1,15 @@
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+RAW_DATA_DIR = PROJECT_ROOT / "data/raw"
+PROCESSED_DATA_DIR = PROJECT_ROOT / "data/processed"
+RESULTS_DIR = PROJECT_ROOT / "results"
+WEKA_DIR = PROJECT_ROOT / "weka"
+
+RANDOM_STATE = 42
+TEST_SIZE = 0.20
+CV_FOLDS = 5
+K_VALUES = tuple(range(1, 32, 2))
+TIE_TOLERANCE = 1e-12
+DEFAULT_BATCH_SIZE = 256
+CATEGORICAL_COLUMNS = ("SEX", "EDUCATION", "MARRIAGE")

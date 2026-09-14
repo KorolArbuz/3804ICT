@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.py[cod]
+weka/target/
+
+data/raw/*
+!data/raw/README.md
+data/processed/
+
+results/predictions_*.csv
+results/*.runtime.json
+results/*.log
+results/dataset_summary.json
+results/weka_evaluation.txt
