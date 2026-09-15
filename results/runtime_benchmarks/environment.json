@@ -1,0 +1,78 @@
+{
+  "captured_at": "2026-09-15T17:15:26.807+03:00",
+  "cpu": "Intel(R) Core(TM) i5-14600KF",
+  "logical_cpu_count": 20,
+  "ram_bytes": 34100523008,
+  "operating_system": "Windows-10-10.0.19045-SP0",
+  "python": "3.10.14",
+  "numpy": "1.26.0",
+  "scikit_learn": "1.2.1",
+  "matplotlib": "3.7.0",
+  "java": "openjdk version \"11.0.16.1\" 2022-08-12 LTS",
+  "weka": "3.8.6",
+  "cmake": "cmake version 3.25.1-msvc1",
+  "cpp_compiler": "MSVC _MSC_VER=1935 _MSC_FULL_VER=193532216",
+  "cpp_build_mode": "Release native",
+  "cpp_native_lto": true,
+  "power_mode": "High performance (8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c)",
+  "thread_environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "BLIS_NUM_THREADS": "1"
+  },
+  "numerical_threadpools": [
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "prefix": "libopenblas",
+      "version": "0.3.23.dev",
+      "num_threads": 1,
+      "threading_layer": "pthreads",
+      "architecture": "Prescott"
+    },
+    {
+      "user_api": "blas",
+      "internal_api": "openblas",
+      "prefix": "libopenblas",
+      "version": "0.3.27",
+      "num_threads": 1,
+      "threading_layer": "pthreads",
+      "architecture": "Haswell"
+    },
+    {
+      "user_api": "openmp",
+      "internal_api": "openmp",
+      "prefix": "vcomp",
+      "version": null,
+      "num_threads": 1,
+      "threading_layer": null,
+      "architecture": null
+    }
+  ],
+  "machine_state_note": "CPU frequency, thermal state, and background activity were not locked; raw order and outliers are retained.",
+  "protocol": {
+    "runs_each": 15,
+    "warmups_each": 1,
+    "random_seed": 3804,
+    "implementations": [
+      "custom_python_v5_1",
+      "sklearn",
+      "weka",
+      "custom_cpp"
+    ],
+    "training_shape": [
+      24000,
+      33
+    ],
+    "test_shape": [
+      6000,
+      33
+    ],
+    "selected_k": 19,
+    "custom_python_batch_size": 64,
+    "cpp_batch_size": 32
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "artifact": "comprehensive KNN runtime benchmark",
+  "implementations": [
+    "custom_python_v5_1",
+    "sklearn",
+    "weka",
+    "custom_cpp"
+  ],
+  "prediction_runs_each": 20,
+  "full_pipeline_runs_each": 5,
+  "scaling_runs": {
+    "python_sklearn_cpp": 5,
+    "weka": 3
+  },
+  "prediction_medians_seconds": {
+    "custom_python_v5_1": 1.2617403000185732,
+    "sklearn": 0.9550257499795407,
+    "weka": 5.9476937,
+    "custom_cpp": 0.61429405
+  },
+  "prediction_iqr_seconds": {
+    "custom_python_v5_1": 0.022009999986039475,
+    "sklearn": 0.005717800042475574,
+    "weka": 0.040033325249999585,
+    "custom_cpp": 0.06634619999999991
+  },
+  "full_pipeline_medians_seconds": {
+    "custom_python_v5_1": 1.3965525000239722,
+    "sklearn": 1.0559556999942288,
+    "weka": 14.841612700023688,
+    "custom_cpp": 0.843516000022646
+  },
+  "throughput_queries_per_second": {
+    "custom_python_v5_1": 4755.336736023791,
+    "sklearn": 6282.553114540144,
+    "weka": 1008.7943836112474,
+    "custom_cpp": 9767.309320349106
+  },
+  "iqr_outliers": {
+    "weka": [
+      {
+        "global_run_order": 68,
+        "run_number": 16,
+        "runtime_seconds": 4.596160801
+      }
+    ],
+    "sklearn": [
+      {
+        "global_run_order": 63,
+        "run_number": 15,
+        "runtime_seconds": 0.9708312000147998
+      }
+    ],
+    "custom_python_v5_1": [],
+    "custom_cpp": [
+      {
+        "global_run_order": 64,
+        "run_number": 15,
+        "runtime_seconds": 1.5585721
+      }
+    ]
+  },
+  "training_size_regression": {
+    "custom_cpp": {
+      "slope_seconds_per_row": 4.220925782957028e-06,
+      "intercept_seconds": 0.002786594610342326,
+      "r_squared": 0.9980949792879041
+    },
+    "custom_python_v5_1": {
+      "slope_seconds_per_row": 8.229009202338033e-06,
+      "intercept_seconds": 0.0016853374248701,
+      "r_squared": 0.9223542138271411
+    },
+    "sklearn": {
+      "slope_seconds_per_row": 6.7673037643035665e-06,
+      "intercept_seconds": -0.009272703425987558,
+      "r_squared": 0.9276085290060746
+    },
+    "weka": {
+      "slope_seconds_per_row": 5.067109293396457e-05,
+      "intercept_seconds": 0.015114051718135787,
+      "r_squared": 0.9493984432440071
+    }
+  },
+  "query_size_regression": {
+    "custom_cpp": {
+      "slope_seconds_per_row": 0.00010010229586745292,
+      "intercept_seconds": 0.006581928890825357,
+      "r_squared": 0.9970562768384922
+    },
+    "custom_python_v5_1": {
+      "slope_seconds_per_row": 0.00021132346270210208,
+      "intercept_seconds": -0.0019917083267058304,
+      "r_squared": 0.9997737514341714
+    },
+    "sklearn": {
+      "slope_seconds_per_row": 0.00015856844185675856,
+      "intercept_seconds": 0.0016695257495321029,
+      "r_squared": 0.9999976411074434
+    },
+    "weka": {
+      "slope_seconds_per_row": 0.000957305389409602,
+      "intercept_seconds": 0.0666517652395735,
+      "r_squared": 0.9735313782545778
+    }
+  },
+  "cpp_status": "experimental candidate",
+  "cpp_correctness": "6000/6000 labels, positive-neighbour counts, and vote fractions exact",
+  "source": "runtime_summary.json"
+}

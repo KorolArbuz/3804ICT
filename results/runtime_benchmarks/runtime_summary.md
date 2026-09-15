@@ -1,0 +1,14 @@
+| Mode | Implementation | Runs | Median Seconds | Mean Seconds | Min Seconds | Max Seconds | Sample Std Seconds | Q1 Seconds | Q3 Seconds | Iqr Seconds | P10 Seconds | P90 Seconds | Coefficient Of Variation | Notes |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| prediction_only | custom_python_v5_1 | 20 | 1.26174 | 1.26109 | 1.24191 | 1.2872 | 0.0140196 | 1.2485 | 1.27051 | 0.02201 | 1.24534 | 1.28062 | 0.0111171 | Accepted V5.1; batch 64; one-thread numerical pools |
+| prediction_only | sklearn | 20 | 0.955026 | 0.956617 | 0.951115 | 0.970831 | 0.004941 | 0.953312 | 0.95903 | 0.0057178 | 0.95251 | 0.963359 | 0.00516508 | Brute Euclidean; uniform voting; n_jobs=1 |
+| prediction_only | weka | 20 | 5.94769 | 5.8794 | 4.59616 | 5.99493 | 0.302892 | 5.92067 | 5.9607 | 0.0400333 | 5.9164 | 5.96962 | 0.0515175 | IBk internal prediction timer; fresh one-CPU JVM per observation |
+| prediction_only | custom_cpp | 20 | 0.614294 | 0.662726 | 0.580654 | 1.55857 | 0.213201 | 0.584409 | 0.650755 | 0.0663462 | 0.582215 | 0.657115 | 0.321703 | Experimental native Release; exact heap; batch 32 |
+| full_pipeline | custom_python_v5_1 | 5 | 1.39655 | 1.40284 | 1.39031 | 1.43337 | 0.0174217 | 1.39409 | 1.39987 | 0.0057807 | 1.39182 | 1.41997 | 0.0124189 | Prepared input loading, fit/build, prediction, output, and metrics |
+| full_pipeline | sklearn | 5 | 1.05596 | 1.05712 | 1.05506 | 1.06203 | 0.00282118 | 1.05569 | 1.05686 | 0.0011626 | 1.05531 | 1.05996 | 0.00266874 | Prepared input loading, fit/build, prediction, output, and metrics |
+| full_pipeline | weka | 5 | 14.8416 | 14.8333 | 14.7998 | 14.869 | 0.0299953 | 14.8048 | 14.8511 | 0.0463402 | 14.8018 | 14.8619 | 0.00202216 | Prepared input loading, fit/build, prediction, output, and metrics |
+| full_pipeline | custom_cpp | 5 | 0.843516 | 1.01911 | 0.780341 | 1.78847 | 0.431125 | 0.822956 | 0.860261 | 0.0373052 | 0.797387 | 1.41719 | 0.42304 | Prepared input loading, fit/build, prediction, output, and metrics |
+| fit_build | custom_python_v5_1 | 5 | 0.0113638 | 0.0114331 | 0.0111429 | 0.0119716 | 0.000324249 | 0.0112306 | 0.0114564 | 0.0002258 | 0.011178 | 0.0117655 | 0.0283607 | Internal fit/build scope differs by implementation; compare cautiously |
+| fit_build | sklearn | 5 | 0.002171 | 0.00218244 | 0.0021658 | 0.0022294 | 2.66806e-05 | 0.0021677 | 0.0021783 | 1.06e-05 | 0.00216656 | 0.00220896 | 0.0122251 | Internal fit/build scope differs by implementation; compare cautiously |
+| fit_build | weka | 5 | 8.1854 | 8.18455 | 8.18042 | 8.18661 | 0.0024778 | 8.18422 | 8.18612 | 0.0018934 | 8.18194 | 8.18641 | 0.000302741 | Internal fit/build scope differs by implementation; compare cautiously |
+| fit_build | custom_cpp | 5 | 0.0021463 | 0.00217908 | 0.0021379 | 0.0022734 | 5.73898e-05 | 0.0021434 | 0.0021944 | 5.1e-05 | 0.0021401 | 0.0022418 | 0.0263367 | Internal fit/build scope differs by implementation; compare cautiously |

@@ -1,0 +1,7 @@
+| Experiment | Hypothesis | Reference Seconds | Candidate Seconds | Result | Decision | Reason |
+|---|---|---|---|---|---|---|
+| Batched direct fallback | Vectorize exact fallback rows in chunks | 0.789058 | 0.823137 | Best tested batch still increased total and fallback time | Rejected | Batched direct-distance construction increased fallback and total prediction time. |
+| Python batches below 64 | Smaller score workspaces could improve cache behavior | 1.32593 | 1.30634 | Ranks changed across machine states and gains did not clear the acceptance rule | Rejected | Smaller candidates were within about 1-2% under sustained load, changed rank across trials, and did not consistently beat 64 enough to clear the stated acceptance rule. |
+| V6 lower-bound pruning | Partial distances can cheaply reject most rows | 0.68702 | 1.16799 | Candidate was about 1.70x slower | Rejected | The best exact raw-feature lower-bound candidate was about 1.70x slower than paired V5.1, far below the required stable 10% speedup. |
+| V7 block pruning | Block bounds can avoid exact row evaluation | 1.24205 | 1.84059 | Candidate was about 1.47x slower | Rejected | The best exact block candidate achieved only a 0.6809x median paired V5.1/V7 timing ratio and was about 1.47x slower than V5.1; it did not meet the required stable 10% speedup. |
+| C++ nth_element selection | Contiguous partial partition may beat bounded heaps | 0.656964 | 1.8764 | Native nth_element was 2.86x slower | Rejected | The bounded heap avoids materializing and partitioning the full distance matrix. |

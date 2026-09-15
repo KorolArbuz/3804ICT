@@ -48,6 +48,14 @@ The Weka comparison is a genuine Java program using Weka 3.8.6 `IBk` and
 cross-validation are disabled so it consumes the same transformed features and
 selected `k` as the Python implementations.
 
+### Experimental pure C++20 custom candidate
+
+An additional standard-library-only C++20 implementation evaluates whether a
+manually implemented exact KNN can improve on accepted Python/NumPy V5.1. It is
+an alternative custom implementation, not a third toolkit, and V5.1 remains
+unchanged. See [`src/cpp_knn/README.md`](src/cpp_knn/README.md) for its algorithm,
+build, verification, and benchmark details.
+
 ## 4. Experiment Methodology
 
 - A stratified 80/20 split creates 24,000 training rows and 6,000 test rows.
@@ -71,11 +79,15 @@ src/data/          dataset loading, validation, summary, and splitting
 src/preprocessing/ training-fitted transformation and compact NPZ/Weka export
 src/tuning/        cross-validation and k selection
 src/custom_knn/    manual NumPy KNN and its runner
+src/cpp_knn/       experimental pure C++20 exact KNN and evidence drivers
+src/benchmarking/  reproducible four-way runtime benchmarks and figures
 src/sklearn_knn/   scikit-learn KNN runner
 src/evaluation/    metrics, alignment, and implementation comparison
 src/reporting/     result chart generation
 weka/              Maven project for the Java/Weka implementation
+tests/             standard-library C++ correctness tests used by CTest
 results/           compact measured tables and figures
+CMakeLists.txt     portable and optional native C++ release builds
 run_all.py         complete experiment entry point
 ```
 
@@ -131,6 +143,34 @@ Build the Java project independently with:
 mvn -f weka/pom.xml clean package
 ```
 
+The C++ candidate is independent of the main three-implementation experiment.
+After the canonical NPZ files exist, export its inputs and make a portable build:
+
+```bash
+python -m src.cpp_knn.export_data
+cmake -S . -B build-cpp-portable -DCMAKE_BUILD_TYPE=Release
+cmake --build build-cpp-portable --config Release
+ctest --test-dir build-cpp-portable -C Release --output-on-failure
+```
+
+Native benchmark and standalone execution commands are documented in
+[`src/cpp_knn/README.md`](src/cpp_knn/README.md).
+
+Run the comprehensive four-implementation runtime suite with:
+
+```bash
+python -m src.benchmarking.run_runtime_suite \
+  --prediction-runs 20 --full-pipeline-runs 5 \
+  --scaling-runs 5 --weka-scaling-runs 3 \
+  --cpp-configuration-runs 5
+python -m src.benchmarking.build_report_data
+python -m src.benchmarking.generate_figures
+python -m src.benchmarking.generate_comprehensive_summary
+```
+
+The methodology and individual stage commands are in
+[`src/benchmarking/README.md`](src/benchmarking/README.md).
+
 ## 8. Results
 
 Cross-validation selected `k=19`. The following values are from one complete
@@ -143,6 +183,34 @@ optimisation benchmark below and will vary by machine.
 | Custom Python KNN | 19 | 0.8088 | 0.6253 | 0.3384 | 0.4391 | 0.6404 | 0.7353 | 0.4853 | 0.824 |
 | scikit-learn | 19 | 0.8092 | 0.6271 | 0.3384 | 0.4395 | 0.6406 | 0.7354 | 0.4855 | 0.463 |
 | Weka IBk | 19 | 0.8090 | 0.6262 | 0.3384 | 0.4393 | 0.6405 | 0.7353 | 0.4856 | 3.445 |
+
+### Experimental C++ candidate result
+
+The separate native single-thread benchmark used 15 randomized paired trials
+on an Intel Core i5-14600KF. Median prediction times were 0.5902 seconds for
+pure C++20, 1.2529 seconds for accepted V5.1, and 0.9553 seconds for
+scikit-learn. C++ matched all 6,000 V5.1 predictions and positive-neighbour
+vote counts exactly. It passed both performance goals by median, although two
+of 15 C++ trials were outliers and the evidence covers one AVX2 Windows system.
+The candidate therefore remains experimental and does not change `run_all.py`
+or the headline three-implementation results above. Raw trials, environment
+details, and ratios are in `results/cpp_knn_benchmark.json`; parity and metrics
+are in `results/cpp_knn_correctness.json`.
+
+### Comprehensive runtime benchmark and figures
+
+The comprehensive four-implementation suite retained 20 randomized
+prediction-only runs per implementation. Its medians were 1.2617 seconds for
+accepted V5.1, 0.9550 seconds for scikit-learn, 5.9477 seconds for Weka, and
+0.6143 seconds for experimental C++. Five-run prepared-input full-pipeline
+medians were 1.3966, 1.0560, 14.8416, and 0.8435 seconds in the same order.
+The suite also measures fit/build time, training/query scaling, native and
+portable C++ configurations, estimated algorithm memory, agreement, and
+runtime/quality trade-offs. Raw timings, complete statistics, environment
+details, analysis, and 24 PNG/SVG figure pairs are in
+[`results/runtime_benchmarks/`](results/runtime_benchmarks/benchmark_summary.md).
+The new raw run order contains one high C++ timing outlier and adjacent
+scikit-learn anomaly; none were removed.
 
 ## Custom KNN Performance Improvement
 

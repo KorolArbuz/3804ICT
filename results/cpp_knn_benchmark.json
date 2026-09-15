@@ -1,0 +1,343 @@
+{
+  "artifact": "pure C++20 exact KNN final benchmark",
+  "generated_at": "2026-09-15T16:30:26.581644+03:00",
+  "git_head": "7b15f1e5f90bb24073beca42669f00de37d36d7e",
+  "source_sha256": {
+    "CMakeLists.txt": "b61cffe96ee190170d6d22b45caeb8b2cc0c7ae9dfe5c0a370eddbe1b82998ba",
+    "src/cpp_knn/knn.hpp": "a7a4b3939516ac36c33f043cdafb101526cf0522c4f0d3c5c5a0be50db00cd4d",
+    "src/cpp_knn/knn.cpp": "a30c5d287bc8c4adde1e02b595655d7f5c87215a78d0fb43153d2aefbe62aa97",
+    "src/cpp_knn/data_io.hpp": "c3ecfb514afdd3ed56e513c0315ed6182a87b0ff0d200b25327e6e8624050a9a",
+    "src/cpp_knn/data_io.cpp": "3a9b335ef521ad9611740fed707a9fb495582cae12548d531208d06c9b9f802f",
+    "src/cpp_knn/main.cpp": "b1e0913c25566db678e1d3b74a80905450e46890faf6821c267cf154019f4b0e",
+    "src/custom_knn/classifier.py": "7d1a675e7a0b15e4e43ff521cd2137e0481a7f58c5a70557c9c45dd2b5929652",
+    "src/sklearn_knn/runner.py": "ad387899aac72709a71025ed8c24219f9278eeeb4e097c111afe7309d01b39a5",
+    "weka/src/main/java/project/WekaIBkRunner.java": "335b319b33bead93357ea0e63463e72b581cc996b832a2c14db8b1d01229ae3a"
+  },
+  "protocol": {
+    "training_rows": 24000,
+    "test_rows": 6000,
+    "feature_count": 33,
+    "k": 19,
+    "metric": "exact exhaustive squared Euclidean distance",
+    "voting": "uniform",
+    "thread_count": 1,
+    "warmup": "one call per Python model; one internal call in every fresh C++ process",
+    "measured_runs_each": 15,
+    "interleaving_seed": 3804,
+    "trial_orders": [
+      [
+        "custom_cpp",
+        "custom_python_v5_1",
+        "sklearn"
+      ],
+      [
+        "custom_python_v5_1",
+        "custom_cpp",
+        "sklearn"
+      ],
+      [
+        "custom_cpp",
+        "custom_python_v5_1",
+        "sklearn"
+      ],
+      [
+        "sklearn",
+        "custom_python_v5_1",
+        "custom_cpp"
+      ],
+      [
+        "custom_cpp",
+        "sklearn",
+        "custom_python_v5_1"
+      ],
+      [
+        "custom_python_v5_1",
+        "sklearn",
+        "custom_cpp"
+      ],
+      [
+        "custom_cpp",
+        "sklearn",
+        "custom_python_v5_1"
+      ],
+      [
+        "custom_python_v5_1",
+        "sklearn",
+        "custom_cpp"
+      ],
+      [
+        "sklearn",
+        "custom_python_v5_1",
+        "custom_cpp"
+      ],
+      [
+        "custom_cpp",
+        "custom_python_v5_1",
+        "sklearn"
+      ],
+      [
+        "custom_cpp",
+        "sklearn",
+        "custom_python_v5_1"
+      ],
+      [
+        "sklearn",
+        "custom_python_v5_1",
+        "custom_cpp"
+      ],
+      [
+        "custom_cpp",
+        "custom_python_v5_1",
+        "sklearn"
+      ],
+      [
+        "custom_cpp",
+        "custom_python_v5_1",
+        "sklearn"
+      ],
+      [
+        "custom_cpp",
+        "custom_python_v5_1",
+        "sklearn"
+      ]
+    ],
+    "timing_scope": "predict_proba plus argmax for Python; exact distance, selection, voting, and output vectors for C++; fit, input parsing, process startup, and serialization excluded"
+  },
+  "environment": {
+    "cpu": "Intel(R) Core(TM) i5-14600KF",
+    "logical_cpu_count": 20,
+    "operating_system": "Windows-10-10.0.19045-SP0",
+    "python": "3.10.14",
+    "numpy": "1.26.0",
+    "scikit_learn": "1.2.1",
+    "threadpoolctl": "3.5.0",
+    "java": "openjdk version \"11.0.16.1\" 2022-08-12 LTS",
+    "weka": "3.8.6",
+    "cpp_compiler": "MSVC _MSC_VER=1935 _MSC_FULL_VER=193532216",
+    "cpp_build_mode": "Release native",
+    "power_mode": "GUID \u0421\u0403\u0421\u2026\u0420\u00b5\u0420\u0458\u0421\u2039 \u0420\u0457\u0420\u0451\u0421\u201a\u0420\u00b0\u0420\u0405\u0420\u0451\u0421\u040f: 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c  (\u0420\u2019\u0421\u2039\u0421\u0403\u0420\u0455\u0420\u0454\u0420\u00b0\u0421\u040f \u0420\u0457\u0421\u0402\u0420\u0455\u0420\u0451\u0420\u00b7\u0420\u0406\u0420\u0455\u0420\u0491\u0420\u0451\u0421\u201a\u0420\u00b5\u0420\u00bb\u0421\u040a\u0420\u0405\u0420\u0455\u0421\u0403\u0421\u201a\u0421\u040a)",
+    "threadpools_during_measurement": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libopenblas",
+        "filepath": "C:\\Users\\Denis\\anaconda3\\Lib\\site-packages\\numpy.libs\\libopenblas64__v0.3.23-293-gc2f4bdbb-gcc_10_3_0-65e29aac85b9409a6008e2dc84b1cc09.dll",
+        "version": "0.3.23.dev",
+        "threading_layer": "pthreads",
+        "architecture": "Prescott"
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 1,
+        "prefix": "libopenblas",
+        "filepath": "C:\\Users\\Denis\\anaconda3\\Lib\\site-packages\\scipy.libs\\libopenblas_v0.3.27--3aa239bc726cfb0bd8e5330d8d4c15c6.dll",
+        "version": "0.3.27",
+        "threading_layer": "pthreads",
+        "architecture": "Haswell"
+      },
+      {
+        "user_api": "openmp",
+        "internal_api": "openmp",
+        "num_threads": 1,
+        "prefix": "vcomp",
+        "filepath": "C:\\Users\\Denis\\anaconda3\\vcomp140.dll",
+        "version": null
+      }
+    ],
+    "frequency_limitation": "CPU frequency, background load, and thermal state were not locked; randomized interleaving reduces but cannot remove this source of variation."
+  },
+  "configuration_screen": {
+    "candidate_policy": "heap vs nth_element at batch 32; heap batches 16, 32, 64",
+    "warmups_each": 1,
+    "measured_runs_each": 3,
+    "candidates": {
+      "heap_batch_16": {
+        "raw_seconds": [
+          0.7256748,
+          0.7274012,
+          0.730253
+        ],
+        "median_seconds": 0.7274012,
+        "min_seconds": 0.7256748,
+        "max_seconds": 0.730253,
+        "iqr_seconds": 0.002289100000000044
+      },
+      "heap_batch_32": {
+        "raw_seconds": [
+          0.589828,
+          0.5914153,
+          0.5947803
+        ],
+        "median_seconds": 0.5914153,
+        "min_seconds": 0.589828,
+        "max_seconds": 0.5947803,
+        "iqr_seconds": 0.0024761500000000103
+      },
+      "heap_batch_64": {
+        "raw_seconds": [
+          0.9058359,
+          0.9080929,
+          0.9071132
+        ],
+        "median_seconds": 0.9071132,
+        "min_seconds": 0.9058359,
+        "max_seconds": 0.9080929,
+        "iqr_seconds": 0.0011284999999999767
+      },
+      "nth_batch_32": {
+        "raw_seconds": [
+          1.8484655,
+          1.8521811,
+          1.854349
+        ],
+        "median_seconds": 1.8521811,
+        "min_seconds": 1.8484655,
+        "max_seconds": 1.854349,
+        "iqr_seconds": 0.0029417500000001873
+      }
+    },
+    "selected": "heap_batch_32"
+  },
+  "implementations": {
+    "custom_cpp": {
+      "raw_seconds": [
+        0.6360593,
+        0.5784564,
+        0.5902035,
+        1.5478999,
+        0.5882076,
+        0.5844588,
+        0.6520974,
+        1.5920705,
+        0.6372215,
+        0.5890627,
+        0.5847802,
+        0.5870845,
+        0.5860125,
+        0.6477242,
+        0.5905906
+      ],
+      "median_seconds": 0.5902035,
+      "min_seconds": 0.5784564,
+      "max_seconds": 1.5920705,
+      "iqr_seconds": 0.055924349999999956,
+      "fit_seconds": 0.0021387,
+      "prediction_hash": "fnv1a64:28ccc6b308a3421f",
+      "compiler": "MSVC _MSC_VER=1935 _MSC_FULL_VER=193532216",
+      "build_mode": "Release native",
+      "batch_size": 32,
+      "selection": "bounded max-heap",
+      "peak_auxiliary_bytes_estimate": 91200
+    },
+    "custom_python_v5_1": {
+      "raw_seconds": [
+        1.3123933000024408,
+        1.310785300040152,
+        1.2362620000494644,
+        1.2446419000043534,
+        1.246658300049603,
+        1.2360715999966487,
+        1.2677390999742784,
+        1.2584773999988101,
+        1.259418600006029,
+        1.2528874999843538,
+        1.2631685000378639,
+        1.248609599948395,
+        1.2570436999667436,
+        1.2444155999692157,
+        1.2514595999964513
+      ],
+      "median_seconds": 1.2528874999843538,
+      "min_seconds": 1.2360715999966487,
+      "max_seconds": 1.3123933000024408,
+      "iqr_seconds": 0.01564344999496825,
+      "fit_seconds": 0.011339400021824986,
+      "prediction_hash": "fnv1a64:28ccc6b308a3421f",
+      "source_sha256": "7d1a675e7a0b15e4e43ff521cd2137e0481a7f58c5a70557c9c45dd2b5929652"
+    },
+    "sklearn": {
+      "raw_seconds": [
+        0.9665635999990627,
+        0.9734342999872752,
+        0.9518990000360645,
+        0.9510958000319079,
+        0.9527452000183985,
+        0.9840403999551199,
+        0.9557678999844939,
+        0.9615058999625035,
+        0.9546097999555059,
+        0.954831299954094,
+        0.9564168000360951,
+        0.9553388999775052,
+        0.9556141999782994,
+        0.953888599993661,
+        0.9521482000127435
+      ],
+      "median_seconds": 0.9553388999775052,
+      "min_seconds": 0.9510958000319079,
+      "max_seconds": 0.9840403999551199,
+      "iqr_seconds": 0.005644449993269518,
+      "fit_seconds": 0.0025035999715328217,
+      "prediction_hash": "fnv1a64:fff1e9c899bc8344",
+      "configuration": "KNeighborsClassifier(brute, euclidean, uniform, n_jobs=1)"
+    },
+    "weka": {
+      "source": "C:/Users/Denis/Desktop/3804ICT/results/runtime_comparison.csv",
+      "fit_seconds": 0.3608734,
+      "prediction_seconds": 3.4235869,
+      "measurement_note": "Existing genuine Java/Weka IBk full-pipeline result; a single model call, shown for context and excluded from repeated-run ratios."
+    }
+  },
+  "correctness": {
+    "cpp_vs_v5_1_predictions": "6000/6000",
+    "cpp_vs_v5_1_positive_vote_counts": "6000/6000 exact",
+    "cpp_vs_v5_1_prediction_hash_equal": true
+  },
+  "ratios": {
+    "v5_1_median_over_cpp_median": 2.122805947413653,
+    "cpp_median_over_sklearn_median": 0.6177948998139793,
+    "paired_v5_1_over_cpp": [
+      2.063319096195026,
+      2.266005355010597,
+      2.0946368499161125,
+      0.8040842305141007,
+      2.1194188923257755,
+      2.114899459117818,
+      1.944094701150899,
+      0.7904658744690076,
+      1.9764220133909935,
+      2.126917049720435,
+      2.1600739902579873,
+      2.126797079378514,
+      2.145080011035163,
+      1.921212145492195,
+      2.1189968143692965
+    ],
+    "median_paired_v5_1_over_cpp": 2.114899459117818,
+    "paired_cpp_over_sklearn": [
+      0.658062542393089,
+      0.5942428780325099,
+      0.6200274398624633,
+      1.6274910476400697,
+      0.6173818561233803,
+      0.593937809897496,
+      0.6822758956547709,
+      1.6558093923938346,
+      0.667520383752294,
+      0.616928561127312,
+      0.6114281973904373,
+      0.614530089807736,
+      0.6132312600768255,
+      0.6790354764741966,
+      0.6202717181969105
+    ],
+    "median_paired_cpp_over_sklearn": 0.6200274398624633,
+    "cpp_faster_than_v5_1_trial_count": 13
+  },
+  "performance_gates": {
+    "cpp_at_least_10_percent_faster_than_v5_1": true,
+    "cpp_within_1_10x_sklearn": true
+  }
+}

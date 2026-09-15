@@ -1,10 +1,11 @@
+import hashlib
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
 from src.common.config import PROCESSED_DATA_DIR
-from src.common.utils import load_pair, read_json
+from src.common.utils import load_pair, read_json, write_json
 from src.data.dataset import load_dataset, split_dataset
 from .pipeline import make_preprocessor, validate_processed_feature_names
 
@@ -118,3 +119,77 @@ def export_arff(train, test, output_dir):
 
     print(f"Exported matching ARFF headers and test row IDs -> {output_dir}")
     return {"train_rows": len(training["y"]), "test_rows": len(testing["y"])}
+
+
+def _sha256(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def _write_cpp_features(path, values):
+    with Path(path).open("w", encoding="ascii", newline="\n") as handle:
+        for row in np.asarray(values, dtype=np.float64):
+            handle.write(",".join(format(float(value), ".17g") for value in row))
+            handle.write("\n")
+
+
+def _write_cpp_labels(path, labels):
+    with Path(path).open("w", encoding="ascii", newline="\n") as handle:
+        for label in np.asarray(labels):
+            handle.write(f"{int(label)}\n")
+
+
+def export_cpp_csv(train, test, output_dir):
+    """Export the canonical NPZ arrays without changing rows or preprocessing."""
+    training, testing = load_pair(train, test)
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    feature_names = training["feature_names"].tolist()
+    validate_processed_feature_names(feature_names)
+    if training["X"].shape[1] != testing["X"].shape[1]:
+        raise ValueError("C++ train/test feature counts differ")
+
+    files = {
+        "train_features": output_dir / "train_features.csv",
+        "train_labels": output_dir / "train_labels.csv",
+        "test_features": output_dir / "test_features.csv",
+        "test_labels": output_dir / "test_labels.csv",
+    }
+    _write_cpp_features(files["train_features"], training["X"])
+    _write_cpp_labels(files["train_labels"], training["y"])
+    _write_cpp_features(files["test_features"], testing["X"])
+    _write_cpp_labels(files["test_labels"], testing["y"])
+
+    manifest = {
+        "format": "headerless comma-separated float64 values; one binary label per line",
+        "float_format": ".17g round-trippable decimal",
+        "train_rows": len(training["y"]),
+        "test_rows": len(testing["y"]),
+        "feature_count": training["X"].shape[1],
+        "feature_names": feature_names,
+        "excluded_fields": ["ID", "target", "class"],
+        "source_npz_sha256": {
+            "train": _sha256(train),
+            "test": _sha256(test),
+        },
+        "files": {
+            name: {
+                "path": path.name,
+                "bytes": path.stat().st_size,
+                "sha256": _sha256(path),
+            }
+            for name, path in files.items()
+        },
+    }
+    write_json(output_dir / "manifest.json", manifest)
+    print(
+        f"Exported canonical C++ inputs: {manifest['train_rows']} train / "
+        f"{manifest['test_rows']} test rows, {manifest['feature_count']} features "
+        f"-> {output_dir}",
+        flush=True,
+    )
+    return manifest

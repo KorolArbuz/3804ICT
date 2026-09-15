@@ -1,0 +1,603 @@
+{
+  "artifact": "KNN runtime benchmark and visualization suite",
+  "generated_at": "2026-09-15T17:20:11.362583+03:00",
+  "prediction_only": {
+    "custom_python_v5_1": {
+      "count": 15,
+      "median_seconds": 1.2685003000078723,
+      "min_seconds": 0.6721131000085734,
+      "max_seconds": 1.288651500013657,
+      "mean_seconds": 1.1932123066741043,
+      "sample_std_seconds": 0.21026902003642736,
+      "iqr_seconds": 0.016406949958764017,
+      "p10_seconds": 0.9111346400226468,
+      "p90_seconds": 1.2819834000081756,
+      "notes": "Accepted V5.1, batch size 64; NumPy/BLAS limited to one thread"
+    },
+    "sklearn": {
+      "count": 15,
+      "median_seconds": 0.954537799989339,
+      "min_seconds": 0.4607720000203699,
+      "max_seconds": 0.9569164999993518,
+      "mean_seconds": 0.8890789466677234,
+      "sample_std_seconds": 0.17338029494072948,
+      "iqr_seconds": 0.0018515000119805336,
+      "p10_seconds": 0.6587279600091279,
+      "p90_seconds": 0.9565489799948409,
+      "notes": "Brute Euclidean, uniform weights, n_jobs=1"
+    },
+    "weka": {
+      "count": 15,
+      "median_seconds": 5.9359603,
+      "min_seconds": 3.416904101,
+      "max_seconds": 5.9798942,
+      "mean_seconds": 5.770459140066667,
+      "sample_std_seconds": 0.6515354022536161,
+      "iqr_seconds": 0.04191655050000076,
+      "p10_seconds": 5.906768899999999,
+      "p90_seconds": 5.96981496,
+      "notes": "Fresh one-CPU JVM per trial; internal Java prediction timer"
+    },
+    "custom_cpp": {
+      "count": 15,
+      "median_seconds": 0.5884875,
+      "min_seconds": 0.5792875,
+      "max_seconds": 1.5420101,
+      "mean_seconds": 0.6707542933333333,
+      "sample_std_seconds": 0.24336434146055716,
+      "iqr_seconds": 0.0655673,
+      "p10_seconds": 0.58370204,
+      "p90_seconds": 0.66960946,
+      "notes": "Exact native Release candidate, batch size 32; internal warm-up per process"
+    }
+  },
+  "full_pipeline": {
+    "custom_python_v5_1": {
+      "count": 3,
+      "median_seconds": 1.3884101000148803,
+      "min_seconds": 0.7767583999666385,
+      "max_seconds": 1.3976835999637842,
+      "mean_seconds": 1.1876173666484344,
+      "sample_std_seconds": 0.35584451285280533,
+      "iqr_seconds": 0.31046259999857284,
+      "p10_seconds": 0.8990887399762869,
+      "p90_seconds": 1.3958288999740034
+    },
+    "sklearn": {
+      "count": 3,
+      "median_seconds": 1.068632400012575,
+      "min_seconds": 0.5445179000380449,
+      "max_seconds": 1.0792169999913312,
+      "mean_seconds": 0.8974557666806504,
+      "sample_std_seconds": 0.30569897239253646,
+      "iqr_seconds": 0.2673495499766432,
+      "p10_seconds": 0.6493408000329509,
+      "p90_seconds": 1.07710007999558
+    },
+    "weka": {
+      "count": 3,
+      "median_seconds": 14.771649100002833,
+      "min_seconds": 13.49500860000262,
+      "max_seconds": 14.777228399994783,
+      "mean_seconds": 14.347962033333411,
+      "sample_std_seconds": 0.7386846090993023,
+      "iqr_seconds": 0.6411098999960814,
+      "p10_seconds": 13.750336700002663,
+      "p90_seconds": 14.776112539996394
+    },
+    "custom_cpp": {
+      "count": 3,
+      "median_seconds": 0.7886437999550253,
+      "min_seconds": 0.7829618999967352,
+      "max_seconds": 0.8426730000064708,
+      "mean_seconds": 0.8047595666527437,
+      "sample_std_seconds": 0.032956673349788086,
+      "iqr_seconds": 0.029855550004867837,
+      "p10_seconds": 0.7840982799883932,
+      "p90_seconds": 0.8318671599961818
+    }
+  },
+  "historical_optimization": [
+    {
+      "version": "Original",
+      "runtime_seconds": 33.28119000000879,
+      "measurement_summary": "historical_single_or_unspecified",
+      "decision": "historical baseline",
+      "description": "Straightforward distance calculation and full sorting",
+      "speedup_vs_original": 1.0
+    },
+    {
+      "version": "V1",
+      "runtime_seconds": 1.980312600004254,
+      "measurement_summary": "historical_five_run_warm_median",
+      "decision": "superseded",
+      "description": "Vector norms, matrix operations, and partial top-k selection",
+      "speedup_vs_original": 16.806028502741082
+    },
+    {
+      "version": "V2",
+      "runtime_seconds": 1.505170299991732,
+      "measurement_summary": "historical_five_run_warm_median",
+      "decision": "superseded",
+      "description": "Reusable workspace and one-thread row-wise selection",
+      "speedup_vs_original": 22.11124548510664
+    },
+    {
+      "version": "V3",
+      "runtime_seconds": 1.4190630999801215,
+      "measurement_summary": "fresh_interleaved_five_run_warm_median",
+      "decision": "superseded",
+      "description": "Avoided ordered distances for uniform-vote prediction",
+      "speedup_vs_original": 23.45293172690841
+    },
+    {
+      "version": "V4",
+      "runtime_seconds": 0.8129578000225592,
+      "measurement_summary": "fresh_interleaved_nine_run_warm_median",
+      "decision": "superseded",
+      "description": "Exact pilot threshold prefilter before top-k selection",
+      "speedup_vs_original": 40.93839803134339
+    },
+    {
+      "version": "V5",
+      "runtime_seconds": 0.7541230999922846,
+      "measurement_summary": "fresh_interleaved_nine_run_warm_median",
+      "decision": "superseded",
+      "description": "Batch 64 and augmented training matrix",
+      "speedup_vs_original": 44.1323041295901
+    },
+    {
+      "version": "V5.1",
+      "runtime_seconds": 1.2781049000041094,
+      "measurement_summary": "fresh_interleaved_nine_run_warm_median",
+      "decision": "accepted",
+      "description": "Feature-major exact-fallback storage",
+      "speedup_vs_original": 26.039482361660443
+    },
+    {
+      "version": "C++ experimental",
+      "runtime_seconds": 0.5884875,
+      "measurement_summary": "current_interleaved_15_run_median",
+      "decision": "experimental",
+      "description": "Pure C++20 exhaustive fused distance and bounded-heap kernel",
+      "speedup_vs_original": 56.553775568739844
+    }
+  ],
+  "run_order_analysis": {
+    "classification": "observable two regimes; no monotonic start-to-finish drift",
+    "late_over_early_median_ratio": {
+      "custom_python_v5_1": 1.0113747274285507,
+      "sklearn": 1.0010793998465972,
+      "weka": 1.0047937901383817,
+      "custom_cpp": 0.9327396764337408
+    },
+    "largest_late_over_early_ratio": 1.0113747274285507,
+    "smallest_late_over_early_ratio": 0.9327396764337408,
+    "iqr_outlier_count": {
+      "custom_python_v5_1": 2,
+      "sklearn": 2,
+      "weka": 1,
+      "custom_cpp": 1
+    },
+    "total_iqr_outlier_count": 6,
+    "fast_regime_threshold": "runtime below 0.80 times implementation median",
+    "fast_regime_trials": {
+      "custom_python_v5_1": [
+        7,
+        8
+      ],
+      "sklearn": [
+        7,
+        8
+      ],
+      "weka": [
+        7
+      ],
+      "custom_cpp": []
+    },
+    "synchronized_fast_trials": [
+      7,
+      8
+    ],
+    "ordered_timed_results": {
+      "sklearn": [
+        {
+          "sequence_index": 5,
+          "trial_index": 1,
+          "seconds": 0.954537799989339
+        },
+        {
+          "sequence_index": 10,
+          "trial_index": 2,
+          "seconds": 0.9543266000109725
+        },
+        {
+          "sequence_index": 15,
+          "trial_index": 3,
+          "seconds": 0.9536819999921136
+        },
+        {
+          "sequence_index": 20,
+          "trial_index": 4,
+          "seconds": 0.9565031999954954
+        },
+        {
+          "sequence_index": 21,
+          "trial_index": 5,
+          "seconds": 0.9534726999700069
+        },
+        {
+          "sequence_index": 26,
+          "trial_index": 6,
+          "seconds": 0.9518369000288658
+        },
+        {
+          "sequence_index": 31,
+          "trial_index": 7,
+          "seconds": 0.46332199999596924
+        },
+        {
+          "sequence_index": 34,
+          "trial_index": 8,
+          "seconds": 0.4607720000203699
+        },
+        {
+          "sequence_index": 38,
+          "trial_index": 9,
+          "seconds": 0.9565794999944046
+        },
+        {
+          "sequence_index": 42,
+          "trial_index": 10,
+          "seconds": 0.953691600007005
+        },
+        {
+          "sequence_index": 48,
+          "trial_index": 11,
+          "seconds": 0.954653299995698
+        },
+        {
+          "sequence_index": 52,
+          "trial_index": 12,
+          "seconds": 0.9553566999966279
+        },
+        {
+          "sequence_index": 53,
+          "trial_index": 13,
+          "seconds": 0.9555009999894537
+        },
+        {
+          "sequence_index": 58,
+          "trial_index": 14,
+          "seconds": 0.9550324000301771
+        },
+        {
+          "sequence_index": 64,
+          "trial_index": 15,
+          "seconds": 0.9569164999993518
+        }
+      ],
+      "custom_python_v5_1": [
+        {
+          "sequence_index": 6,
+          "trial_index": 1,
+          "seconds": 1.2663775999681093
+        },
+        {
+          "sequence_index": 11,
+          "trial_index": 2,
+          "seconds": 1.2691286000190303
+        },
+        {
+          "sequence_index": 14,
+          "trial_index": 3,
+          "seconds": 1.2611216999939643
+        },
+        {
+          "sequence_index": 17,
+          "trial_index": 4,
+          "seconds": 1.258743799990043
+        },
+        {
+          "sequence_index": 24,
+          "trial_index": 5,
+          "seconds": 1.2826804000069387
+        },
+        {
+          "sequence_index": 25,
+          "trial_index": 6,
+          "seconds": 1.2685003000078723
+        },
+        {
+          "sequence_index": 30,
+          "trial_index": 7,
+          "seconds": 0.6721131000085734
+        },
+        {
+          "sequence_index": 33,
+          "trial_index": 8,
+          "seconds": 0.6793952000443824
+        },
+        {
+          "sequence_index": 37,
+          "trial_index": 9,
+          "seconds": 1.2779319999972358
+        },
+        {
+          "sequence_index": 41,
+          "trial_index": 10,
+          "seconds": 1.266242100042291
+        },
+        {
+          "sequence_index": 47,
+          "trial_index": 11,
+          "seconds": 1.2662124000489712
+        },
+        {
+          "sequence_index": 51,
+          "trial_index": 12,
+          "seconds": 1.2793656999710947
+        },
+        {
+          "sequence_index": 56,
+          "trial_index": 13,
+          "seconds": 1.2807822999893688
+        },
+        {
+          "sequence_index": 60,
+          "trial_index": 14,
+          "seconds": 1.288651500013657
+        },
+        {
+          "sequence_index": 62,
+          "trial_index": 15,
+          "seconds": 1.2809379000100307
+        }
+      ],
+      "custom_cpp": [
+        {
+          "sequence_index": 7,
+          "trial_index": 1,
+          "seconds": 0.583511
+        },
+        {
+          "sequence_index": 12,
+          "trial_index": 2,
+          "seconds": 0.6466249
+        },
+        {
+          "sequence_index": 13,
+          "trial_index": 3,
+          "seconds": 0.5946584
+        },
+        {
+          "sequence_index": 19,
+          "trial_index": 4,
+          "seconds": 0.6699771
+        },
+        {
+          "sequence_index": 23,
+          "trial_index": 5,
+          "seconds": 0.6560268
+        },
+        {
+          "sequence_index": 27,
+          "trial_index": 6,
+          "seconds": 0.5839886
+        },
+        {
+          "sequence_index": 32,
+          "trial_index": 7,
+          "seconds": 0.5860604
+        },
+        {
+          "sequence_index": 36,
+          "trial_index": 8,
+          "seconds": 0.586788
+        },
+        {
+          "sequence_index": 39,
+          "trial_index": 9,
+          "seconds": 0.5792875
+        },
+        {
+          "sequence_index": 44,
+          "trial_index": 10,
+          "seconds": 0.5854567
+        },
+        {
+          "sequence_index": 45,
+          "trial_index": 11,
+          "seconds": 1.5420101
+        },
+        {
+          "sequence_index": 49,
+          "trial_index": 12,
+          "seconds": 0.5862467
+        },
+        {
+          "sequence_index": 55,
+          "trial_index": 13,
+          "seconds": 0.5884875
+        },
+        {
+          "sequence_index": 57,
+          "trial_index": 14,
+          "seconds": 0.6031327
+        },
+        {
+          "sequence_index": 61,
+          "trial_index": 15,
+          "seconds": 0.669058
+        }
+      ],
+      "weka": [
+        {
+          "sequence_index": 8,
+          "trial_index": 1,
+          "seconds": 5.952971101
+        },
+        {
+          "sequence_index": 9,
+          "trial_index": 2,
+          "seconds": 5.9056155
+        },
+        {
+          "sequence_index": 16,
+          "trial_index": 3,
+          "seconds": 5.956068
+        },
+        {
+          "sequence_index": 18,
+          "trial_index": 4,
+          "seconds": 5.9191786
+        },
+        {
+          "sequence_index": 22,
+          "trial_index": 5,
+          "seconds": 5.9134243
+        },
+        {
+          "sequence_index": 28,
+          "trial_index": 6,
+          "seconds": 5.908499
+        },
+        {
+          "sequence_index": 29,
+          "trial_index": 7,
+          "seconds": 3.416904101
+        },
+        {
+          "sequence_index": 35,
+          "trial_index": 8,
+          "seconds": 5.965587
+        },
+        {
+          "sequence_index": 40,
+          "trial_index": 9,
+          "seconds": 5.9444107
+        },
+        {
+          "sequence_index": 43,
+          "trial_index": 10,
+          "seconds": 5.926405099
+        },
+        {
+          "sequence_index": 46,
+          "trial_index": 11,
+          "seconds": 5.9798942
+        },
+        {
+          "sequence_index": 50,
+          "trial_index": 12,
+          "seconds": 5.9117817
+        },
+        {
+          "sequence_index": 54,
+          "trial_index": 13,
+          "seconds": 5.9359603
+        },
+        {
+          "sequence_index": 59,
+          "trial_index": 14,
+          "seconds": 5.9475539
+        },
+        {
+          "sequence_index": 63,
+          "trial_index": 15,
+          "seconds": 5.9726336
+        }
+      ]
+    },
+    "note": "All observations remain in raw files and every plotted distribution."
+  },
+  "rejected_candidates": {
+    "V6": "The best exact raw-feature lower-bound candidate was about 1.70x slower than paired V5.1, far below the required stable 10% speedup.",
+    "V7": "The best exact block candidate achieved only a 0.6809x median paired V5.1/V7 timing ratio and was about 1.47x slower than V5.1; it did not meet the required stable 10% speedup."
+  },
+  "environment": {
+    "captured_at": "2026-09-15T17:15:26.807+03:00",
+    "cpu": "Intel(R) Core(TM) i5-14600KF",
+    "logical_cpu_count": 20,
+    "ram_bytes": 34100523008,
+    "operating_system": "Windows-10-10.0.19045-SP0",
+    "python": "3.10.14",
+    "numpy": "1.26.0",
+    "scikit_learn": "1.2.1",
+    "matplotlib": "3.7.0",
+    "java": "openjdk version \"11.0.16.1\" 2022-08-12 LTS",
+    "weka": "3.8.6",
+    "cmake": "cmake version 3.25.1-msvc1",
+    "cpp_compiler": "MSVC _MSC_VER=1935 _MSC_FULL_VER=193532216",
+    "cpp_build_mode": "Release native",
+    "cpp_native_lto": true,
+    "power_mode": "High performance (8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c)",
+    "thread_environment": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "BLIS_NUM_THREADS": "1"
+    },
+    "numerical_threadpools": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "prefix": "libopenblas",
+        "version": "0.3.23.dev",
+        "num_threads": 1,
+        "threading_layer": "pthreads",
+        "architecture": "Prescott"
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "prefix": "libopenblas",
+        "version": "0.3.27",
+        "num_threads": 1,
+        "threading_layer": "pthreads",
+        "architecture": "Haswell"
+      },
+      {
+        "user_api": "openmp",
+        "internal_api": "openmp",
+        "prefix": "vcomp",
+        "version": null,
+        "num_threads": 1,
+        "threading_layer": null,
+        "architecture": null
+      }
+    ],
+    "machine_state_note": "CPU frequency, thermal state, and background activity were not locked; raw order and outliers are retained.",
+    "protocol": {
+      "runs_each": 15,
+      "warmups_each": 1,
+      "random_seed": 3804,
+      "implementations": [
+        "custom_python_v5_1",
+        "sklearn",
+        "weka",
+        "custom_cpp"
+      ],
+      "training_shape": [
+        24000,
+        33
+      ],
+      "test_shape": [
+        6000,
+        33
+      ],
+      "selected_k": 19,
+      "custom_python_batch_size": 64,
+      "cpp_batch_size": 32
+    }
+  },
+  "artifacts": {
+    "raw_prediction_csv": "results/runtime_benchmarks/raw_prediction_benchmark.csv",
+    "raw_prediction_json": "results/runtime_benchmarks/raw_prediction_benchmark.json",
+    "raw_full_pipeline_csv": "results/runtime_benchmarks/raw_full_pipeline_benchmark.csv",
+    "raw_full_pipeline_json": "results/runtime_benchmarks/raw_full_pipeline_benchmark.json",
+    "figures_directory": "results/runtime_benchmarks/figures"
+  }
+}
