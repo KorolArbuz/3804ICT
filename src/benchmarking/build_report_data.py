@@ -1,9 +1,7 @@
 """Build report tables from raw measurements and authoritative saved evidence."""
 
 import csv
-import json
 from collections import defaultdict
-from pathlib import Path
 
 import numpy as np
 from threadpoolctl import threadpool_limits
@@ -32,25 +30,9 @@ NOTES = {
 }
 
 
-def _markdown_value(value):
-    if isinstance(value, float):
-        return f"{value:.6g}"
-    if value is None:
-        return ""
-    return str(value).replace("|", "\\|").replace("\n", " ")
-
-
 def _write_table(stem, rows, columns):
     path = BENCHMARK_DIR / f"{stem}.csv"
     write_rows(path, rows, columns)
-    labels = [column.replace("_", " ").title() for column in columns]
-    lines = [
-        "| " + " | ".join(labels) + " |",
-        "|" + "|".join("---" for _ in columns) + "|",
-    ]
-    for row in rows:
-        lines.append("| " + " | ".join(_markdown_value(row.get(column)) for column in columns) + " |")
-    path.with_suffix(".md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
 
 
 def _grouped_summary(rows, value_field, group_fields, warmup_field=None):
@@ -83,6 +65,16 @@ def _statistics_row(name, values, notes=""):
     }
 
 
+def _bootstrap_median_interval(values, seed, resamples=10_000):
+    """Return a deterministic percentile bootstrap interval for the raw median."""
+    values = np.asarray([float(value) for value in values], dtype=float)
+    randomizer = np.random.default_rng(seed)
+    indices = randomizer.integers(0, len(values), size=(resamples, len(values)))
+    medians = np.median(values[indices], axis=1)
+    low, high = np.percentile(medians, [2.5, 97.5])
+    return float(low), float(high)
+
+
 def _linear_regression(points):
     x = np.asarray([point[0] for point in points], dtype=float)
     y = np.asarray([point[1] for point in points], dtype=float)
@@ -100,12 +92,74 @@ def _linear_regression(points):
 def _prediction_tables():
     rows = read_rows(BENCHMARK_DIR / "raw_prediction_runs.csv")
     grouped = _grouped_summary(rows, "runtime_seconds", ("implementation",), "warmup")
-    statistics = [
-        _statistics_row(name, grouped[(name,)], NOTES[name]) for name in IMPLEMENTATIONS
-    ]
+    statistics = []
+    for index, name in enumerate(IMPLEMENTATIONS):
+        values = grouped[(name,)]
+        row = _statistics_row(name, values, NOTES[name])
+        low, high = _bootstrap_median_interval(values, seed=3804 + index)
+        row.update({
+            "median_ci95_low": low,
+            "median_ci95_high": high,
+            "bootstrap_resamples": 10_000,
+            "bootstrap_seed": 3804 + index,
+        })
+        statistics.append(row)
     columns = tuple(statistics[0])
     _write_table("prediction_runtime_statistics", statistics, columns)
-    return statistics
+    return statistics, rows
+
+
+def _paired_speedups(raw_prediction):
+    """Pair implementations by randomized trial number and summarize V5.1 ratios."""
+    timed = [row for row in raw_prediction if row["warmup"] == "false"]
+    by_trial = {
+        (int(row["run_number_within_implementation"]), row["implementation"]): float(row["runtime_seconds"])
+        for row in timed
+    }
+    comparisons = (
+        ("custom_cpp", "C++20 experimental"),
+        ("sklearn", "scikit-learn"),
+        ("weka", "Weka IBk"),
+    )
+    trial_numbers = sorted({trial for trial, implementation in by_trial if implementation == "custom_python_v5_1"})
+    rows = []
+    for candidate, label in comparisons:
+        for trial in trial_numbers:
+            reference = by_trial[(trial, "custom_python_v5_1")]
+            candidate_runtime = by_trial[(trial, candidate)]
+            rows.append({
+                "trial": trial,
+                "comparison": label,
+                "reference_runtime_seconds": reference,
+                "candidate_runtime_seconds": candidate_runtime,
+                "speedup_factor": reference / candidate_runtime,
+            })
+    _write_table("paired_speedups", rows, tuple(rows[0]))
+
+    summaries = []
+    for candidate, label in comparisons:
+        values = [
+            row["speedup_factor"]
+            for row in rows
+            if row["comparison"] == label
+        ]
+        stats = summarize(values)
+        summaries.append({
+            "comparison": label,
+            "candidate_implementation": candidate,
+            "paired_trials": stats["count"],
+            "median_speedup_factor": stats["median_seconds"],
+            "q1_speedup_factor": stats["q1_seconds"],
+            "q3_speedup_factor": stats["q3_seconds"],
+            "iqr_speedup_factor": stats["iqr_seconds"],
+            "min_speedup_factor": stats["min_seconds"],
+            "max_speedup_factor": stats["max_seconds"],
+            "candidate_wins": sum(value > 1.0 for value in values),
+            "v5_1_wins": sum(value < 1.0 for value in values),
+            "ties": sum(value == 1.0 for value in values),
+        })
+    _write_table("paired_speedup_summary", summaries, tuple(summaries[0]))
+    return rows, summaries
 
 
 def _pipeline_tables():
@@ -392,23 +446,17 @@ def _memory_table(cpp_rows):
         {"implementation": "custom_cpp", "category": "result_buffers", "bytes": 6000 * (4 + 8), "mib": 6000 * (4 + 8) / 2**20, "basis": "Estimated int labels plus size_t vote counts"},
     ]
     _write_table("raw_memory", rows, tuple(rows[0]))
-    _write_table("memory_storage", rows, tuple(rows[0]))
     return rows
 
 
 def _environment_table():
     environment = read_json(BENCHMARK_DIR / "environment_comprehensive.json")
-    rows = []
-    for key, value in environment.items():
-        if isinstance(value, (dict, list)):
-            value = json.dumps(value, ensure_ascii=False, separators=(",", ":"))
-        rows.append({"item": key, "value": value})
-    _write_table("environment_reproducibility", rows, ("item", "value"))
     return environment
 
 
 def main():
-    prediction = _prediction_tables()
+    prediction, raw_prediction = _prediction_tables()
+    paired_speedups, paired_speedup_summary = _paired_speedups(raw_prediction)
     pipeline, fit = _pipeline_tables()
     train_scaling, train_regressions = _scaling_table(
         "raw_scaling_train.csv", "train_rows", "training_size_scaling"
@@ -429,6 +477,8 @@ def main():
     _write_table("runtime_summary", combined, tuple(combined[0]))
     write_json(BENCHMARK_DIR / "runtime_summary.json", {
         "prediction_only": prediction,
+        "paired_speedups": paired_speedups,
+        "paired_speedup_summary": paired_speedup_summary,
         "full_pipeline": pipeline,
         "fit_build": fit,
         "training_size_scaling": train_scaling,
@@ -444,7 +494,7 @@ def main():
         "memory": memory,
         "environment": environment,
     })
-    print("Comprehensive CSV, Markdown, and JSON report tables generated.")
+    print("Comprehensive CSV and JSON report tables generated.")
     return 0
 
 

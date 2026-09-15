@@ -12,6 +12,7 @@ from src.common.config import PROCESSED_DATA_DIR
 from src.cpp_knn.verify import main as verify_cpp
 
 from .benchmark_cpp_configurations import main as benchmark_cpp
+from .benchmark_cpp_process_modes import main as benchmark_cpp_process_modes
 from .benchmark_full_pipeline import main as benchmark_full_pipeline
 from .benchmark_prediction_runs import main as benchmark_prediction
 from .benchmark_scaling import main as benchmark_scaling
@@ -26,6 +27,7 @@ def main(argv=None):
     parser.add_argument("--scaling-runs", type=int, default=5)
     parser.add_argument("--weka-scaling-runs", type=int, default=3)
     parser.add_argument("--cpp-configuration-runs", type=int, default=5)
+    parser.add_argument("--cpp-process-mode-runs", type=int, default=20)
     parser.add_argument("--cpp-native", default="build-cpp-native/cpp_knn.exe")
     parser.add_argument("--cpp-portable", default="build-cpp-portable/cpp_knn.exe")
     args = parser.parse_args(argv)
@@ -66,6 +68,10 @@ def main(argv=None):
         "--runs", str(args.cpp_configuration_runs),
         "--native", str(native),
         "--portable", str(portable),
+    ])
+    benchmark_cpp_process_modes([
+        "--runs", str(args.cpp_process_mode_runs),
+        "--cpp-executable", str(native),
     ])
     capture_environment([
         "--cpp-executable", str(native),

@@ -1,8 +1,6 @@
 """Write the comprehensive academic benchmark narrative from generated tables."""
 
-import shutil
 from collections import defaultdict
-from pathlib import Path
 
 from .benchmark_utils import BENCHMARK_DIR, DISPLAY_NAMES, IMPLEMENTATIONS, read_json, read_rows, write_json
 
@@ -12,14 +10,29 @@ def _fmt(value, digits=4):
 
 
 def _runtime_table(rows):
+    show_interval = "median_ci95_low" in rows[0]
     lines = [
-        "| Implementation | Runs | Median (s) | Min | Max | IQR | CV |",
-        "|---|---:|---:|---:|---:|---:|---:|",
+        (
+            "| Implementation | Runs | Median (s) | Bootstrap 95% CI | Min | Max | IQR | CV |"
+            if show_interval else
+            "| Implementation | Runs | Median (s) | Min | Max | IQR | CV |"
+        ),
+        (
+            "|---|---:|---:|---:|---:|---:|---:|---:|"
+            if show_interval else
+            "|---|---:|---:|---:|---:|---:|---:|"
+        ),
     ]
     for row in rows:
+        interval = (
+            f"[{_fmt(row['median_ci95_low'])}, "
+            f"{_fmt(row['median_ci95_high'])}] | "
+            if show_interval else ""
+        )
         lines.append(
             f"| {DISPLAY_NAMES[row['implementation']]} | {row['runs']} | "
-            f"{_fmt(row['median_seconds'])} | {_fmt(row['min_seconds'])} | "
+            f"{_fmt(row['median_seconds'])} | {interval}"
+            f"{_fmt(row['min_seconds'])} | "
             f"{_fmt(row['max_seconds'])} | {_fmt(row['iqr_seconds'])} | "
             f"{100 * float(row['coefficient_of_variation']):.2f}% |"
         )
@@ -81,10 +94,31 @@ def _quality_table(rows):
     return "\n".join(lines)
 
 
+def _paired_table(rows):
+    lines = [
+        "| Comparison | Trials | Median speedup | IQR | Min | Max | Candidate wins |",
+        "|---|---:|---:|---:|---:|---:|---:|",
+    ]
+    for row in rows:
+        lines.append(
+            f"| {row['comparison']} | {row['paired_trials']} | "
+            f"{float(row['median_speedup_factor']):.3f}x | "
+            f"{float(row['iqr_speedup_factor']):.3f} | "
+            f"{float(row['min_speedup_factor']):.3f} | "
+            f"{float(row['max_speedup_factor']):.3f} | "
+            f"{row['candidate_wins']}/{row['paired_trials']} |"
+        )
+    return "\n".join(lines)
+
+
 def main():
     summary = read_json(BENCHMARK_DIR / "runtime_summary.json")
     environment = summary["environment"]
     prediction = {row["implementation"]: row for row in summary["prediction_only"]}
+    paired = {
+        row["candidate_implementation"]: row
+        for row in summary["paired_speedup_summary"]
+    }
     pipeline = {row["implementation"]: row for row in summary["full_pipeline"]}
     fit = {row["implementation"]: row for row in summary["fit_build"]}
     outliers = _iqr_outliers()
@@ -101,14 +135,12 @@ def main():
     )
     custom_workspace = next(row for row in summary["memory"] if row["implementation"] == "custom_python_v5_1" and row["category"] == "major_prediction_workspace")
     cpp_workspace = next(row for row in summary["memory"] if row["implementation"] == "custom_cpp" and row["category"] == "major_prediction_workspace")
-    history_v51 = next(row for row in summary["historical_optimization"] if row["version"] == "V5.1")
-
-    initial_md = BENCHMARK_DIR / "benchmark_summary_prediction_pipeline.md"
-    initial_json = BENCHMARK_DIR / "benchmark_summary_prediction_pipeline.json"
-    if not initial_md.exists() and (BENCHMARK_DIR / "benchmark_summary.md").exists():
-        shutil.copyfile(BENCHMARK_DIR / "benchmark_summary.md", initial_md)
-    if not initial_json.exists() and (BENCHMARK_DIR / "benchmark_summary.json").exists():
-        shutil.copyfile(BENCHMARK_DIR / "benchmark_summary.json", initial_json)
+    process_modes = {
+        row["mode"]: row
+        for row in read_rows(BENCHMARK_DIR / "cpp_process_mode_summary.csv")
+    }
+    session_rows = read_rows(BENCHMARK_DIR / "session_summary.csv")
+    session_count = len({row["session_id"] for row in session_rows})
 
     markdown = f"""# Comprehensive KNN benchmark and runtime analysis
 
@@ -156,7 +188,11 @@ Pairwise class agreement is 99.9667% for V5.1 versus scikit-learn, 99.9833% for 
 
 {_runtime_table(summary['prediction_only'])}
 
-**Measured fact.** C++ has the lowest median at {_fmt(prediction['custom_cpp']['median_seconds'])} s, followed by scikit-learn at {_fmt(prediction['sklearn']['median_seconds'])} s and accepted V5.1 at {_fmt(prediction['custom_python_v5_1']['median_seconds'])} s. C++ is {prediction['custom_python_v5_1']['median_seconds'] / prediction['custom_cpp']['median_seconds']:.3f}x faster than V5.1 by median; scikit-learn is {prediction['custom_python_v5_1']['median_seconds'] / prediction['sklearn']['median_seconds']:.3f}x faster.
+The intervals use a deterministic 10,000-resample percentile bootstrap of the raw medians. Every raw timing, including IQR outliers, remains in the calculation.
+
+{_paired_table(summary['paired_speedup_summary'])}
+
+**Measured fact.** C++ has the lowest raw median at {_fmt(prediction['custom_cpp']['median_seconds'])} s, followed by scikit-learn at {_fmt(prediction['sklearn']['median_seconds'])} s and accepted V5.1 at {_fmt(prediction['custom_python_v5_1']['median_seconds'])} s. Pairing observations by randomized trial index gives a median V5.1/C++ speedup of {paired['custom_cpp']['median_speedup_factor']:.3f}x with {paired['custom_cpp']['candidate_wins']}/{paired['custom_cpp']['paired_trials']} C++ wins. The paired V5.1/scikit-learn median is {paired['sklearn']['median_speedup_factor']:.3f}x with {paired['sklearn']['candidate_wins']}/{paired['sklearn']['paired_trials']} scikit-learn wins.
 
 Median throughput is {throughput['custom_cpp']:.0f} queries/s for C++, {throughput['sklearn']:.0f} for scikit-learn, {throughput['custom_python_v5_1']:.0f} for V5.1, and {throughput['weka']:.0f} for Weka. Corresponding average costs are {milliseconds['custom_cpp']:.3f}, {milliseconds['sklearn']:.3f}, {milliseconds['custom_python_v5_1']:.3f}, and {milliseconds['weka']:.3f} ms/query.
 
@@ -168,11 +204,13 @@ Median throughput is {throughput['custom_cpp']:.0f} queries/s for C++, {throughp
 
 **Hypothesis.** Frequency scheduling, cache state, or background activity could cause the isolated transitions. Temperature and frequency telemetry were unavailable, so thermal throttling is not claimed.
 
-## 7. Full-pipeline performance
+The targeted C++ process diagnostic retained 20 fresh-process and 20 persistent-process observations. Their medians were {float(process_modes['fresh_process']['median_seconds']):.4f} s and {float(process_modes['persistent_process']['median_seconds']):.4f} s, maxima were {float(process_modes['fresh_process']['max_seconds']):.4f} s and {float(process_modes['persistent_process']['max_seconds']):.4f} s, and the 1.5-IQR rule flagged {process_modes['fresh_process']['outlier_count_1_5_iqr']} and {process_modes['persistent_process']['outlier_count_1_5_iqr']} observations respectively. The persistent series shifts to a slower regime after its ninth timed observation. Process reuse therefore did not remove variability in this session; the measurement does not identify why the regime changed.
+
+## 7. Prepared-input implementation pipeline performance
 
 {_runtime_table(summary['full_pipeline'])}
 
-**Measured fact.** C++ has the lowest five-run pipeline median at {_fmt(pipeline['custom_cpp']['median_seconds'])} s; one C++ full-pipeline run reached {_fmt(pipeline['custom_cpp']['max_seconds'])} s. Weka's {_fmt(pipeline['weka']['median_seconds'])} s total includes JVM startup and an {_fmt(fit['weka']['median_seconds'])} s internal model build.
+**Measured fact.** C++ has the lowest five-run prepared-input pipeline median at {_fmt(pipeline['custom_cpp']['median_seconds'])} s; one C++ pipeline run reached {_fmt(pipeline['custom_cpp']['max_seconds'])} s. Weka's {_fmt(pipeline['weka']['median_seconds'])} s total includes JVM startup and an {_fmt(fit['weka']['median_seconds'])} s internal model build.
 
 Fit/build medians are {_fmt(fit['custom_cpp']['median_seconds'], 6)} s for C++, {_fmt(fit['sklearn']['median_seconds'], 6)} s for scikit-learn, {_fmt(fit['custom_python_v5_1']['median_seconds'], 6)} s for V5.1, and {_fmt(fit['weka']['median_seconds'])} s for Weka. These setup scopes are implementation-specific and are not perfectly equivalent.
 
@@ -180,7 +218,7 @@ Fit/build medians are {_fmt(fit['custom_cpp']['median_seconds'], 6)} s for C++, 
 
 {_history_table(summary['historical_optimization'])}
 
-**Measured fact.** The accepted V5.1 historical median is {history_v51['speedup_vs_original']:.1f}x faster than the 33.281 s Original artifact. Historical points came from their recorded protocols, while the C++ point uses the new 20-run controlled median; the charts label this regime difference. V6 and V7 remain rejected and are excluded from the accepted history line.
+The history plot is contextual evidence assembled from saved development artifacts. Its points were recorded in different sessions and under their documented protocols, so they do not form a controlled speedup series and are not used for current comparative claims. V6 and V7 remain rejected and are excluded from the accepted history line.
 
 ## 9. C++ configuration experiments
 
@@ -210,7 +248,7 @@ Fit/build medians are {_fmt(fit['custom_cpp']['median_seconds'], 6)} s for C++, 
 
 **Measured fact.** Fitted V5.1 NumPy arrays occupy {next(row['mib'] for row in summary['memory'] if row['implementation'] == 'custom_python_v5_1' and row['category'] == 'persistent_model_storage'):.3f} MiB. Estimated C++ persistent storage is {next(row['mib'] for row in summary['memory'] if row['implementation'] == 'custom_cpp' and row['category'] == 'persistent_model_storage'):.3f} MiB. Major prediction workspace is estimated at {custom_workspace['mib']:.3f} MiB for V5.1 and {cpp_workspace['mib']:.3f} MiB for native heap/batch 32.
 
-These are array/buffer measurements and analytical estimates, not uniform process RSS peaks. They are separated by category in `memory_storage.csv`; no Python RSS value is compared with a C++ internal-buffer estimate.
+These are array/buffer measurements and analytical estimates, not uniform process RSS peaks. They are separated by category in `raw_memory.csv`; no Python RSS value is compared with a C++ internal-buffer estimate.
 
 ## 13. Runtime versus classification quality
 
@@ -234,24 +272,27 @@ The full table records hypotheses, measured outcomes, and artifact-backed reject
 - CPU frequency, temperature, and background load were not locked or recorded reliably.
 - Weka uses fewer scaling repetitions and fresh JVM processes; only its internal prediction timer is compared in prediction-only plots.
 - Historical optimization points use their saved protocols and are not treated as one homogeneous controlled run.
+- The repository currently contains {session_count} real independent benchmark session(s). Two or three independently collected sessions are still needed before claiming cross-session reproducibility.
+- No CPU-affinity diagnostic was collected because no logical CPU was explicitly selected; the optional command refuses to guess one.
 - Memory values describe major arrays and buffers; they are not complete process RSS peaks.
 - Simple linear fits summarize the tested range and do not establish formal complexity.
 
 ## 16. Conclusions
 
-**Measured fact.** Experimental C++ is fastest by controlled prediction median, full-pipeline median, and throughput, and it remains exactly equivalent to V5.1 on all 6,000 outputs. Native heap/batch 32 is the strongest screened C++ configuration.
+**Measured fact.** Experimental C++ has the lowest controlled prediction median, prepared-input pipeline median, and highest throughput, and it remains exactly equivalent to V5.1 on all 6,000 outputs. Its paired median speedup against V5.1 is {paired['custom_cpp']['median_speedup_factor']:.3f}x across {paired['custom_cpp']['paired_trials']} trials. Native heap/batch 32 is the strongest screened C++ configuration.
 
 **Interpretation.** The fused loop and bounded top-k storage explain why C++ can beat the larger NumPy workspace while preserving exact exhaustive KNN behavior.
 
-**Decision.** C++ remains an **experimental candidate**. Correctness and median performance are strong, but a high outlier persisted in both prediction-only and full-pipeline evidence, the adjacent scikit-learn anomaly does not identify the cause, and reproducibility has not yet been demonstrated across machines or repeated sessions.
+**Decision.** C++ remains an **experimental candidate**. Correctness and median performance are strong, but a high outlier persisted in prediction-only and prepared-input pipeline evidence, the persistent-process diagnostic entered a slower regime, and reproducibility has not yet been demonstrated across machines or repeated sessions.
 
 ## Artifact index
 
-- Raw measurements: `raw_prediction_runs.csv`, `raw_full_pipeline_runs.csv`, `raw_scaling_train.csv`, `raw_scaling_queries.csv`, `raw_cpp_configuration.csv`
+- Raw measurements: `raw_prediction_runs.csv`, `raw_full_pipeline_runs.csv`, `raw_scaling_train.csv`, `raw_scaling_queries.csv`, `raw_cpp_configuration.csv`, `raw_memory.csv`, `cpp_process_mode_diagnostic.csv`
 - Structured analysis: `runtime_summary.csv`, `runtime_summary.json`, and the report tables in this directory
 - Environment: `environment_comprehensive.json`
 - Correctness: `cpp_correctness_comprehensive.json`, `correctness_summary.csv`
-- Figures: `figures/README.md` and 24 PNG/SVG figure pairs
+- Stability: `paired_speedups.csv`, `paired_speedup_summary.csv`, `session_summary.csv`, and `sessions/`
+- Figures: `figures/README.md` and the compact PNG/SVG figure set
 """
     (BENCHMARK_DIR / "benchmark_summary.md").write_text(markdown, encoding="utf-8", newline="\n")
     compact = {
@@ -262,11 +303,22 @@ The full table records hypotheses, measured outcomes, and artifact-backed reject
         "scaling_runs": {"python_sklearn_cpp": 5, "weka": 3},
         "prediction_medians_seconds": {name: prediction[name]["median_seconds"] for name in IMPLEMENTATIONS},
         "prediction_iqr_seconds": {name: prediction[name]["iqr_seconds"] for name in IMPLEMENTATIONS},
+        "prediction_bootstrap_95_ci_seconds": {
+            name: [
+                prediction[name]["median_ci95_low"],
+                prediction[name]["median_ci95_high"],
+            ]
+            for name in IMPLEMENTATIONS
+        },
+        "paired_speedup_summary": summary["paired_speedup_summary"],
         "full_pipeline_medians_seconds": {name: pipeline[name]["median_seconds"] for name in IMPLEMENTATIONS},
         "throughput_queries_per_second": throughput,
         "iqr_outliers": outliers,
         "training_size_regression": train_regression,
         "query_size_regression": query_regression,
+        "cpp_process_mode_summary": process_modes,
+        "real_session_count": session_count,
+        "affinity_diagnostic_collected": (BENCHMARK_DIR / "affinity_stability_diagnostic.csv").exists(),
         "cpp_status": "experimental candidate",
         "cpp_correctness": "6000/6000 labels, positive-neighbour counts, and vote fractions exact",
         "source": "runtime_summary.json",

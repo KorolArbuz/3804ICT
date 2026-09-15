@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-09-15T19:58:44.419+03:00",
+  "captured_at": "2026-09-15T18:49:39.771+03:00",
   "cpu": "Intel(R) Core(TM) i5-14600KF",
   "logical_cpu_count": 20,
   "physical_cpu_count": 14,
@@ -112,10 +112,11 @@
       6000
     ],
     "cpp_configuration_runs_each": 5,
-    "cpp_process_mode_runs_each": 20,
     "python_thread_policy": "environment variables plus threadpoolctl limit=1",
     "weka_policy": "existing IBk runner in a one-CPU JVM",
     "cpp_policy": "single-threaded exact native Release candidate"
   },
-  "telemetry_limitation": "Reliable per-run CPU effective frequency and temperature were unavailable without adding a machine-specific dependency, so those fields are blank."
+  "telemetry_limitation": "Reliable per-run CPU effective frequency and temperature were unavailable without adding a machine-specific dependency, so those fields are blank.",
+  "session_id": "comprehensive_20260915",
+  "session_origin": "Existing real comprehensive controlled run collected 2026-09-15; registered without rerunning or altering measurements"
 }

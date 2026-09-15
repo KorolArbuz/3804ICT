@@ -18,27 +18,21 @@ FIGURES = (
     "prediction_runtime_controlled",
     "prediction_runtime_distribution_comprehensive",
     "prediction_runtime_run_order_comprehensive",
+    "paired_speedup_distribution",
     "full_pipeline_runtime_comprehensive",
-    "fit_build_runtime",
-    "custom_optimization_history_linear",
     "custom_optimization_history_log",
-    "speedup_vs_original",
-    "speedup_vs_v5_1_comprehensive",
     "v5_phase_breakdown",
     "cpp_configuration_screen",
     "runtime_vs_training_size",
     "runtime_vs_query_count",
     "prediction_throughput",
-    "milliseconds_per_query",
-    "runtime_vs_f1",
-    "runtime_vs_accuracy",
     "confusion_matrix_v5_1",
     "cv_f1_by_k_comprehensive",
-    "cv_balanced_accuracy_by_k",
     "implementation_agreement_heatmap",
     "auxiliary_memory_comparison",
-    "cpp_build_comparison",
     "rejected_optimization_experiments",
+    "cpp_process_mode_distribution",
+    "runtime_by_session",
 )
 
 
@@ -61,6 +55,9 @@ def main():
     train = _rows("raw_scaling_train.csv")
     queries = _rows("raw_scaling_queries.csv")
     cpp = _rows("raw_cpp_configuration.csv")
+    process_modes = _rows("cpp_process_mode_diagnostic.csv")
+    paired = _rows("paired_speedups.csv")
+    sessions = _rows("session_summary.csv")
     if len(prediction) != 84 or len(full) != 20 or len(train) != 176 or len(queries) != 154 or len(cpp) != 40:
         raise AssertionError("Unexpected raw artifact row count")
     timed = Counter(row["implementation"] for row in prediction if row["warmup"] == "false")
@@ -73,6 +70,19 @@ def main():
     _finite(full, ("total_seconds", "fit_seconds", "prediction_seconds", "metric_seconds"))
     _finite(train + queries, ("runtime_seconds", "train_rows", "query_rows", "queries_per_second"))
     _finite(cpp, ("runtime_seconds", "batch_size", "peak_auxiliary_bytes_estimate"))
+    _finite(process_modes, ("runtime_seconds", "run"))
+    _finite(paired, ("trial", "speedup_factor"))
+    _finite(sessions, ("runs", "median", "IQR"))
+    if Counter(row["mode"] for row in process_modes) != Counter({
+        "fresh_process": 20, "persistent_process": 20,
+    }):
+        raise AssertionError("C++ process diagnostic does not contain 20 runs per mode")
+    if Counter(row["comparison"] for row in paired) != Counter({
+        "C++20 experimental": 20, "scikit-learn": 20, "Weka IBk": 20,
+    }):
+        raise AssertionError("Paired speedup data is incomplete")
+    if len({row["session_id"] for row in sessions}) < 1:
+        raise AssertionError("No real benchmark session was retained")
 
     summary = read_json(BENCHMARK_DIR / "runtime_summary.json")
     grouped = defaultdict(list)
@@ -83,6 +93,12 @@ def main():
         measured = statistics.median(grouped[row["implementation"]])
         if not math.isclose(measured, row["median_seconds"], rel_tol=0, abs_tol=1e-12):
             raise AssertionError(f"Summary median mismatch for {row['implementation']}")
+        low = row["median_ci95_low"]
+        high = row["median_ci95_high"]
+        if not low <= row["median_seconds"] <= high:
+            raise AssertionError(f"Bootstrap interval excludes median for {row['implementation']}")
+        if row["bootstrap_resamples"] != 10_000:
+            raise AssertionError("Bootstrap resample count changed")
 
     correctness = read_json(BENCHMARK_DIR / "cpp_correctness_comprehensive.json")
     equivalence = correctness["equivalence"]
@@ -110,7 +126,8 @@ def main():
             raise AssertionError(f"Missing report section {heading}")
     print(
         "Runtime suite valid: 20 timed prediction runs each; 5 full-pipeline runs each; "
-        "8 train sizes; 7 query sizes; 8 C++ configurations; 24 PNG/SVG pairs; "
+        "8 train sizes; 7 query sizes; 8 C++ configurations; 18 PNG/SVG pairs; "
+        "20 fresh and 20 persistent C++ runs; one real session; "
         "C++ exact 6000/6000; V5.1 source unchanged."
     )
     return 0

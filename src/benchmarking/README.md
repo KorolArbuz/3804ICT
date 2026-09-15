@@ -1,43 +1,36 @@
-# Comprehensive runtime benchmark and visualization workflow
+# Runtime benchmarking suite
 
-This package measures the current accepted Python V5.1, scikit-learn, genuine
-Java/Weka IBk, and the verified experimental pure C++20 candidate. It uses the
-same prepared train/test split and selected `k=19` without changing any model.
+This package measures accepted Python V5.1, scikit-learn, genuine Java/Weka
+IBk, and the verified experimental C++20 candidate on the same prepared split
+with `k=19`. It does not change any classifier or experiment setting.
 
-Prediction-only timings contain one complete prediction pass and exclude
-prepared-file loading and model fit. Each implementation receives an explicit
-warm-up, every timed implementation has at least 15 raw observations, and trial
-order is randomized. Python BLAS/OpenMP pools are limited to one thread. Weka
-runs in a one-CPU JVM and reports the Java classifier's internal prediction
-timer. The C++ executable reports its internal exact prediction timer after an
-internal warm-up.
+Prediction-only timings cover one complete 6,000-query pass. Prepared input
+loading and fitting are excluded. Trials are randomized and interleaved, Python
+numerical pools use one thread, Weka reports its internal classifier timer from
+a one-CPU JVM, and C++ reports its internal exact-prediction timer. All raw
+timings, including outliers, remain in the statistics.
 
-The full-pipeline mode starts from the fixed prepared inputs and includes file
-loading, model fit/build, prediction, artifact export, and metric generation.
-It deliberately excludes the shared raw-data preparation, split, cross-validation,
-and `k` selection because those steps are identical experiment setup rather
-than implementation-specific runtime.
+The prepared-input implementation pipeline benchmark separately includes input
+loading, model fit/build, prediction, output writing, and metrics. Dataset
+preparation, splitting, cross-validation, and parameter selection remain fixed
+shared setup.
 
-The comprehensive suite adds runtime stability, fit/build time, deterministic
-training-size and query-count scaling, native/portable C++ configuration
-screening, memory estimates, correctness/agreement, quality trade-offs, and
-historical optimization evidence. Older prediction/pipeline artifacts remain
-under their original `raw_*_benchmark` names.
+## Authoritative workflow
 
-Run every expensive measurement from the repository root after the native and
-portable C++ builds exist:
+Build the native and portable C++ executables first, then collect every
+expensive measurement:
 
 ```bash
 python -m src.benchmarking.run_runtime_suite \
-  --prediction-runs 20 --full-pipeline-runs 5 \
-  --scaling-runs 5 --weka-scaling-runs 3 \
+  --prediction-runs 20 \
+  --full-pipeline-runs 5 \
+  --scaling-runs 5 \
+  --weka-scaling-runs 3 \
   --cpp-configuration-runs 5 \
-  --cpp-native build-cpp-native/cpp_knn.exe \
-  --cpp-portable build-cpp-portable/cpp_knn.exe
+  --cpp-process-mode-runs 20
 ```
 
-Measurement and reporting are separate. Rebuild every table, figure, and the
-academic narrative without rerunning timings with:
+Rebuild derived artifacts without rerunning timings:
 
 ```bash
 python -m src.benchmarking.build_report_data
@@ -46,22 +39,48 @@ python -m src.benchmarking.generate_comprehensive_summary
 python -m src.benchmarking.validate_runtime_suite
 ```
 
-Outputs are written under `results/runtime_benchmarks/`. CSV and JSON files
-retain every raw measurement, including warm-up records and outliers. Figures
-are generated only from those raw files with matplotlib and are saved as PNG
-and SVG. `figures/README.md` maps every chart to its data source and suggested
-report section.
+The main outputs are under `results/runtime_benchmarks/`:
 
-The main raw files are:
+- `raw_prediction_runs.csv`: one warm-up and 20 timed observations per implementation;
+- `prediction_runtime_statistics.csv`: median, spread, and deterministic bootstrap 95% intervals;
+- `paired_speedups.csv` and `paired_speedup_summary.csv`: V5.1 speedups paired by trial index;
+- `raw_full_pipeline_runs.csv`: five prepared-input pipeline observations per implementation;
+- `raw_scaling_train.csv` and `raw_scaling_queries.csv`: deterministic scaling measurements;
+- `raw_cpp_configuration.csv`: native and portable C++ configuration screen;
+- `cpp_process_mode_diagnostic.csv`: 20 fresh-process and 20 persistent-process C++ timings;
+- `runtime_summary.json`: machine-readable derived analysis;
+- `benchmark_summary.md`: report-ready methodology, findings, and limitations;
+- `figures/README.md`: chart-to-source index.
 
-- `raw_prediction_runs.csv`: 20 timed runs and one warm-up for each implementation;
-- `raw_full_pipeline_runs.csv`: five complete prepared-input runs each;
-- `raw_scaling_train.csv`: eight nested training prefixes;
-- `raw_scaling_queries.csv`: seven nested query prefixes;
-- `raw_cpp_configuration.csv`: five runs for each native/portable C++ configuration;
-- `raw_memory.csv`: measured NumPy storage and explicitly labelled buffer estimates.
+## Independent sessions
 
-Weka uses three measurements per scaling point because every observation uses
-a fresh JVM. CPU frequency and temperature fields remain blank when reliable
-telemetry is unavailable. The full methodology, results, limitations, and C++
-status are in `results/runtime_benchmarks/benchmark_summary.md`.
+A session command creates a unique directory and refuses to overwrite it:
+
+```bash
+python -m src.benchmarking.benchmark_sessions --session-id session_02 --runs 20
+python -m src.benchmarking.aggregate_sessions
+```
+
+Each completed session contains `raw_prediction_runs.csv` and
+`environment.json`. Aggregation discovers completed session directories,
+writes `session_summary.csv`, and creates `runtime_by_session.png` and SVG.
+The repository currently contains one real session migrated from the existing
+comprehensive controlled run. Two or three additional sessions should be
+collected before claiming cross-session reproducibility.
+
+## Optional CPU-affinity diagnostic
+
+Affinity is never guessed. Select a valid logical CPU explicitly:
+
+```bash
+python -m src.benchmarking.benchmark_affinity --cpu-index 0 --runs 10
+python -m src.benchmarking.generate_figures
+```
+
+The figure is created only when actual diagnostic measurements exist. No
+affinity diagnostic is included in the current evidence.
+
+Weka uses three measurements per scaling point because each observation starts
+a fresh JVM. CPU frequency and temperature remain blank when reliable telemetry
+is unavailable. Historical optimization points came from mixed development
+sessions and are contextual evidence rather than a controlled speedup series.

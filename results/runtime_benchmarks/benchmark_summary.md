@@ -42,14 +42,22 @@ Pairwise class agreement is 99.9667% for V5.1 versus scikit-learn, 99.9833% for 
 
 ## 5. Prediction-only performance
 
-| Implementation | Runs | Median (s) | Min | Max | IQR | CV |
-|---|---:|---:|---:|---:|---:|---:|
-| Custom Python KNN V5.1 | 20 | 1.2617 | 1.2419 | 1.2872 | 0.0220 | 1.11% |
-| scikit-learn KNN | 20 | 0.9550 | 0.9511 | 0.9708 | 0.0057 | 0.52% |
-| Weka IBk | 20 | 5.9477 | 4.5962 | 5.9949 | 0.0400 | 5.15% |
-| Pure C++20 KNN (experimental) | 20 | 0.6143 | 0.5807 | 1.5586 | 0.0663 | 32.17% |
+| Implementation | Runs | Median (s) | Bootstrap 95% CI | Min | Max | IQR | CV |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Custom Python KNN V5.1 | 20 | 1.2617 | [1.2488, 1.2688] | 1.2419 | 1.2872 | 0.0220 | 1.11% |
+| scikit-learn KNN | 20 | 0.9550 | [0.9537, 0.9581] | 0.9511 | 0.9708 | 0.0057 | 0.52% |
+| Weka IBk | 20 | 5.9477 | [5.9236, 5.9575] | 4.5962 | 5.9949 | 0.0400 | 5.15% |
+| Pure C++20 KNN (experimental) | 20 | 0.6143 | [0.5859, 0.6503] | 0.5807 | 1.5586 | 0.0663 | 32.17% |
 
-**Measured fact.** C++ has the lowest median at 0.6143 s, followed by scikit-learn at 0.9550 s and accepted V5.1 at 1.2617 s. C++ is 2.054x faster than V5.1 by median; scikit-learn is 1.321x faster.
+The intervals use a deterministic 10,000-resample percentile bootstrap of the raw medians. Every raw timing, including IQR outliers, remains in the calculation.
+
+| Comparison | Trials | Median speedup | IQR | Min | Max | Candidate wins |
+|---|---:|---:|---:|---:|---:|---:|
+| C++20 experimental | 20 | 2.056x | 0.200 | 0.797 | 2.202 | 19/20 |
+| scikit-learn | 20 | 1.319x | 0.023 | 1.280 | 1.344 | 20/20 |
+| Weka IBk | 20 | 0.212x | 0.004 | 0.208 | 0.270 | 0/20 |
+
+**Measured fact.** C++ has the lowest raw median at 0.6143 s, followed by scikit-learn at 0.9550 s and accepted V5.1 at 1.2617 s. Pairing observations by randomized trial index gives a median V5.1/C++ speedup of 2.056x with 19/20 C++ wins. The paired V5.1/scikit-learn median is 1.319x with 20/20 scikit-learn wins.
 
 Median throughput is 9767 queries/s for C++, 6283 for scikit-learn, 4755 for V5.1, and 1009 for Weka. Corresponding average costs are 0.102, 0.159, 0.210, and 0.991 ms/query.
 
@@ -61,7 +69,9 @@ Median throughput is 9767 queries/s for C++, 6283 for scikit-learn, 4755 for V5.
 
 **Hypothesis.** Frequency scheduling, cache state, or background activity could cause the isolated transitions. Temperature and frequency telemetry were unavailable, so thermal throttling is not claimed.
 
-## 7. Full-pipeline performance
+The targeted C++ process diagnostic retained 20 fresh-process and 20 persistent-process observations. Their medians were 0.5975 s and 1.2764 s, maxima were 1.5457 s and 1.4547 s, and the 1.5-IQR rule flagged 1 and 0 observations respectively. The persistent series shifts to a slower regime after its ninth timed observation. Process reuse therefore did not remove variability in this session; the measurement does not identify why the regime changed.
+
+## 7. Prepared-input implementation pipeline performance
 
 | Implementation | Runs | Median (s) | Min | Max | IQR | CV |
 |---|---:|---:|---:|---:|---:|---:|
@@ -70,7 +80,7 @@ Median throughput is 9767 queries/s for C++, 6283 for scikit-learn, 4755 for V5.
 | Weka IBk | 5 | 14.8416 | 14.7998 | 14.8690 | 0.0463 | 0.20% |
 | Pure C++20 KNN (experimental) | 5 | 0.8435 | 0.7803 | 1.7885 | 0.0373 | 42.30% |
 
-**Measured fact.** C++ has the lowest five-run pipeline median at 0.8435 s; one C++ full-pipeline run reached 1.7885 s. Weka's 14.8416 s total includes JVM startup and an 8.1854 s internal model build.
+**Measured fact.** C++ has the lowest five-run prepared-input pipeline median at 0.8435 s; one C++ pipeline run reached 1.7885 s. Weka's 14.8416 s total includes JVM startup and an 8.1854 s internal model build.
 
 Fit/build medians are 0.002146 s for C++, 0.002171 s for scikit-learn, 0.011364 s for V5.1, and 8.1854 s for Weka. These setup scopes are implementation-specific and are not perfectly equivalent.
 
@@ -89,7 +99,7 @@ Fit/build medians are 0.002146 s for C++, 0.002171 s for scikit-learn, 0.011364 
 | V7 | Rejected | 1.8406 | 18.1x | Exact block pruning |
 | C++ experimental | Experimental | 0.6143 | 54.2x | Fused exact distance accumulation and bounded heap |
 
-**Measured fact.** The accepted V5.1 historical median is 26.0x faster than the 33.281 s Original artifact. Historical points came from their recorded protocols, while the C++ point uses the new 20-run controlled median; the charts label this regime difference. V6 and V7 remain rejected and are excluded from the accepted history line.
+The history plot is contextual evidence assembled from saved development artifacts. Its points were recorded in different sessions and under their documented protocols, so they do not form a controlled speedup series and are not used for current comparative claims. V6 and V7 remain rejected and are excluded from the accepted history line.
 
 ## 9. C++ configuration experiments
 
@@ -125,7 +135,7 @@ Fit/build medians are 0.002146 s for C++, 0.002171 s for scikit-learn, 0.011364 
 
 **Measured fact.** Fitted V5.1 NumPy arrays occupy 18.685 MiB. Estimated C++ persistent storage is 6.134 MiB. Major prediction workspace is estimated at 12.788 MiB for V5.1 and 0.018 MiB for native heap/batch 32.
 
-These are array/buffer measurements and analytical estimates, not uniform process RSS peaks. They are separated by category in `memory_storage.csv`; no Python RSS value is compared with a C++ internal-buffer estimate.
+These are array/buffer measurements and analytical estimates, not uniform process RSS peaks. They are separated by category in `raw_memory.csv`; no Python RSS value is compared with a C++ internal-buffer estimate.
 
 ## 13. Runtime versus classification quality
 
@@ -158,21 +168,24 @@ The full table records hypotheses, measured outcomes, and artifact-backed reject
 - CPU frequency, temperature, and background load were not locked or recorded reliably.
 - Weka uses fewer scaling repetitions and fresh JVM processes; only its internal prediction timer is compared in prediction-only plots.
 - Historical optimization points use their saved protocols and are not treated as one homogeneous controlled run.
+- The repository currently contains 1 real independent benchmark session(s). Two or three independently collected sessions are still needed before claiming cross-session reproducibility.
+- No CPU-affinity diagnostic was collected because no logical CPU was explicitly selected; the optional command refuses to guess one.
 - Memory values describe major arrays and buffers; they are not complete process RSS peaks.
 - Simple linear fits summarize the tested range and do not establish formal complexity.
 
 ## 16. Conclusions
 
-**Measured fact.** Experimental C++ is fastest by controlled prediction median, full-pipeline median, and throughput, and it remains exactly equivalent to V5.1 on all 6,000 outputs. Native heap/batch 32 is the strongest screened C++ configuration.
+**Measured fact.** Experimental C++ has the lowest controlled prediction median, prepared-input pipeline median, and highest throughput, and it remains exactly equivalent to V5.1 on all 6,000 outputs. Its paired median speedup against V5.1 is 2.056x across 20 trials. Native heap/batch 32 is the strongest screened C++ configuration.
 
 **Interpretation.** The fused loop and bounded top-k storage explain why C++ can beat the larger NumPy workspace while preserving exact exhaustive KNN behavior.
 
-**Decision.** C++ remains an **experimental candidate**. Correctness and median performance are strong, but a high outlier persisted in both prediction-only and full-pipeline evidence, the adjacent scikit-learn anomaly does not identify the cause, and reproducibility has not yet been demonstrated across machines or repeated sessions.
+**Decision.** C++ remains an **experimental candidate**. Correctness and median performance are strong, but a high outlier persisted in prediction-only and prepared-input pipeline evidence, the persistent-process diagnostic entered a slower regime, and reproducibility has not yet been demonstrated across machines or repeated sessions.
 
 ## Artifact index
 
-- Raw measurements: `raw_prediction_runs.csv`, `raw_full_pipeline_runs.csv`, `raw_scaling_train.csv`, `raw_scaling_queries.csv`, `raw_cpp_configuration.csv`
+- Raw measurements: `raw_prediction_runs.csv`, `raw_full_pipeline_runs.csv`, `raw_scaling_train.csv`, `raw_scaling_queries.csv`, `raw_cpp_configuration.csv`, `raw_memory.csv`, `cpp_process_mode_diagnostic.csv`
 - Structured analysis: `runtime_summary.csv`, `runtime_summary.json`, and the report tables in this directory
 - Environment: `environment_comprehensive.json`
 - Correctness: `cpp_correctness_comprehensive.json`, `correctness_summary.csv`
-- Figures: `figures/README.md` and 24 PNG/SVG figure pairs
+- Stability: `paired_speedups.csv`, `paired_speedup_summary.csv`, `session_summary.csv`, and `sessions/`
+- Figures: `figures/README.md` and the compact PNG/SVG figure set

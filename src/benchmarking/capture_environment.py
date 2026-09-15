@@ -45,6 +45,7 @@ def main(argv=None):
         "fixed_training_scaling_query_rows": 1000,
         "query_sizes": [100, 250, 500, 1000, 2000, 4000, 6000],
         "cpp_configuration_runs_each": 5,
+        "cpp_process_mode_runs_each": 20,
         "python_thread_policy": "environment variables plus threadpoolctl limit=1",
         "weka_policy": "existing IBk runner in a one-CPU JVM",
         "cpp_policy": "single-threaded exact native Release candidate",

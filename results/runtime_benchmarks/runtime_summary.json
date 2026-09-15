@@ -14,7 +14,11 @@
       "p10_seconds": 1.2453371200070251,
       "p90_seconds": 1.280617509986041,
       "coefficient_of_variation": 0.011117127118714692,
-      "notes": "Accepted V5.1; batch 64; one-thread numerical pools"
+      "notes": "Accepted V5.1; batch 64; one-thread numerical pools",
+      "median_ci95_low": 1.248792250000406,
+      "median_ci95_high": 1.268758499994874,
+      "bootstrap_resamples": 10000,
+      "bootstrap_seed": 3804
     },
     {
       "implementation": "sklearn",
@@ -30,7 +34,11 @@
       "p10_seconds": 0.9525100799626671,
       "p90_seconds": 0.963359280017903,
       "coefficient_of_variation": 0.00516507681495521,
-      "notes": "Brute Euclidean; uniform voting; n_jobs=1"
+      "notes": "Brute Euclidean; uniform voting; n_jobs=1",
+      "median_ci95_low": 0.9537382499838714,
+      "median_ci95_high": 0.9580886500189081,
+      "bootstrap_resamples": 10000,
+      "bootstrap_seed": 3805
     },
     {
       "implementation": "weka",
@@ -46,7 +54,11 @@
       "p10_seconds": 5.916399580099999,
       "p90_seconds": 5.9696242299,
       "coefficient_of_variation": 0.0515175384995934,
-      "notes": "IBk internal prediction timer; fresh one-CPU JVM per observation"
+      "notes": "IBk internal prediction timer; fresh one-CPU JVM per observation",
+      "median_ci95_low": 5.923606449999999,
+      "median_ci95_high": 5.9574560000000005,
+      "bootstrap_resamples": 10000,
+      "bootstrap_seed": 3806
     },
     {
       "implementation": "custom_cpp",
@@ -62,7 +74,477 @@
       "p10_seconds": 0.58221491,
       "p90_seconds": 0.65711481,
       "coefficient_of_variation": 0.3217025602066562,
-      "notes": "Experimental native Release; exact heap; batch 32"
+      "notes": "Experimental native Release; exact heap; batch 32",
+      "median_ci95_low": 0.5859077500000001,
+      "median_ci95_high": 0.6502747,
+      "bootstrap_resamples": 10000,
+      "bootstrap_seed": 3807
+    }
+  ],
+  "paired_speedups": [
+    {
+      "trial": 1,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2804300999850966,
+      "candidate_runtime_seconds": 0.5815049,
+      "speedup_factor": 2.2019248676754
+    },
+    {
+      "trial": 2,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2624698000145145,
+      "candidate_runtime_seconds": 0.5946385,
+      "speedup_factor": 2.1230878929206813
+    },
+    {
+      "trial": 3,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2647509999806061,
+      "candidate_runtime_seconds": 0.5831214,
+      "speedup_factor": 2.168932575584786
+    },
+    {
+      "trial": 4,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2672670999891125,
+      "candidate_runtime_seconds": 0.587371,
+      "speedup_factor": 2.1575241201712587
+    },
+    {
+      "trial": 5,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2490814999910071,
+      "candidate_runtime_seconds": 0.5806535,
+      "speedup_factor": 2.1511650235312576
+    },
+    {
+      "trial": 6,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2823041999945417,
+      "candidate_runtime_seconds": 0.6570124,
+      "speedup_factor": 1.9517199370887697
+    },
+    {
+      "trial": 7,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2871994000161067,
+      "candidate_runtime_seconds": 0.6325657,
+      "speedup_factor": 2.0348864948196
+    },
+    {
+      "trial": 8,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2484924999880604,
+      "candidate_runtime_seconds": 0.6011839,
+      "speedup_factor": 2.0767231124919685
+    },
+    {
+      "trial": 9,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2697584999841638,
+      "candidate_runtime_seconds": 0.6501859,
+      "speedup_factor": 1.9529160813609827
+    },
+    {
+      "trial": 10,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2586022000177763,
+      "candidate_runtime_seconds": 0.6445671,
+      "speedup_factor": 1.9526317741283667
+    },
+    {
+      "trial": 11,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2476989999995567,
+      "candidate_runtime_seconds": 0.5822938,
+      "speedup_factor": 2.142731040583906
+    },
+    {
+      "trial": 12,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2456362000084482,
+      "candidate_runtime_seconds": 0.6562571,
+      "speedup_factor": 1.8980917692295416
+    },
+    {
+      "trial": 13,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.248503000009805,
+      "candidate_runtime_seconds": 0.5844445,
+      "speedup_factor": 2.136221660071752
+    },
+    {
+      "trial": 14,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2509223999804817,
+      "candidate_runtime_seconds": 0.6503635,
+      "speedup_factor": 1.9234203641201908
+    },
+    {
+      "trial": 15,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2426453999942169,
+      "candidate_runtime_seconds": 1.5585721,
+      "speedup_factor": 0.7972973467151228
+    },
+    {
+      "trial": 16,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2419065999565646,
+      "candidate_runtime_seconds": 0.6274042,
+      "speedup_factor": 1.9794362230226776
+    },
+    {
+      "trial": 17,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2773076000157744,
+      "candidate_runtime_seconds": 0.6519309,
+      "speedup_factor": 1.9592683826089152
+    },
+    {
+      "trial": 18,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2610108000226319,
+      "candidate_runtime_seconds": 0.6580365,
+      "speedup_factor": 1.9163234866494971
+    },
+    {
+      "trial": 19,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2629547999822535,
+      "candidate_runtime_seconds": 0.5843031,
+      "speedup_factor": 2.161472016804726
+    },
+    {
+      "trial": 20,
+      "comparison": "C++20 experimental",
+      "reference_runtime_seconds": 1.2727660000091419,
+      "candidate_runtime_seconds": 0.5881133,
+      "speedup_factor": 2.1641510232962626
+    },
+    {
+      "trial": 1,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2804300999850966,
+      "candidate_runtime_seconds": 0.9525461999583058,
+      "speedup_factor": 1.3442183697138708
+    },
+    {
+      "trial": 2,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2624698000145145,
+      "candidate_runtime_seconds": 0.9525947000365704,
+      "speedup_factor": 1.325295847190886
+    },
+    {
+      "trial": 3,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2647509999806061,
+      "candidate_runtime_seconds": 0.9643517999793403,
+      "speedup_factor": 1.3115037479140925
+    },
+    {
+      "trial": 4,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2672670999891125,
+      "candidate_runtime_seconds": 0.9588772000279278,
+      "speedup_factor": 1.3216156354037856
+    },
+    {
+      "trial": 5,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2490814999910071,
+      "candidate_runtime_seconds": 0.9561407000292093,
+      "speedup_factor": 1.3063783394565767
+    },
+    {
+      "trial": 6,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2823041999945417,
+      "candidate_runtime_seconds": 0.9552061000140384,
+      "speedup_factor": 1.3424371975594545
+    },
+    {
+      "trial": 7,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2871994000161067,
+      "candidate_runtime_seconds": 0.95981380000012,
+      "speedup_factor": 1.3410928244790248
+    },
+    {
+      "trial": 8,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2484924999880604,
+      "candidate_runtime_seconds": 0.9535420999745838,
+      "speedup_factor": 1.30932079456307
+    },
+    {
+      "trial": 9,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2697584999841638,
+      "candidate_runtime_seconds": 0.9539343999931589,
+      "speedup_factor": 1.331075281479806
+    },
+    {
+      "trial": 10,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2586022000177763,
+      "candidate_runtime_seconds": 0.9521850000019185,
+      "speedup_factor": 1.321804271244811
+    },
+    {
+      "trial": 11,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2476989999995567,
+      "candidate_runtime_seconds": 0.9526235000230372,
+      "speedup_factor": 1.3097503892874611
+    },
+    {
+      "trial": 12,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2456362000084482,
+      "candidate_runtime_seconds": 0.9594894000329077,
+      "speedup_factor": 1.2982282034233275
+    },
+    {
+      "trial": 13,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.248503000009805,
+      "candidate_runtime_seconds": 0.9632490000221878,
+      "speedup_factor": 1.2961373434917103
+    },
+    {
+      "trial": 14,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2509223999804817,
+      "candidate_runtime_seconds": 0.9511147000011988,
+      "speedup_factor": 1.3152171867167073
+    },
+    {
+      "trial": 15,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2426453999942169,
+      "candidate_runtime_seconds": 0.9708312000147998,
+      "speedup_factor": 1.2799809070570387
+    },
+    {
+      "trial": 16,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2419065999565646,
+      "candidate_runtime_seconds": 0.9550858999718912,
+      "speedup_factor": 1.300308799442139
+    },
+    {
+      "trial": 17,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2773076000157744,
+      "candidate_runtime_seconds": 0.9545087000005879,
+      "speedup_factor": 1.3381832978735424
+    },
+    {
+      "trial": 18,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2610108000226319,
+      "candidate_runtime_seconds": 0.9573001000098884,
+      "speedup_factor": 1.3172575663677526
+    },
+    {
+      "trial": 19,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2629547999822535,
+      "candidate_runtime_seconds": 0.9539796999888495,
+      "speedup_factor": 1.3238801622267387
+    },
+    {
+      "trial": 20,
+      "comparison": "scikit-learn",
+      "reference_runtime_seconds": 1.2727660000091419,
+      "candidate_runtime_seconds": 0.9549655999871902,
+      "speedup_factor": 1.3327872752968428
+    },
+    {
+      "trial": 1,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2804300999850966,
+      "candidate_runtime_seconds": 5.920212299,
+      "speedup_factor": 0.21628111211508036
+    },
+    {
+      "trial": 2,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2624698000145145,
+      "candidate_runtime_seconds": 5.909092301,
+      "speedup_factor": 0.2136486850613022
+    },
+    {
+      "trial": 3,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2647509999806061,
+      "candidate_runtime_seconds": 5.994933901,
+      "speedup_factor": 0.2109699657855504
+    },
+    {
+      "trial": 4,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2672670999891125,
+      "candidate_runtime_seconds": 5.9518957,
+      "speedup_factor": 0.21291823040331714
+    },
+    {
+      "trial": 5,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2490814999910071,
+      "candidate_runtime_seconds": 5.9546386,
+      "speedup_factor": 0.2097661308934865
+    },
+    {
+      "trial": 6,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2823041999945417,
+      "candidate_runtime_seconds": 5.9263946,
+      "speedup_factor": 0.21637172118011544
+    },
+    {
+      "trial": 7,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2871994000161067,
+      "candidate_runtime_seconds": 5.9477324,
+      "speedup_factor": 0.21641851271185414
+    },
+    {
+      "trial": 8,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2484924999880604,
+      "candidate_runtime_seconds": 5.9466408,
+      "speedup_factor": 0.20994920358869842
+    },
+    {
+      "trial": 9,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2697584999841638,
+      "candidate_runtime_seconds": 5.9619803,
+      "speedup_factor": 0.21297596370524133
+    },
+    {
+      "trial": 10,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2586022000177763,
+      "candidate_runtime_seconds": 5.9182596,
+      "speedup_factor": 0.21266424338969117
+    },
+    {
+      "trial": 11,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2476989999995567,
+      "candidate_runtime_seconds": 5.952922499,
+      "speedup_factor": 0.20959436313997892
+    },
+    {
+      "trial": 12,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2456362000084482,
+      "candidate_runtime_seconds": 5.9208183,
+      "speedup_factor": 0.21038243987464508
+    },
+    {
+      "trial": 13,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.248503000009805,
+      "candidate_runtime_seconds": 5.947576999,
+      "speedup_factor": 0.20991792123409633
+    },
+    {
+      "trial": 14,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2509223999804817,
+      "candidate_runtime_seconds": 5.9681513,
+      "speedup_factor": 0.2095996460378747
+    },
+    {
+      "trial": 15,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2426453999942169,
+      "candidate_runtime_seconds": 5.9602734,
+      "speedup_factor": 0.20848798647293879
+    },
+    {
+      "trial": 16,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2419065999565646,
+      "candidate_runtime_seconds": 4.596160801,
+      "speedup_factor": 0.2702052112028716
+    },
+    {
+      "trial": 17,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2773076000157744,
+      "candidate_runtime_seconds": 5.9172115,
+      "speedup_factor": 0.21586309700367723
+    },
+    {
+      "trial": 18,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2610108000226319,
+      "candidate_runtime_seconds": 5.947655,
+      "speedup_factor": 0.2120181483328525
+    },
+    {
+      "trial": 19,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2629547999822535,
+      "candidate_runtime_seconds": 5.9624709,
+      "speedup_factor": 0.2118173524305592
+    },
+    {
+      "trial": 20,
+      "comparison": "Weka IBk",
+      "reference_runtime_seconds": 1.2727660000091419,
+      "candidate_runtime_seconds": 5.982880599,
+      "speedup_factor": 0.2127346482933115
+    }
+  ],
+  "paired_speedup_summary": [
+    {
+      "comparison": "C++20 experimental",
+      "candidate_implementation": "custom_cpp",
+      "paired_trials": 20,
+      "median_speedup_factor": 2.0558048036557843,
+      "q1_speedup_factor": 1.9524038148684675,
+      "q3_speedup_factor": 2.1527547976912578,
+      "iqr_speedup_factor": 0.2003509828227903,
+      "min_speedup_factor": 0.7972973467151228,
+      "max_speedup_factor": 2.2019248676754,
+      "candidate_wins": 19,
+      "v5_1_wins": 1,
+      "ties": 0
+    },
+    {
+      "comparison": "scikit-learn",
+      "candidate_implementation": "sklearn",
+      "paired_trials": 20,
+      "median_speedup_factor": 1.3194366008857692,
+      "q1_speedup_factor": 1.3085851807864466,
+      "q3_speedup_factor": 1.3315032799340651,
+      "iqr_speedup_factor": 0.022918099147618554,
+      "min_speedup_factor": 1.2799809070570387,
+      "max_speedup_factor": 1.3442183697138708,
+      "candidate_wins": 20,
+      "v5_1_wins": 0,
+      "ties": 0
+    },
+    {
+      "comparison": "Weka IBk",
+      "candidate_implementation": "weka",
+      "paired_trials": 20,
+      "median_speedup_factor": 0.21234119586127184,
+      "q1_speedup_factor": 0.2099413830000479,
+      "q3_speedup_factor": 0.21420228804689595,
+      "iqr_speedup_factor": 0.0042609050468480625,
+      "min_speedup_factor": 0.20848798647293879,
+      "max_speedup_factor": 0.2702052112028716,
+      "candidate_wins": 0,
+      "v5_1_wins": 20,
+      "ties": 0
     }
   ],
   "full_pipeline": [
@@ -1580,7 +2062,7 @@
     }
   ],
   "environment": {
-    "captured_at": "2026-09-15T18:49:39.771+03:00",
+    "captured_at": "2026-09-15T19:58:44.419+03:00",
     "cpu": "Intel(R) Core(TM) i5-14600KF",
     "logical_cpu_count": 20,
     "physical_cpu_count": 14,
@@ -1693,6 +2175,7 @@
         6000
       ],
       "cpp_configuration_runs_each": 5,
+      "cpp_process_mode_runs_each": 20,
       "python_thread_policy": "environment variables plus threadpoolctl limit=1",
       "weka_policy": "existing IBk runner in a one-CPU JVM",
       "cpp_policy": "single-threaded exact native Release candidate"

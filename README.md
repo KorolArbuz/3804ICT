@@ -1,131 +1,97 @@
 # KNN Credit Default Classification
 
-## 1. Project Overview
+This university Data Mining project predicts whether a credit-card client will
+default in the next month. It compares a manual NumPy KNN classifier,
+scikit-learn's KNeighborsClassifier, and Java/Weka's IBk on one fixed
+experiment. A verified pure C++20 implementation is included as an experimental
+performance candidate.
 
-This Data Mining project predicts whether a credit-card client will default on
-the next month's payment. It uses K-Nearest Neighbours (KNN) as the classifier
-and compares three implementations on the same train/test split:
+## Dataset
 
-- a manual Python and NumPy implementation;
-- scikit-learn's `KNeighborsClassifier`;
-- Java/Weka's `IBk` classifier.
+The project uses the [UCI Default of Credit Card Clients dataset](https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients):
+30,000 records, 23 original predictors, and a binary default target. ID is
+excluded from the model.
 
-## 2. Dataset
-
-The experiment uses the [Default of Credit Card Clients dataset from the UCI
-Machine Learning Repository](https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients).
-It contains 30,000 client records and 23 original predictive attributes.
-
-The binary target is:
-
-- `0`: no default in the next month;
-- `1`: default in the next month.
-
-The source `ID` identifies a record and is excluded from all model features.
-Download the official dataset and save it as:
+Download the official spreadsheet and save it as:
 
 ```text
 data/raw/default.xls
 ```
 
-## 3. Implementations
+## Experiment protocol
 
-### Custom Python KNN
+- stratified 80/20 train/test split with random seed 42;
+- five-fold stratified cross-validation on the training partition;
+- odd candidate values from k=1 through k=31;
+- mean class-1 F1 as the selection measure, with balanced accuracy and smaller
+  k as tie-breakers;
+- selected value **k = 19**;
+- full one-hot encoding for SEX, EDUCATION, and MARRIAGE;
+- median imputation and standard scaling for the remaining features;
+- Euclidean distance and uniform voting;
+- the same untouched 6,000 test rows for every implementation.
 
-The custom classifier manually calculates squared Euclidean distances, selects
-the nearest training rows, and performs uniform voting using NumPy. It does not
-use a ready-made nearest-neighbour implementation.
+## Implementations
 
-### scikit-learn KNN
+The custom Python package implements exact brute-force KNN with NumPy and
+deterministic boundary handling. It does not call a ready-made neighbour
+classifier. scikit-learn uses brute-force Euclidean search, uniform weights,
+and one worker. The genuine Java project uses Weka 3.8.6 IBk with
+LinearNNSearch; Weka distance normalization and internal cross-validation are
+disabled to match the prepared experiment.
 
-The scikit-learn comparison uses `KNeighborsClassifier` with brute-force
-Euclidean search, uniform weights, and one worker.
+The optional standard-library-only C++20 candidate implements the same exact
+custom prediction semantics and has 6,000/6,000 agreement with accepted Python
+V5.1 for classes, positive-neighbour counts, and vote fractions. It remains
+experimental and does not replace any implementation in run_all.py. See
+[src/cpp_knn/README.md](src/cpp_knn/README.md).
 
-### Weka IBk
-
-The Weka comparison is a genuine Java program using Weka 3.8.6 `IBk` and
-`LinearNNSearch`. Weka's internal distance normalisation and internal
-cross-validation are disabled so it consumes the same transformed features and
-selected `k` as the Python implementations.
-
-### Experimental pure C++20 custom candidate
-
-An additional standard-library-only C++20 implementation evaluates whether a
-manually implemented exact KNN can improve on accepted Python/NumPy V5.1. It is
-an alternative custom implementation, not a third toolkit, and V5.1 remains
-unchanged. See [`src/cpp_knn/README.md`](src/cpp_knn/README.md) for its algorithm,
-build, verification, and benchmark details.
-
-## 4. Experiment Methodology
-
-- A stratified 80/20 split creates 24,000 training rows and 6,000 test rows.
-- The fixed random seed is 42.
-- Five-fold stratified cross-validation runs on the training partition only.
-- Candidate values are the odd integers from `k=1` through `k=31`.
-- Mean F1 for class 1 is the primary selection measure.
-- Mean balanced accuracy and then smaller `k` resolve ties.
-- The measured cross-validation result selects **k = 19**.
-- `SEX`, `EDUCATION`, and `MARRIAGE` receive full one-hot encoding.
-- Remaining features receive median imputation and `StandardScaler`.
-- Final models use Euclidean distance and uniform voting.
-- All three implementations evaluate the same untouched test rows.
-
-## 5. Project Structure
+## Project structure
 
 ```text
-data/raw/          dataset placement instructions
-src/common/        experiment settings and shared file/model helpers
-src/data/          dataset loading, validation, summary, and splitting
-src/preprocessing/ training-fitted transformation and compact NPZ/Weka export
+src/common/        shared settings and model helpers
+src/data/          loading, validation, summary, and splitting
+src/preprocessing/ training-fitted transforms and NPZ/ARFF/C++ export
 src/tuning/        cross-validation and k selection
-src/custom_knn/    manual NumPy KNN and its runner
-src/cpp_knn/       experimental pure C++20 exact KNN and evidence drivers
-src/benchmarking/  reproducible four-way runtime benchmarks and figures
-src/sklearn_knn/   scikit-learn KNN runner
-src/evaluation/    metrics, alignment, and implementation comparison
-src/reporting/     result chart generation
-weka/              Maven project for the Java/Weka implementation
-tests/             standard-library C++ correctness tests used by CTest
-results/           compact measured tables and figures
-CMakeLists.txt     portable and optional native C++ release builds
-run_all.py         complete experiment entry point
+src/custom_knn/    manual NumPy classifier and runner
+src/sklearn_knn/   scikit-learn runner
+src/evaluation/    metrics, alignment, and comparisons
+src/reporting/     standard experiment figures
+src/benchmarking/  controlled runtime measurements and report generation
+src/cpp_knn/       experimental exact C++20 candidate
+weka/              Maven project for genuine Java/Weka IBk
+tests/             C++ correctness tests
+results/           compact experiment and benchmark evidence
+run_all.py         complete three-implementation experiment
 ```
 
-## 6. Installation
+## Installation
 
-Python 3.10 or later is recommended. From the repository root, create and
-activate a virtual environment:
+Python 3.10 or later is recommended.
 
 ```powershell
 python -m venv .venv
 .venv\Scripts\activate
-```
-
-On macOS or Linux, activate it with:
-
-```bash
-source .venv/bin/activate
-```
-
-Install the Python dependencies:
-
-```bash
 python -m pip install -r requirements.txt
 ```
 
-The Weka implementation also requires JDK 11 or later and Maven available on
-`PATH`. Maven downloads the Weka dependencies during its first build.
+On macOS or Linux, activate the environment with
+source .venv/bin/activate. Weka also requires JDK 11 or later and Maven on
+PATH.
 
-## 7. Running the Project
+## Run the complete experiment
 
-Run the complete three-implementation experiment from the repository root:
+From the repository root:
 
 ```bash
 python run_all.py --data data/raw/default.xls
 ```
 
-Use `--skip-weka` when only the two Python implementations are required. The
-main stages can also be run separately:
+Use --skip-weka when Java or Maven is unavailable. The standard experiment
+writes metrics, agreement, confusion matrices, cross-validation results, and
+figures under results/.
+
+## Standalone commands
 
 ```bash
 python -m src.data --data data/raw/default.xls
@@ -135,16 +101,10 @@ python -m src.custom_knn
 python -m src.sklearn_knn
 python -m src.evaluation
 python -m src.reporting
-```
-
-Build the Java project independently with:
-
-```bash
 mvn -f weka/pom.xml clean package
 ```
 
-The C++ candidate is independent of the main three-implementation experiment.
-After the canonical NPZ files exist, export its inputs and make a portable build:
+For the C++ candidate:
 
 ```bash
 python -m src.cpp_knn.export_data
@@ -153,179 +113,80 @@ cmake --build build-cpp-portable --config Release
 ctest --test-dir build-cpp-portable -C Release --output-on-failure
 ```
 
-Native benchmark and standalone execution commands are documented in
-[`src/cpp_knn/README.md`](src/cpp_knn/README.md).
+## Results
 
-Run the comprehensive four-implementation runtime suite with:
+The standard experiment selected k=19.
+
+| Implementation | Accuracy | F1 | Balanced accuracy | ROC-AUC |
+|---|---:|---:|---:|---:|
+| Custom Python V5.1 | 0.8088 | 0.4391 | 0.6404 | 0.7353 |
+| scikit-learn | 0.8092 | 0.4395 | 0.6406 | 0.7354 |
+| Weka IBk | 0.8090 | 0.4393 | 0.6405 | 0.7353 |
+
+The controlled benchmark retains 20 randomized, interleaved prediction-only
+runs per implementation. The deterministic 95% intervals use 10,000 bootstrap
+resamples of all raw timings, including outliers.
+
+| Implementation | Median (s) | Bootstrap 95% CI (s) |
+|---|---:|---:|
+| Custom Python V5.1 | 1.2617 | 1.2488–1.2688 |
+| scikit-learn | 0.9550 | 0.9537–0.9581 |
+| Weka IBk | 5.9477 | 5.9236–5.9575 |
+| C++20 experimental | 0.6143 | 0.5859–0.6503 |
+
+![Controlled prediction runtime](results/runtime_benchmarks/figures/prediction_runtime_controlled.png)
+
+Trial-index pairing gives a median V5.1/C++ speedup of 2.056×, with C++ faster
+in 19 of 20 pairs. The C++ result remains a one-machine experimental finding.
+See the
+[benchmark report](results/runtime_benchmarks/benchmark_summary.md),
+[paired speedups](results/runtime_benchmarks/paired_speedup_summary.csv), and
+[figure index](results/runtime_benchmarks/figures/README.md).
+
+Core standard outputs are
+[results/metrics_comparison.csv](results/metrics_comparison.csv),
+[results/cv_results_summary.csv](results/cv_results_summary.csv), and
+[results/prediction_agreement.csv](results/prediction_agreement.csv).
+
+## Tests
 
 ```bash
-python -m src.benchmarking.run_runtime_suite \
-  --prediction-runs 20 --full-pipeline-runs 5 \
-  --scaling-runs 5 --weka-scaling-runs 3 \
-  --cpp-configuration-runs 5
+python -m compileall -q src run_all.py
+ctest --test-dir build-cpp-portable -C Release --output-on-failure
+ctest --test-dir build-cpp-native -C Release --output-on-failure
+```
+
+The runtime suite has a separate validator:
+
+```bash
 python -m src.benchmarking.build_report_data
 python -m src.benchmarking.generate_figures
 python -m src.benchmarking.generate_comprehensive_summary
+python -m src.benchmarking.validate_runtime_suite
 ```
 
-The methodology and individual stage commands are in
-[`src/benchmarking/README.md`](src/benchmarking/README.md).
+Full benchmark methodology, independent-session commands, and the optional
+explicit CPU-affinity diagnostic are documented in
+[src/benchmarking/README.md](src/benchmarking/README.md).
 
-## 8. Results
+## Troubleshooting
 
-Cross-validation selected `k=19`. The following values are from one complete
-experiment run on the included environment. Each prediction time is a single
-model call inside the full pipeline, so it is separate from the repeated warm
-optimisation benchmark below and will vary by machine.
+- If the dataset is missing, confirm data/raw/default.xls exists or pass its
+  path with --data.
+- If Python reports a missing package, activate the environment and reinstall
+  requirements.txt.
+- If Weka cannot build, confirm that java -version and mvn -version both work.
+- If only Python is available, use python run_all.py --skip-weka.
+- Build the C++ input export and executable before running the optional
+  four-implementation benchmark suite.
 
-| Implementation | k | Accuracy | Precision | Recall | F1 | Balanced accuracy | ROC-AUC | Average precision | Prediction time (s) |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Custom Python KNN | 19 | 0.8088 | 0.6253 | 0.3384 | 0.4391 | 0.6404 | 0.7353 | 0.4853 | 0.824 |
-| scikit-learn | 19 | 0.8092 | 0.6271 | 0.3384 | 0.4395 | 0.6406 | 0.7354 | 0.4855 | 0.463 |
-| Weka IBk | 19 | 0.8090 | 0.6262 | 0.3384 | 0.4393 | 0.6405 | 0.7353 | 0.4856 | 3.445 |
-
-### Experimental C++ candidate result
-
-The separate native single-thread benchmark used 15 randomized paired trials
-on an Intel Core i5-14600KF. Median prediction times were 0.5902 seconds for
-pure C++20, 1.2529 seconds for accepted V5.1, and 0.9553 seconds for
-scikit-learn. C++ matched all 6,000 V5.1 predictions and positive-neighbour
-vote counts exactly. It passed both performance goals by median, although two
-of 15 C++ trials were outliers and the evidence covers one AVX2 Windows system.
-The candidate therefore remains experimental and does not change `run_all.py`
-or the headline three-implementation results above. Raw trials, environment
-details, and ratios are in `results/cpp_knn_benchmark.json`; parity and metrics
-are in `results/cpp_knn_correctness.json`.
-
-### Comprehensive runtime benchmark and figures
-
-The comprehensive four-implementation suite retained 20 randomized
-prediction-only runs per implementation. Its medians were 1.2617 seconds for
-accepted V5.1, 0.9550 seconds for scikit-learn, 5.9477 seconds for Weka, and
-0.6143 seconds for experimental C++. Five-run prepared-input full-pipeline
-medians were 1.3966, 1.0560, 14.8416, and 0.8435 seconds in the same order.
-The suite also measures fit/build time, training/query scaling, native and
-portable C++ configurations, estimated algorithm memory, agreement, and
-runtime/quality trade-offs. Raw timings, complete statistics, environment
-details, analysis, and 24 PNG/SVG figure pairs are in
-[`results/runtime_benchmarks/`](results/runtime_benchmarks/benchmark_summary.md).
-The new raw run order contains one high C++ timing outlier and adjacent
-scikit-learn anomaly; none were removed.
-
-## Custom KNN Performance Improvement
-
-The original custom implementation used a straightforward feature-by-feature
-distance calculation and sorted every training row. The optimised version
-precomputes training-vector norms, calculates exact squared Euclidean distances
-with NumPy matrix operations, and uses partial top-k selection. Square roots are
-only calculated when `kneighbors()` requests actual distances. It remains an
-exact brute-force KNN classifier with deterministic tie handling.
-
-The second optimisation pass reuses one distance workspace and partitions one
-query row at a time, avoiding a large temporary index matrix. Its exact fallback
-also uses partial selection instead of sorting all training rows. The third pass
-keeps the selected neighbour set unordered for uniform-vote prediction, avoids
-building selected-distance output that prediction discards, and calculates each
-query norm once per batch. Public `kneighbors()` still returns ordered neighbour
-indices with actual Euclidean distances.
-
-For prediction, the third pass ranks training rows with twice the score
-`0.5 * ||x||^2 - q dot x`. The omitted `||q||^2` term is constant for a query.
-Numerically ambiguous boundaries still use direct sum-of-squared-differences and
-deterministic training-row tie handling. The controlled checks and all 6,000
-real test rows had exact class and class-1 vote-fraction agreement with v2; this
-observed parity is not a proof for every possible float64 input.
-
-The fresh same-process benchmark used `k=19`, distance batch size 128, row-wise
-selection, NumPy 1.26.0 with OpenBLAS limited to one thread, one warm-up, and
-five alternating measured trials. The v2 median was 1.518 seconds (range
-1.502-1.545); the v3 median was 1.419 seconds (range 1.415-1.426), a 1.070x
-end-to-end speedup. First calls were 1.511 and 1.410 seconds. The exact fallback
-handled 38 of 6,000 queries. Phase profiling leaves row-wise partition as the
-largest cost at about 0.788 seconds.
-
-The fourth pass reduces that partition cost with a deterministic, label-free
-pilot of 1,024 distinct training positions. For each query, it finds the
-20th-smallest pilot score and scans the full score row, retaining every row at
-or below that threshold. At least 20 pilot rows meet the threshold, so a row
-above it cannot belong to the global first 20; keeping `<=` also preserves every
-threshold tie. The reduced candidate array then uses the same top-k boundary
-check and full-data numerical fallback as v3. All training scores are still
-computed and scanned, so this remains exact exhaustive selection for the v3
-score rows and retains linear search complexity.
-
-On the real test set, the retained candidate count had median 464, 95th
-percentile 656, and maximum 876 out of 24,000 rows. A 50% density guard uses the
-v3 full selector when broad ties make the filtered set large. The fresh
-nine-trial paired benchmark measured a v3 median of 1.411 seconds (range
-1.403-1.436) and a v4 median of 0.813 seconds (range 0.808-0.826), a 1.736x
-end-to-end speedup. First calls were 1.425 and 0.814 seconds. Classes and class-1
-vote fractions again matched for all 6,000 rows, and the direct fallback count
-remained 38. Matrix multiplication is now the largest measured phase.
-
-The fifth pass re-benchmarked the V4 design and reduced the prediction batch
-from 128 to 64. It also stores an augmented 34-column training matrix so one
-matrix multiplication directly produces `||x||^2 - 2(q dot x)`, eliminating
-the full score-workspace multiply and norm-add passes. The original V4
-acceptance median was 0.813 seconds. In the fresh nine-trial V5 comparison, the
-frozen V4 median was 0.832 seconds and V5 measured 0.754 seconds (range
-0.730-0.764), a 1.103x speedup. This is a 44.132x speedup over the historical
-33.281-second original baseline. NumPy/OpenBLAS remained limited to one thread,
-and all 6,000 classes and vote fractions matched frozen V4 exactly.
-
-The V5.1 pass keeps batch size 64 and stores a contiguous feature-major copy of
-the training data for the 38 exact direct-fallback queries. Under the fresh
-sustained-load comparison, frozen V5 measured 1.323 seconds and V5.1 measured
-1.278 seconds, a 1.035x speedup. Predictions and vote fractions remained exact.
-
-Historical and fresh summaries are in `results/custom_knn_optimization.csv`.
-The historical original baseline remains labelled with an unspecified run
-count rather than as a repeated-trial median.
-
-The v4 pilot-size search, raw paired trials, selection-only timings, phase
-profiles, tie-heavy density-guard check, and memory estimates are stored in
-`results/custom_knn_v4_benchmark.json`.
-
-The V5 batch-size sweep, score candidates, fallback and selection experiments,
-final raw trials, phase profile, parity checks, and memory estimates are stored
-in `results/custom_knn_v5_benchmark.json`.
-
-The V5.1 small-batch and feature-major fallback measurements are stored in
-`results/custom_knn_v5_1_benchmark.json`.
-
-Production dependencies were not upgraded for this pass. A newer compatible
-NumPy and scientific-Python stack can be benchmarked in an isolated environment,
-with backend gains reported separately from custom-classifier changes.
-
-Detailed values are stored in `results/metrics_comparison.csv`, while confusion
-counts and pairwise agreement are in their corresponding compact CSV files.
-
-![Cross-validation F1 by k](results/cv_f1_vs_k.png)
-![Metric comparison](results/metrics_comparison.png)
-![Prediction runtime comparison](results/runtime_comparison.png)
-
-## 9. Main Source Files
-
-- [`src/custom_knn/classifier.py`](src/custom_knn/classifier.py) contains the complete manual distance, neighbour-selection, voting, and classifier logic.
-- [`src/sklearn_knn/runner.py`](src/sklearn_knn/runner.py) configures the scikit-learn comparison.
-- [`weka/src/main/java/project/WekaIBkRunner.java`](weka/src/main/java/project/WekaIBkRunner.java)
-  configures and runs genuine Weka `IBk`.
-- [`src/preprocessing/pipeline.py`](src/preprocessing/pipeline.py) defines the training-fitted preprocessing pipeline.
-- [`src/tuning/search.py`](src/tuning/search.py) performs cross-validation and selects `k`.
-
-## 10. References
+## References
 
 - I-Cheng Yeh, [Default of Credit Card Clients](https://doi.org/10.24432/C55S3H),
   UCI Machine Learning Repository.
-- I. Yeh and C. Lien, "The comparisons of data mining techniques for the predictive accuracy of probability of default of credit card clients," *Expert Systems with Applications*, 2009, [doi:10.1016/j.eswa.2007.12.020](https://doi.org/10.1016/j.eswa.2007.12.020).
-- [scikit-learn `KNeighborsClassifier` documentation](https://scikit-learn.org/1.2/modules/generated/sklearn.neighbors.KNeighborsClassifier.html).
-- [Weka `IBk` documentation](https://weka.sourceforge.io/doc.stable/weka/classifiers/lazy/IBk.html).
-
-## 11. Troubleshooting
-
-- If the dataset is not found, confirm that `default.xls` exists under
-  `data/raw/` or pass its path with `--data`.
-- If Python reports a missing module, activate the virtual environment and run
-  `python -m pip install -r requirements.txt`.
-- If Weka cannot build, confirm that `java -version` and `mvn -version` work.
-- If only Python is available, run the experiment with `--skip-weka`.
+- I. Yeh and C. Lien, “The comparisons of data mining techniques for the
+  predictive accuracy of probability of default of credit card clients,”
+  *Expert Systems with Applications*, 2009,
+  [doi:10.1016/j.eswa.2007.12.020](https://doi.org/10.1016/j.eswa.2007.12.020).
+- [scikit-learn KNeighborsClassifier documentation](https://scikit-learn.org/1.2/modules/generated/sklearn.neighbors.KNeighborsClassifier.html).
+- [Weka IBk documentation](https://weka.sourceforge.io/doc.stable/weka/classifiers/lazy/IBk.html).

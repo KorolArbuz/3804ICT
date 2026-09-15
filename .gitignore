@@ -1,4 +1,5 @@
 .venv/
+/verification/
 __pycache__/
 *.py[cod]
 weka/target/
@@ -16,5 +17,10 @@ data/processed/
 results/predictions_*.csv
 results/*.runtime.json
 results/*.log
+results/cv_fold_metadata.json
+results/comparison_manifest.json
+results/mismatch_diagnostics.csv
 results/dataset_summary.json
 results/weka_evaluation.txt
+report_assets/source_hashes.json
+report_assets/appendix_source_code.md

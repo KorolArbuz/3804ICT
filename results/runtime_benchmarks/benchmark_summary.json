@@ -24,6 +24,68 @@
     "weka": 0.040033325249999585,
     "custom_cpp": 0.06634619999999991
   },
+  "prediction_bootstrap_95_ci_seconds": {
+    "custom_python_v5_1": [
+      1.248792250000406,
+      1.268758499994874
+    ],
+    "sklearn": [
+      0.9537382499838714,
+      0.9580886500189081
+    ],
+    "weka": [
+      5.923606449999999,
+      5.9574560000000005
+    ],
+    "custom_cpp": [
+      0.5859077500000001,
+      0.6502747
+    ]
+  },
+  "paired_speedup_summary": [
+    {
+      "comparison": "C++20 experimental",
+      "candidate_implementation": "custom_cpp",
+      "paired_trials": 20,
+      "median_speedup_factor": 2.0558048036557843,
+      "q1_speedup_factor": 1.9524038148684675,
+      "q3_speedup_factor": 2.1527547976912578,
+      "iqr_speedup_factor": 0.2003509828227903,
+      "min_speedup_factor": 0.7972973467151228,
+      "max_speedup_factor": 2.2019248676754,
+      "candidate_wins": 19,
+      "v5_1_wins": 1,
+      "ties": 0
+    },
+    {
+      "comparison": "scikit-learn",
+      "candidate_implementation": "sklearn",
+      "paired_trials": 20,
+      "median_speedup_factor": 1.3194366008857692,
+      "q1_speedup_factor": 1.3085851807864466,
+      "q3_speedup_factor": 1.3315032799340651,
+      "iqr_speedup_factor": 0.022918099147618554,
+      "min_speedup_factor": 1.2799809070570387,
+      "max_speedup_factor": 1.3442183697138708,
+      "candidate_wins": 20,
+      "v5_1_wins": 0,
+      "ties": 0
+    },
+    {
+      "comparison": "Weka IBk",
+      "candidate_implementation": "weka",
+      "paired_trials": 20,
+      "median_speedup_factor": 0.21234119586127184,
+      "q1_speedup_factor": 0.2099413830000479,
+      "q3_speedup_factor": 0.21420228804689595,
+      "iqr_speedup_factor": 0.0042609050468480625,
+      "min_speedup_factor": 0.20848798647293879,
+      "max_speedup_factor": 0.2702052112028716,
+      "candidate_wins": 0,
+      "v5_1_wins": 20,
+      "ties": 0
+    }
+  ],
   "full_pipeline_medians_seconds": {
     "custom_python_v5_1": 1.3965525000239722,
     "sklearn": 1.0559556999942288,
@@ -104,6 +166,28 @@
       "r_squared": 0.9735313782545778
     }
   },
+  "cpp_process_mode_summary": {
+    "fresh_process": {
+      "mode": "fresh_process",
+      "runs": "20",
+      "median_seconds": "0.59753525",
+      "iqr_seconds": "0.04473885",
+      "min_seconds": "0.5830857",
+      "max_seconds": "1.5456861",
+      "outlier_count_1_5_iqr": "1"
+    },
+    "persistent_process": {
+      "mode": "persistent_process",
+      "runs": "20",
+      "median_seconds": "1.27639245",
+      "iqr_seconds": "0.81506865",
+      "min_seconds": "0.6202447",
+      "max_seconds": "1.4546633",
+      "outlier_count_1_5_iqr": "0"
+    }
+  },
+  "real_session_count": 1,
+  "affinity_diagnostic_collected": false,
   "cpp_status": "experimental candidate",
   "cpp_correctness": "6000/6000 labels, positive-neighbour counts, and vote fractions exact",
   "source": "runtime_summary.json"

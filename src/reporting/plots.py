@@ -134,6 +134,8 @@ def plot_results(results_dir=RESULTS_DIR, output_dir=None):
     save(figure, output_dir / "runtime_comparison.png")
 
     for row in metrics.itertuples(index=False):
+        if row.implementation != "custom":
+            continue
         matrix = np.array([[row.TN, row.FP], [row.FN, row.TP]], dtype=int)
         figure, axis = plt.subplots(figsize=(5, 4.5))
         rendered = axis.imshow(matrix, cmap="Blues", vmin=0)
@@ -162,4 +164,4 @@ def plot_results(results_dir=RESULTS_DIR, output_dir=None):
         figure.colorbar(rendered, ax=axis, label="Test samples")
         save(figure, output_dir / f"confusion_matrix_{row.implementation}.png")
 
-    print(f"Generated {3 + len(metrics)} measured-result charts -> {output_dir}")
+    print(f"Generated 4 measured-result charts -> {output_dir}")

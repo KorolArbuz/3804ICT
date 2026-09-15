@@ -24,15 +24,28 @@ def _save(fig, stem):
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
     fig.tight_layout(pad=1.5)
     fig.savefig(FIGURES_DIR / f"{stem}.png", dpi=220, facecolor="white")
-    fig.savefig(FIGURES_DIR / f"{stem}.svg", facecolor="white")
+    svg_path = FIGURES_DIR / f"{stem}.svg"
+    fig.savefig(svg_path, facecolor="white")
     plt.close(fig)
+    svg = svg_path.read_text(encoding="utf-8")
+    svg_path.write_text(
+        "\n".join(line.rstrip() for line in svg.splitlines()) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
 
 
-def _bar(values, title, ylabel, stem, labels=None, colors=None, value_format="{:.3f}"):
+def _bar(
+    values, title, ylabel, stem, labels=None, colors=None,
+    value_format="{:.3f}", yerr=None,
+):
     labels = labels or [SHORT_NAMES[name] for name in IMPLEMENTATIONS]
     colors = colors or [COLORS[name] for name in IMPLEMENTATIONS]
     fig, ax = plt.subplots(figsize=(8.2, 5.0))
-    bars = ax.bar(labels, values, color=colors, edgecolor="#333333", linewidth=0.6)
+    bars = ax.bar(
+        labels, values, color=colors, edgecolor="#333333", linewidth=0.6,
+        yerr=yerr, capsize=4 if yerr is not None else 0,
+    )
     ax.set_title(title, fontsize=13, pad=12)
     ax.set_ylabel(ylabel)
     ax.set_ylim(bottom=0)
@@ -42,13 +55,22 @@ def _bar(values, title, ylabel, stem, labels=None, colors=None, value_format="{:
 
 
 def _prediction_figures(summary):
-    medians = {row["implementation"]: row["median_seconds"] for row in summary["prediction_only"]}
+    statistics = {row["implementation"]: row for row in summary["prediction_only"]}
+    medians = {name: statistics[name]["median_seconds"] for name in IMPLEMENTATIONS}
     values = [medians[name] for name in IMPLEMENTATIONS]
+    intervals = np.asarray([
+        (
+            statistics[name]["median_seconds"] - statistics[name]["median_ci95_low"],
+            statistics[name]["median_ci95_high"] - statistics[name]["median_seconds"],
+        )
+        for name in IMPLEMENTATIONS
+    ]).T
     _bar(
         values,
-        "Prediction runtime for one complete test-set pass",
+        "Controlled prediction runtime with bootstrap 95% intervals",
         "Median prediction time (seconds)",
         "prediction_runtime_controlled",
+        yerr=intervals,
     )
     raw = read_rows(BENCHMARK_DIR / "raw_prediction_runs.csv")
     grouped = {
@@ -98,30 +120,15 @@ def _prediction_figures(summary):
         "prediction_throughput",
         value_format="{:.0f}",
     )
-    milliseconds = [1000 * medians[name] / 6000 for name in IMPLEMENTATIONS]
-    _bar(
-        milliseconds,
-        "Average prediction time per query",
-        "Milliseconds per query",
-        "milliseconds_per_query",
-        value_format="{:.3f}",
-    )
 
 
 def _pipeline_figures(summary):
     pipeline = {row["implementation"]: row["median_seconds"] for row in summary["full_pipeline"]}
-    fit = {row["implementation"]: row["median_seconds"] for row in summary["fit_build"]}
     _bar(
         [pipeline[name] for name in IMPLEMENTATIONS],
-        "End-to-end experiment runtime",
+        "Prepared-input implementation pipeline runtime",
         "Median prepared-input pipeline time (seconds)",
         "full_pipeline_runtime_comprehensive",
-    )
-    _bar(
-        [fit[name] for name in IMPLEMENTATIONS],
-        "Model fit/build time",
-        "Median fit/build time (seconds)",
-        "fit_build_runtime",
     )
 
 
@@ -132,44 +139,23 @@ def _history_figures(summary):
     ]
     labels = [row["version"] for row in accepted]
     runtimes = [float(row["median_runtime_seconds"]) for row in accepted]
-    colors = ["#4c78a8"] * (len(labels) - 1) + [COLORS["custom_cpp"]]
-    for scale, stem in (("linear", "custom_optimization_history_linear"), ("log", "custom_optimization_history_log")):
-        fig, ax = plt.subplots(figsize=(9.5, 5.2))
-        ax.plot(labels, runtimes, color="#4c78a8", marker="o", linewidth=1.8)
-        ax.scatter(labels[-1], runtimes[-1], color=colors[-1], zorder=3, label="Experimental C++")
-        for x, runtime, row in zip(labels, runtimes, accepted):
-            ax.annotate(f"{row['speedup_vs_original']:.1f}x", (x, runtime), xytext=(0, 7), textcoords="offset points", ha="center", fontsize=8)
-        ax.set_title("Custom KNN optimization history", fontsize=13, pad=12)
-        ax.set_ylabel("Prediction time (seconds)" + (" — logarithmic scale" if scale == "log" else ""))
-        ax.set_xlabel("Implementation version")
-        if scale == "linear":
-            ax.set_ylim(bottom=0)
-        else:
-            ax.set_yscale("log")
-            ax.set_ylim(min(runtimes) * 0.65, max(runtimes) * 1.7)
-        ax.grid(axis="y", alpha=0.25)
-        if scale == "log":
-            ax.legend(fontsize=9)
-        _save(fig, stem)
-    _bar(
-        [row["speedup_vs_original"] for row in accepted],
-        "Speedup relative to the original custom implementation",
-        "Recorded speedup factor (higher is faster)",
-        "speedup_vs_original",
-        labels=labels,
-        colors=colors,
-        value_format="{:.1f}x",
+    fig, ax = plt.subplots(figsize=(9.5, 5.2))
+    ax.plot(labels, runtimes, color="#4c78a8", marker="o", linewidth=1.8)
+    ax.scatter(
+        labels[-1], runtimes[-1], color=COLORS["custom_cpp"],
+        zorder=3, label="Experimental C++",
     )
-    prediction = {row["implementation"]: row["median_seconds"] for row in summary["prediction_only"]}
-    baseline = prediction["custom_python_v5_1"]
-    _bar(
-        [baseline / prediction[name] for name in IMPLEMENTATIONS],
-        "Relative prediction performance vs Python V5.1",
-        "Speedup = V5.1 runtime / implementation runtime (>1 is faster)",
-        "speedup_vs_v5_1_comprehensive",
-        value_format="{:.2f}x",
+    ax.set_title(
+        "Historical custom KNN timings (mixed benchmark sessions)",
+        fontsize=13, pad=12,
     )
-
+    ax.set_ylabel("Recorded prediction time (seconds, logarithmic scale)")
+    ax.set_xlabel("Implementation version")
+    ax.set_yscale("log")
+    ax.set_ylim(min(runtimes) * 0.65, max(runtimes) * 1.7)
+    ax.grid(axis="y", alpha=0.25)
+    ax.legend(fontsize=9)
+    _save(fig, "custom_optimization_history_log")
 
 def _phase_figure():
     profile = read_json(Path("data/processed/v5_local/final_profile.json"))["median_phase_seconds"]
@@ -206,15 +192,6 @@ def _cpp_figures(summary):
     ax.grid(axis="x", alpha=0.25)
     ax.bar_label(bars, labels=[f"{value:.3f}" for value in reversed(values)], padding=3, fontsize=8)
     _save(fig, "cpp_configuration_screen")
-    heap32 = [row for row in rows if row["selection_method"] == "bounded max-heap" and row["batch_size"] == 32]
-    _bar(
-        [row["median_seconds"] for row in heap32],
-        "C++ Release build comparison",
-        "Median prediction time (seconds)",
-        "cpp_build_comparison",
-        labels=[row["build"].title() for row in heap32],
-        colors=["#9c9c9c", "#e15759"],
-    )
 
 
 def _scaling_figure(rows, size_field, title, stem):
@@ -235,25 +212,8 @@ def _scaling_figure(rows, size_field, title, stem):
 
 
 def _quality_figures(summary):
-    runtimes = {row["implementation"]: row["median_seconds"] for row in summary["prediction_only"]}
     quality = {row["implementation"]: row for row in summary["quality_metrics"]}
     quality["custom_python_v5_1"] = quality["custom"]
-    for metric, title, stem in (
-        ("f1", "Runtime vs classification F1", "runtime_vs_f1"),
-        ("accuracy", "Runtime vs classification accuracy", "runtime_vs_accuracy"),
-    ):
-        fig, ax = plt.subplots(figsize=(8.0, 5.0))
-        for name in IMPLEMENTATIONS:
-            metric_name = "custom_cpp" if name == "custom_cpp" else name
-            point = quality[metric_name]
-            ax.scatter(runtimes[name], float(point[metric]), s=70, color=COLORS[name], edgecolor="#333333")
-            ax.annotate(SHORT_NAMES[name].replace("\n", " "), (runtimes[name], float(point[metric])), xytext=(5, 5), textcoords="offset points", fontsize=8)
-        ax.set_title(title, fontsize=13, pad=12)
-        ax.set_xlabel("Median prediction time (seconds)")
-        ax.set_ylabel(metric.upper() if metric == "f1" else "Accuracy")
-        ax.grid(alpha=0.25)
-        _save(fig, stem)
-
     custom = quality["custom"]
     matrix = np.array([[int(custom["TN"]), int(custom["FP"])], [int(custom["FN"]), int(custom["TP"])]])
     fig, ax = plt.subplots(figsize=(5.8, 5.0))
@@ -290,7 +250,6 @@ def _cv_figures():
     k = np.asarray([int(row["k"]) for row in rows])
     for metric, title, stem in (
         ("f1", "Cross-validation F1 by number of neighbours", "cv_f1_by_k_comprehensive"),
-        ("balanced_accuracy", "Cross-validation balanced accuracy by number of neighbours", "cv_balanced_accuracy_by_k"),
     ):
         mean = np.asarray([float(row[f"{metric}_mean"]) for row in rows])
         std = np.asarray([float(row[f"{metric}_std"]) for row in rows])
@@ -336,6 +295,122 @@ def _rejected_figure(summary):
     _save(fig, "rejected_optimization_experiments")
 
 
+def _paired_speedup_figure(summary):
+    candidates = (
+        ("custom_cpp", "C++20 experimental"),
+        ("sklearn", "scikit-learn"),
+        ("weka", "Weka IBk"),
+    )
+    grouped = [
+        [
+            row["speedup_factor"]
+            for row in summary["paired_speedups"]
+            if row["comparison"] == comparison
+        ]
+        for name, comparison in candidates
+    ]
+    fig, ax = plt.subplots(figsize=(8.4, 5.2))
+    plot = ax.boxplot(
+        grouped,
+        labels=[SHORT_NAMES[name].replace("\n", " ") for name, _ in candidates],
+        showmeans=True,
+        patch_artist=True,
+        medianprops={"color": "black", "linewidth": 1.4},
+        meanprops={
+            "marker": "D", "markerfacecolor": "white",
+            "markeredgecolor": "black", "markersize": 5,
+        },
+    )
+    for patch, (name, _) in zip(plot["boxes"], candidates):
+        patch.set_facecolor(COLORS[name])
+        patch.set_alpha(0.78)
+    for position, values in enumerate(grouped, start=1):
+        ax.scatter([position] * len(values), values, s=16, color="#333333", alpha=0.55)
+    ax.axhline(1.0, color="#555555", linestyle="--", linewidth=1.2, label="Equal runtime")
+    ax.set_title("Paired trial speedup relative to accepted Python V5.1")
+    ax.set_ylabel("Paired speedup vs Python V5.1 (>1 is faster)")
+    ax.grid(axis="y", alpha=0.25)
+    ax.legend(fontsize=9)
+    _save(fig, "paired_speedup_distribution")
+
+
+def _cpp_process_figure():
+    path = BENCHMARK_DIR / "cpp_process_mode_diagnostic.csv"
+    if not path.exists():
+        return False
+    rows = read_rows(path)
+    modes = ("fresh_process", "persistent_process")
+    grouped = [
+        [float(row["runtime_seconds"]) for row in rows if row["mode"] == mode]
+        for mode in modes
+    ]
+    fig, ax = plt.subplots(figsize=(7.6, 5.0))
+    ax.boxplot(grouped, labels=["Fresh process", "Persistent process"], showmeans=True)
+    for position, values in enumerate(grouped, start=1):
+        ax.scatter([position] * len(values), values, s=18, color="#e15759", alpha=0.6)
+    ax.set_title("C++ prediction timing by process mode")
+    ax.set_ylabel("Internal prediction time (seconds)")
+    ax.grid(axis="y", alpha=0.25)
+    _save(fig, "cpp_process_mode_distribution")
+    return True
+
+
+def _session_figure():
+    path = BENCHMARK_DIR / "session_summary.csv"
+    if not path.exists():
+        return False
+    rows = read_rows(path)
+    session_ids = sorted({row["session_id"] for row in rows})
+    x = list(range(len(session_ids)))
+    fig, ax = plt.subplots(figsize=(8.8, 5.2))
+    for name in IMPLEMENTATIONS:
+        values = [
+            next(
+                float(row["median"])
+                for row in rows
+                if row["session_id"] == session and row["implementation"] == name
+            )
+            for session in session_ids
+        ]
+        ax.plot(
+            x, values, marker="o", linewidth=1.6,
+            color=COLORS[name], label=DISPLAY_NAMES[name],
+        )
+    ax.set_xticks(x, session_ids, rotation=20, ha="right")
+    ax.set_yscale("log")
+    ax.set_ylabel("Session median prediction time (seconds, log scale)")
+    ax.set_title("Prediction runtime by independent benchmark session")
+    ax.grid(alpha=0.25)
+    ax.legend(fontsize=8)
+    _save(fig, "runtime_by_session")
+    return True
+
+
+def _affinity_figure():
+    path = BENCHMARK_DIR / "affinity_stability_diagnostic.csv"
+    if not path.exists():
+        return False
+    rows = [row for row in read_rows(path) if row["warmup"] == "false"]
+    grouped = []
+    labels = []
+    for mode in ("unpinned", "pinned"):
+        for name in ("custom_python_v5_1", "sklearn", "custom_cpp"):
+            grouped.append([
+                float(row["runtime_seconds"])
+                for row in rows
+                if row["affinity_mode"] == mode and row["implementation"] == name
+            ])
+            labels.append(f"{mode.title()}\n{SHORT_NAMES[name].replace(chr(10), ' ')}")
+    fig, ax = plt.subplots(figsize=(9.0, 5.2))
+    ax.boxplot(grouped, labels=labels, showmeans=True)
+    ax.set_title("Optional CPU-affinity stability diagnostic")
+    ax.set_ylabel("Prediction time (seconds)")
+    ax.set_yscale("log")
+    ax.grid(axis="y", alpha=0.25)
+    _save(fig, "affinity_stability_comparison")
+    return True
+
+
 def _write_index(entries):
     lines = ["# Figure index", "", "All plots are generated from saved artifacts by `python -m src.benchmarking.generate_figures`.", ""]
     for stem, description, source, section, interpretation in entries:
@@ -356,40 +431,59 @@ def main():
     _history_figures(summary)
     _phase_figure()
     _cpp_figures(summary)
-    _scaling_figure(summary["training_size_scaling"], "train_rows", "Prediction runtime vs training-set size", "runtime_vs_training_size")
-    _scaling_figure(summary["query_size_scaling"], "query_rows", "Prediction runtime vs number of queries", "runtime_vs_query_count")
+    _scaling_figure(
+        summary["training_size_scaling"],
+        "train_rows",
+        "Prediction runtime vs training-set size",
+        "runtime_vs_training_size",
+    )
+    _scaling_figure(
+        summary["query_size_scaling"],
+        "query_rows",
+        "Prediction runtime vs number of queries",
+        "runtime_vs_query_count",
+    )
     _quality_figures(summary)
     _cv_figures()
     _memory_figure(summary)
     _rejected_figure(summary)
+    _paired_speedup_figure(summary)
+    has_process = _cpp_process_figure()
+    has_session = _session_figure()
+    has_affinity = _affinity_figure()
+
     entries = [
-        ("prediction_runtime_controlled", "controlled 6,000-query median runtime", "raw_prediction_runs.csv", "Prediction-only performance", "C++ has the lowest median; Weka has the highest."),
+        ("prediction_runtime_controlled", "controlled medians and deterministic bootstrap 95% intervals", "raw_prediction_runs.csv", "Prediction-only performance", "All raw timings, including outliers, contribute to the intervals."),
         ("prediction_runtime_distribution_comprehensive", "all controlled prediction observations and outliers", "raw_prediction_runs.csv", "Stability and outliers", "C++ retains a high implementation-specific outlier."),
-        ("prediction_runtime_run_order_comprehensive", "actual interleaved timing sequence", "raw_prediction_runs.csv", "Stability and outliers", "Sequence context separates shared machine state from isolated outliers."),
-        ("full_pipeline_runtime_comprehensive", "five-run prepared-input pipeline medians", "raw_full_pipeline_runs.csv", "Full-pipeline performance", "C++ is fastest while Weka includes substantial build and JVM overhead."),
-        ("fit_build_runtime", "internal fit/build medians", "raw_full_pipeline_runs.csv", "Full-pipeline performance", "Fit scopes differ and should be compared cautiously."),
-        ("custom_optimization_history_linear", "recorded optimization history on a linear scale", "historical_optimization.csv", "Custom optimization history", "Most runtime reduction occurred in early optimization stages."),
-        ("custom_optimization_history_log", "recorded optimization history on a log scale", "historical_optimization.csv", "Custom optimization history", "The log view makes later version differences visible."),
-        ("speedup_vs_original", "recorded speedup relative to Original", "historical_optimization.csv", "Custom optimization history", "Historical and current measurement regimes are labelled separately."),
-        ("speedup_vs_v5_1_comprehensive", "current controlled speedup relative to V5.1", "prediction_runtime_statistics.csv", "Prediction-only performance", "Values above one are faster than accepted V5.1."),
-        ("v5_phase_breakdown", "trusted V5 phase medians", "data/processed/v5_local/final_profile.json", "Custom optimization history", "Matrix scoring dominates the measured V5 phases."),
-        ("cpp_configuration_screen", "native and portable selection/batch configurations", "raw_cpp_configuration.csv", "C++ configuration experiments", "Native heap/batch 32 is the report configuration."),
-        ("runtime_vs_training_size", "runtime over nested training prefixes", "raw_scaling_train.csv", "Training-size scalability", "Observed growth is broadly linear but has machine-state discontinuities."),
-        ("runtime_vs_query_count", "runtime over nested query prefixes", "raw_scaling_queries.csv", "Query-count scalability", "Runtime generally rises with query count; Weka includes a fast-state anomaly."),
-        ("prediction_throughput", "queries per second at controlled medians", "prediction_runtime_statistics.csv", "Prediction-only performance", "C++ processes the most queries per second."),
-        ("milliseconds_per_query", "average median time per query", "prediction_runtime_statistics.csv", "Prediction-only performance", "Per-query cost mirrors the full-pass comparison."),
-        ("runtime_vs_f1", "prediction median against final F1", "quality_metrics.csv", "Runtime versus quality", "Quality is nearly unchanged while runtime varies substantially."),
-        ("runtime_vs_accuracy", "prediction median against final accuracy", "quality_metrics.csv", "Runtime versus quality", "Tiny accuracy differences should not be overinterpreted."),
-        ("confusion_matrix_v5_1", "accepted V5.1 confusion counts", "confusion_counts.csv", "Correctness and quality", "C++ shares this matrix because its outputs are exact."),
+        ("prediction_runtime_run_order_comprehensive", "the actual interleaved timing sequence", "raw_prediction_runs.csv", "Stability and outliers", "Sequence context helps assess shared machine-state effects."),
+        ("paired_speedup_distribution", "trial-paired speedup distributions relative to V5.1", "paired_speedups.csv", "Prediction-only performance", "Pairing by trial index preserves shared run context; values above one favor the candidate."),
+        ("runtime_vs_training_size", "runtime over nested training prefixes", "raw_scaling_train.csv", "Training-size scalability", "Observed growth is broadly linear over the tested range."),
+        ("runtime_vs_query_count", "runtime over nested query prefixes", "raw_scaling_queries.csv", "Query-count scalability", "Runtime generally rises with query count."),
+        ("cpp_configuration_screen", "native and portable C++ selection/batch configurations", "raw_cpp_configuration.csv", "C++ configuration experiments", "Native heap/batch 32 is the report configuration."),
+        ("custom_optimization_history_log", "recorded optimization history on a log scale", "historical_optimization.csv", "Custom optimization history", "Points come from mixed sessions and are historical context, not a controlled speedup series."),
         ("cv_f1_by_k_comprehensive", "mean CV F1 with standard-deviation bars", "results/cv_results_summary.csv", "Model selection", "The marked k=19 is the selected parameter."),
-        ("cv_balanced_accuracy_by_k", "mean CV balanced accuracy with uncertainty", "results/cv_results_summary.csv", "Model selection", "Balanced accuracy changes little near the selected k."),
+        ("confusion_matrix_v5_1", "accepted V5.1 confusion counts", "confusion_counts.csv", "Correctness and quality", "C++ shares this matrix because its outputs are exact."),
         ("implementation_agreement_heatmap", "pairwise class agreement", "correctness_summary.csv", "Correctness and quality", "All pairs exceed 99.96%; C++ and V5.1 are identical."),
-        ("auxiliary_memory_comparison", "comparable estimated major workspaces", "memory_storage.csv", "Memory behavior", "The fused C++ heap uses far less algorithm workspace."),
-        ("cpp_build_comparison", "portable versus native heap/batch-32 builds", "cpp_configuration_summary.csv", "C++ configuration experiments", "Native AVX2/LTO materially improves this machine's runtime."),
-        ("rejected_optimization_experiments", "candidate/reference runtime ratios", "rejected_optimization_experiments.csv", "Rejected experiments", "Every candidate remains rejected under its documented acceptance evidence."),
+        ("full_pipeline_runtime_comprehensive", "five-run prepared-input implementation pipeline medians", "raw_full_pipeline_runs.csv", "Prepared-input pipeline performance", "C++ is fastest while Weka includes substantial build and JVM overhead."),
+        ("prediction_throughput", "queries per second at controlled medians", "prediction_runtime_statistics.csv", "Prediction-only performance", "C++ processes the most queries per second."),
+        ("v5_phase_breakdown", "trusted V5 phase medians", "data/processed/v5_local/final_profile.json", "Custom optimization history", "Matrix scoring dominates the measured V5 phases."),
+        ("auxiliary_memory_comparison", "comparable estimated major workspaces", "raw_memory.csv", "Memory behavior", "The fused C++ heap uses less algorithm workspace."),
+        ("rejected_optimization_experiments", "candidate/reference runtime ratios", "rejected_optimization_experiments.csv", "Rejected experiments", "Every candidate remains rejected under its recorded evidence."),
     ]
+    if has_process:
+        entries.append(
+            ("cpp_process_mode_distribution", "20 fresh-process and 20 persistent-process C++ timings", "cpp_process_mode_diagnostic.csv", "Runtime stability", "The diagnostic tests whether process reuse explains C++ variability.")
+        )
+    if has_session:
+        entries.append(
+            ("runtime_by_session", "median runtime for each completed real session", "session_summary.csv", "Cross-session reproducibility", "More independent sessions are needed before making a reproducibility claim.")
+        )
+    if has_affinity:
+        entries.append(
+            ("affinity_stability_comparison", "explicit-CPU pinned and unpinned timing distributions", "affinity_stability_diagnostic.csv", "Runtime stability", "This optional diagnostic appears only when actual measurements exist.")
+        )
     _write_index(entries)
-    print(f"Generated {len(entries)} comprehensive figures as PNG and SVG -> {FIGURES_DIR}")
+    print(f"Generated {len(entries)} compact figures as PNG and SVG -> {FIGURES_DIR}")
     return 0
 
 

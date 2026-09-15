@@ -22,7 +22,6 @@ from .benchmark_utils import (
     run_weka_prediction,
     timed_python_prediction,
     timestamp,
-    write_json,
     write_rows,
 )
 
@@ -205,7 +204,6 @@ def main(argv=None):
     if timed_hashes["custom_cpp"] != timed_hashes["custom_python_v5_1"]:
         raise AssertionError("C++ no longer exactly matches accepted V5.1")
     write_rows(args.output, rows, FIELDS)
-    write_json(args.output.with_suffix(".json"), rows)
     print(f"Controlled prediction benchmark: {len(rows) - 4} timed rows -> {args.output}")
     return 0
 

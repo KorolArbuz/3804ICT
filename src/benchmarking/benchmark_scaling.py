@@ -22,7 +22,6 @@ from .benchmark_utils import (
     run_weka_prediction,
     timed_python_prediction,
     timestamp,
-    write_json,
     write_rows,
 )
 
@@ -216,7 +215,6 @@ def _measure_mode(
             raise AssertionError(f"{dimension}={size}: C++ and V5.1 differ")
         print(f"Scaling point complete: {dimension}={size}", flush=True)
     write_rows(output, rows, FIELDS)
-    write_json(output.with_suffix(".json"), rows)
 
 
 def main(argv=None):

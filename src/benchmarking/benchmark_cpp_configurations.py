@@ -8,7 +8,7 @@ from pathlib import Path
 from src.common.config import PROCESSED_DATA_DIR, RESULTS_DIR
 from src.cpp_knn.evidence import sha256_file
 
-from .benchmark_utils import BENCHMARK_DIR, read_json, run_cpp_prediction, timestamp, write_json, write_rows
+from .benchmark_utils import BENCHMARK_DIR, read_json, run_cpp_prediction, timestamp, write_rows
 
 
 FIELDS = (
@@ -95,7 +95,6 @@ def main(argv=None):
                 })
             print(f"C++ screen: {build}/{selection}/batch {batch_size}", flush=True)
     write_rows(args.output, rows, FIELDS)
-    write_json(args.output.with_suffix(".json"), rows)
     print(f"C++ configuration screen: {len(rows)} rows -> {args.output}")
     return 0
 

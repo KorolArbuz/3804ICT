@@ -1,4 +1,4 @@
-"""Measure complete per-implementation runs from prepared inputs through metrics."""
+"""Measure prepared-input implementation runs through prediction and metrics."""
 
 import argparse
 import random
@@ -23,7 +23,6 @@ from .benchmark_utils import (
     run_cpp_prediction,
     run_weka_prediction,
     timestamp,
-    write_json,
     write_rows,
 )
 
@@ -106,7 +105,7 @@ def main(argv=None):
         default=RESULTS_DIR / "selected_parameters.json",
     )
     parser.add_argument(
-        "--output", type=Path, default=BENCHMARK_DIR / "raw_full_pipeline_benchmark.csv"
+        "--output", type=Path, default=BENCHMARK_DIR / "raw_full_pipeline_runs.csv"
     )
     parser.add_argument("--seed", type=int, default=3804)
     args = parser.parse_args(argv)
@@ -177,7 +176,6 @@ def main(argv=None):
                     })
 
     write_rows(args.output, rows, FIELDS)
-    write_json(args.output.with_suffix(".json"), rows)
     medians = {}
     for name in IMPLEMENTATIONS:
         values = [
@@ -187,7 +185,7 @@ def main(argv=None):
         ]
         medians[name] = float(np.median(values))
     print(
-        "Full-pipeline benchmark complete: "
+        "Prepared-input implementation pipeline benchmark complete: "
         + ", ".join(f"{name}={value:.3f}s" for name, value in medians.items()),
         flush=True,
     )
@@ -197,4 +195,3 @@ def main(argv=None):
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
