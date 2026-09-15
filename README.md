@@ -133,15 +133,16 @@ mvn -f weka/pom.xml clean package
 
 ## 8. Results
 
-Cross-validation selected `k=19`. The following values are from the included
-experiment result tables; prediction time is machine-dependent and varies
-between runs.
+Cross-validation selected `k=19`. The following values are from one complete
+experiment run on the included environment. Each prediction time is a single
+model call inside the full pipeline, so it is separate from the repeated warm
+optimisation benchmark below and will vary by machine.
 
 | Implementation | k | Accuracy | Precision | Recall | F1 | Balanced accuracy | ROC-AUC | Average precision | Prediction time (s) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Custom Python KNN | 19 | 0.8088 | 0.6253 | 0.3384 | 0.4391 | 0.6404 | 0.7353 | 0.4853 | 2.480 |
-| scikit-learn | 19 | 0.8092 | 0.6271 | 0.3384 | 0.4395 | 0.6406 | 0.7354 | 0.4855 | 0.952 |
-| Weka IBk | 19 | 0.8090 | 0.6262 | 0.3384 | 0.4393 | 0.6405 | 0.7353 | 0.4856 | 5.928 |
+| Custom Python KNN | 19 | 0.8088 | 0.6253 | 0.3384 | 0.4391 | 0.6404 | 0.7353 | 0.4853 | 0.824 |
+| scikit-learn | 19 | 0.8092 | 0.6271 | 0.3384 | 0.4395 | 0.6406 | 0.7354 | 0.4855 | 0.463 |
+| Weka IBk | 19 | 0.8090 | 0.6262 | 0.3384 | 0.4393 | 0.6405 | 0.7353 | 0.4856 | 3.445 |
 
 ## Custom KNN Performance Improvement
 
@@ -154,16 +155,79 @@ exact brute-force KNN classifier with deterministic tie handling.
 
 The second optimisation pass reuses one distance workspace and partitions one
 query row at a time, avoiding a large temporary index matrix. Its exact fallback
-also uses partial selection instead of sorting all training rows. Benchmarking
-selected batch size 128 because it had the fastest median and used half the
-workspace memory of the effectively tied batch size 256.
+also uses partial selection instead of sorting all training rows. The third pass
+keeps the selected neighbour set unordered for uniform-vote prediction, avoids
+building selected-distance output that prediction discards, and calculates each
+query norm once per batch. Public `kneighbors()` still returns ordered neighbour
+indices with actual Euclidean distances.
 
-On the same processed data, the five-run single-thread median decreased from
-1.980 seconds for v1 to 1.505 seconds for v2, with a range of 1.496–1.512
-seconds. This is 1.32x faster than v1 and 22.11x faster than the original
-33.281-second baseline. Predicted classes and class-1 probabilities matched v1
-for all 6,000 test rows. The measured comparison is stored in
-`results/custom_knn_optimization.csv`.
+For prediction, the third pass ranks training rows with twice the score
+`0.5 * ||x||^2 - q dot x`. The omitted `||q||^2` term is constant for a query.
+Numerically ambiguous boundaries still use direct sum-of-squared-differences and
+deterministic training-row tie handling. The controlled checks and all 6,000
+real test rows had exact class and class-1 vote-fraction agreement with v2; this
+observed parity is not a proof for every possible float64 input.
+
+The fresh same-process benchmark used `k=19`, distance batch size 128, row-wise
+selection, NumPy 1.26.0 with OpenBLAS limited to one thread, one warm-up, and
+five alternating measured trials. The v2 median was 1.518 seconds (range
+1.502-1.545); the v3 median was 1.419 seconds (range 1.415-1.426), a 1.070x
+end-to-end speedup. First calls were 1.511 and 1.410 seconds. The exact fallback
+handled 38 of 6,000 queries. Phase profiling leaves row-wise partition as the
+largest cost at about 0.788 seconds.
+
+The fourth pass reduces that partition cost with a deterministic, label-free
+pilot of 1,024 distinct training positions. For each query, it finds the
+20th-smallest pilot score and scans the full score row, retaining every row at
+or below that threshold. At least 20 pilot rows meet the threshold, so a row
+above it cannot belong to the global first 20; keeping `<=` also preserves every
+threshold tie. The reduced candidate array then uses the same top-k boundary
+check and full-data numerical fallback as v3. All training scores are still
+computed and scanned, so this remains exact exhaustive selection for the v3
+score rows and retains linear search complexity.
+
+On the real test set, the retained candidate count had median 464, 95th
+percentile 656, and maximum 876 out of 24,000 rows. A 50% density guard uses the
+v3 full selector when broad ties make the filtered set large. The fresh
+nine-trial paired benchmark measured a v3 median of 1.411 seconds (range
+1.403-1.436) and a v4 median of 0.813 seconds (range 0.808-0.826), a 1.736x
+end-to-end speedup. First calls were 1.425 and 0.814 seconds. Classes and class-1
+vote fractions again matched for all 6,000 rows, and the direct fallback count
+remained 38. Matrix multiplication is now the largest measured phase.
+
+The fifth pass re-benchmarked the V4 design and reduced the prediction batch
+from 128 to 64. It also stores an augmented 34-column training matrix so one
+matrix multiplication directly produces `||x||^2 - 2(q dot x)`, eliminating
+the full score-workspace multiply and norm-add passes. The original V4
+acceptance median was 0.813 seconds. In the fresh nine-trial V5 comparison, the
+frozen V4 median was 0.832 seconds and V5 measured 0.754 seconds (range
+0.730-0.764), a 1.103x speedup. This is a 44.132x speedup over the historical
+33.281-second original baseline. NumPy/OpenBLAS remained limited to one thread,
+and all 6,000 classes and vote fractions matched frozen V4 exactly.
+
+The V5.1 pass keeps batch size 64 and stores a contiguous feature-major copy of
+the training data for the 38 exact direct-fallback queries. Under the fresh
+sustained-load comparison, frozen V5 measured 1.323 seconds and V5.1 measured
+1.278 seconds, a 1.035x speedup. Predictions and vote fractions remained exact.
+
+Historical and fresh summaries are in `results/custom_knn_optimization.csv`.
+The historical original baseline remains labelled with an unspecified run
+count rather than as a repeated-trial median.
+
+The v4 pilot-size search, raw paired trials, selection-only timings, phase
+profiles, tie-heavy density-guard check, and memory estimates are stored in
+`results/custom_knn_v4_benchmark.json`.
+
+The V5 batch-size sweep, score candidates, fallback and selection experiments,
+final raw trials, phase profile, parity checks, and memory estimates are stored
+in `results/custom_knn_v5_benchmark.json`.
+
+The V5.1 small-batch and feature-major fallback measurements are stored in
+`results/custom_knn_v5_1_benchmark.json`.
+
+Production dependencies were not upgraded for this pass. A newer compatible
+NumPy and scientific-Python stack can be benchmarked in an isolated environment,
+with backend gains reported separately from custom-classifier changes.
 
 Detailed values are stored in `results/metrics_comparison.csv`, while confusion
 counts and pairwise agreement are in their corresponding compact CSV files.

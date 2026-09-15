@@ -1,0 +1,193 @@
+{
+  "revision_before_changes": "775618da456f4b6093a6f4ae54bdeb7ca9e0c3f0",
+  "benchmark_date": "2026-09-15",
+  "environment": {
+    "os": "Windows 10.0.19045",
+    "python": "3.10.14 (Anaconda, MSC v.1916 64 bit)",
+    "numpy": "1.26.0",
+    "scipy": "1.13.1",
+    "scikit_learn": "1.2.1",
+    "pandas": "1.5.3",
+    "threadpoolctl": "3.5.0",
+    "blas": {
+      "implementation": "OpenBLAS",
+      "version": "0.3.23.dev",
+      "threading_layer": "pthreads",
+      "reported_architecture": "Prescott",
+      "verified_threads_inside_timed_region": 1
+    }
+  },
+  "data": {
+    "source": "data/raw/UCI_Credit_Card.csv",
+    "train_shape": [24000, 33],
+    "test_shape": [6000, 33],
+    "selected_k": 19,
+    "dtype": "float64"
+  },
+  "timing_method": {
+    "scope": "predict_proba plus the model_runner argmax; validation and per-call workspace allocation included; fit and file I/O excluded",
+    "warmup_calls_before_measured_trials": 1,
+    "measured_trials_per_version": 5,
+    "trial_order": [
+      ["v2", "v3"],
+      ["v3", "v2"],
+      ["v2", "v3"],
+      ["v3", "v2"],
+      ["v2", "v3"]
+    ],
+    "thread_limit": "threadpoolctl.threadpool_limits(limits=1)"
+  },
+  "authoritative_benchmark": {
+    "v2": {
+      "fit_seconds": 0.0033779999939724803,
+      "first_call_seconds": 1.510818200011272,
+      "raw_warm_trial_seconds": [
+        1.5017442000098526,
+        1.518182399973739,
+        1.5227788999909535,
+        1.508273300016299,
+        1.545394499989925
+      ],
+      "median_seconds": 1.518182399973739,
+      "min_seconds": 1.5017442000098526,
+      "max_seconds": 1.545394499989925
+    },
+    "v3": {
+      "fit_seconds": 0.0033639000030234456,
+      "first_call_seconds": 1.4099106999929063,
+      "raw_warm_trial_seconds": [
+        1.4206328000000212,
+        1.414696499996353,
+        1.4190630999801215,
+        1.4161388999782503,
+        1.4260591000202112
+      ],
+      "median_seconds": 1.4190630999801215,
+      "min_seconds": 1.414696499996353,
+      "max_seconds": 1.4260591000202112,
+      "speedup_vs_fresh_v2": 1.069848409133467
+    },
+    "prediction_agreement": 1.0,
+    "class_1_probability_agreement": 1.0
+  },
+  "interleaved_profile": {
+    "note": "Instrumented phase totals are diagnostic and are not the authoritative benchmark.",
+    "v2": {
+      "raw_total_seconds": [
+        1.5078980999824125,
+        1.5076271000143606,
+        1.4943276999983937
+      ],
+      "median_total_seconds": 1.5076271000143606,
+      "ambiguous_queries_each_trial": [38, 38, 38],
+      "median_phase_seconds": {
+        "validation_and_allocation": 0.00015559999155811965,
+        "matmul_including_query_norms": 0.41154489998007193,
+        "distance_postprocessing": 0.19223000007332303,
+        "partition": 0.7838009994011372,
+        "candidate_ordering_and_boundary": 0.019974799099145457,
+        "direct_fallback": 0.08463369990931824,
+        "output_and_voting": 0.0004629999748431146
+      }
+    },
+    "v3": {
+      "raw_total_seconds": [
+        1.4020074000000022,
+        1.4186717999982648,
+        1.415682699996978
+      ],
+      "median_total_seconds": 1.415682699996978,
+      "ambiguous_queries_each_trial": [38, 38, 38],
+      "median_phase_seconds": {
+        "validation_and_allocation": 0.00015269999857991934,
+        "matmul_including_query_norms": 0.410467800043989,
+        "ranking_score_postprocessing": 0.10121040014200844,
+        "partition": 0.7875718005816452,
+        "boundary_detection": 0.019872200180543587,
+        "direct_fallback": 0.08730319995083846,
+        "output_and_voting": 0.00043670000741258264
+      }
+    }
+  },
+  "candidate_experiments": {
+    "unordered_prediction_and_no_discarded_distances": {
+      "decision": "retained",
+      "v2_median_seconds": 1.5221695000072941,
+      "candidate_median_seconds": 1.5093393999850377,
+      "speedup": 1.0085004737982615,
+      "prediction_and_probability_parity": true
+    },
+    "multi_kth_partition": {
+      "decision": "rejected",
+      "reason": "No end-to-end improvement over single-k partition plus a k-element maximum reduction.",
+      "v2_raw_seconds": [1.5094639000017196, 1.5403989999904297, 1.5135557999892626, 1.5129669999878388, 1.5125992000102997],
+      "candidate_raw_seconds": [1.5219077999936417, 1.5138880999875255, 1.5044461000070442, 1.501971500023501, 1.516000300005544],
+      "v2_median_seconds": 1.5129669999878388,
+      "candidate_median_seconds": 1.5138880999875255
+    },
+    "small_selection_groups": {
+      "decision": "rejected",
+      "reason": "No group improved consistently; grouped argpartition increased temporary memory and later trials experienced system-wide timing drift.",
+      "group_sizes": [1, 4, 8, 16, 32],
+      "first_call_seconds": {"1": 1.6260509999992792, "4": 1.5963431000127457, "8": 1.7606811000150628, "16": 1.7496262000058778, "32": 1.720427699998254},
+      "raw_trial_seconds": {
+        "1": [1.603732299990952, 1.60964559999411, 2.7678832999954466, 2.8850986000034027, 2.828565500007244],
+        "4": [1.5405766000039876, 1.6126324000069872, 2.0488825000065845, 2.5647535000171047, 2.611341400013771],
+        "8": [1.7385719000012614, 1.8252319000021089, 2.8889724999899045, 2.8883959999948274, 2.869374700007029],
+        "16": [1.7639188000175636, 1.76583479999681, 2.9127218000066932, 2.808001900004456, 2.9583980000170413],
+        "32": [1.7624607000034302, 1.7681378000124823, 2.873298499995144, 2.813766100007342, 2.848354699992342]
+      },
+      "partition_index_temporary_mib": {"1": 0.18310546875, "4": 0.732421875, "8": 1.46484375, "16": 2.9296875, "32": 5.859375}
+    },
+    "value_only_partition_and_index_recovery": {
+      "decision": "rejected",
+      "reason": "Only a marginal result during a system-wide throttled interval; the extra full-row value copy and original-row threshold scan were not justified.",
+      "prediction_and_probability_parity": true,
+      "fallback_counts": [38, 38, 38, 38, 38],
+      "indirect_first_call_seconds": 1.4214291000098456,
+      "value_first_call_seconds": 1.3583636000112165,
+      "indirect_raw_seconds": [1.4021663999883458, 2.2493537999980617, 2.2401816999772564, 2.2443606999877375, 2.2494540000043344],
+      "value_raw_seconds": [1.8274363999953493, 2.228695099998731, 2.218743000004906, 2.225300200021593, 2.2333616000250913],
+      "indirect_median_seconds": 2.2443606999877375,
+      "value_median_seconds": 2.225300200021593,
+      "value_copy_mib": 0.18310546875,
+      "threshold_mask_mib": 0.02288818359375
+    },
+    "query_independent_ranking_scores": {
+      "decision": "retained",
+      "reason": "Removed query-norm addition and non-negative clamp passes from prediction while preserving direct fallback and real-distance kneighbors output.",
+      "prediction_and_probability_parity": true,
+      "controlled_scale_and_offset_cases_passed": 1080,
+      "caveat": "Observed parity and the conservative fallback checks are not a proof for every possible float64 input."
+    }
+  },
+  "memory_estimate": {
+    "method": "Analytical live NumPy array payload sizes from shape times dtype size; excludes allocator and Python overhead.",
+    "batch_size": 128,
+    "selection_group_size": 1,
+    "component_mib": {
+      "caller_training_array": 6.04248046875,
+      "model_training_copy": 6.04248046875,
+      "caller_test_array": 1.5106201171875,
+      "distance_or_score_workspace": 23.4375,
+      "training_norms": 0.18310546875,
+      "prediction_neighbour_indices": 0.8697509765625,
+      "row_partition_index_temporary": 0.18310546875,
+      "probability_output": 0.091552734375
+    },
+    "estimated_core_live_payload_mib": 38.360595703125,
+    "discarded_v2_prediction_distance_output_mib": 0.8697509765625
+  },
+  "full_pipeline_single_run": {
+    "timing_type": "single non-warm full-pipeline model measurement; not used for the V2/V3 speedup",
+    "custom_fit_seconds": 0.0032125000143423676,
+    "custom_prediction_seconds": 1.4469021999975666,
+    "sklearn_fit_seconds": 0.0012212000146973878,
+    "sklearn_prediction_seconds": 0.47269420002703555,
+    "weka_fit_seconds": 8.1540578,
+    "weka_prediction_seconds": 3.4711797,
+    "custom_confusion_counts": {"TN": 4404, "FP": 269, "FN": 878, "TP": 449},
+    "non_timing_metrics_unchanged": true,
+    "weka_validated": true
+  }
+}

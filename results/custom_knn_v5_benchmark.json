@@ -1,0 +1,909 @@
+{
+  "revision_before_v5": "775618da456f4b6093a6f4ae54bdeb7ca9e0c3f0",
+  "working_tree_basis": "Current uncommitted local V4; no reset, checkout, stash, clean, commit, push, branch, or history operation performed.",
+  "benchmark_date": "2026-09-15",
+  "environment": {
+    "os": "Windows 10.0.19045",
+    "python": "3.10.14 (Anaconda, MSC v.1916 64 bit)",
+    "numpy": "1.26.0",
+    "threadpoolctl": "3.5.0",
+    "blas": {
+      "implementation": "OpenBLAS",
+      "version": "0.3.23.dev",
+      "threading_layer": "pthreads",
+      "reported_architecture": "Prescott",
+      "verified_threads_inside_timed_region": 1
+    }
+  },
+  "data": {
+    "source": "data/raw/UCI_Credit_Card.csv",
+    "train_shape": [
+      24000,
+      33
+    ],
+    "test_shape": [
+      6000,
+      33
+    ],
+    "selected_k": 19,
+    "dtype": "float64"
+  },
+  "frozen_v4_evidence": {
+    "source_sha256": "82a9f6aa8ecfb6b01acee02a302347ed2b7de17d91910b367552a84a9cdf127f",
+    "prediction_csv_sha256": "b47f57f873462c047008bdb4488ad7e048da0063ea953221fa6bbb54f3f19990",
+    "location": "data/processed/v5_local (ignored by Git)"
+  },
+  "accepted_v5_source_sha256": "d27b7f5788e28195bdf85a60b1b6aa531535f409f115bb56241dbb9fbc47984a",
+  "baseline_v4": {
+    "scope": "Fresh paired predict_proba plus argmax; fit and file I/O excluded.",
+    "benchmark": {
+      "batch_size": 128,
+      "fit_seconds": 0.0046944000059738755,
+      "warmup_seconds": 0.8378839999786578,
+      "raw_seconds": [
+        0.837202900002012,
+        0.8318569999828469,
+        0.8429130000004079,
+        0.8305658000172116,
+        0.8413381999998819,
+        0.8305215000000317,
+        0.8299744999967515,
+        0.8182902999978978,
+        0.8315041000023484
+      ],
+      "median_seconds": 0.8315041000023484,
+      "min_seconds": 0.8182902999978978,
+      "max_seconds": 0.8429130000004079,
+      "milliseconds_per_sample": 0.13858401666705808
+    },
+    "phase_profile": {
+      "validation_and_allocation": 0.00016120000509545207,
+      "matmul_including_query_norms": 0.40700860004290007,
+      "score_postprocessing": 0.09691570000723004,
+      "pilot_threshold": 0.07952119823312387,
+      "full_scan": 0.08947890173294581,
+      "candidate_gather": 0.004201398172881454,
+      "reduced_partition": 0.030028401757590473,
+      "boundary_detection": 0.016672700439812616,
+      "direct_fallback": 0.08713099986198358,
+      "output_and_voting": 0.0004487999831326306
+    },
+    "authoritative_prior_v4_median_seconds": 0.8129578000225592
+  },
+  "batch_size_candidates": {
+    "warmup_calls": 1,
+    "measured_runs_each": 5,
+    "prediction_and_probability_parity": true,
+    "note": "1536 and 2048 were optional and not run; the required sweep already reached a 187.5 MiB workspace at 1024 and showed a clear smaller-batch winner.",
+    "candidates": {
+      "64": {
+        "fit_seconds": 0.004706200008513406,
+        "warmup_seconds": 0.8055518000037409,
+        "raw_seconds": [
+          0.7704948000027798,
+          0.7637551999941934,
+          0.7737265000178013,
+          0.796104099979857,
+          0.7828815999964718
+        ],
+        "median_seconds": 0.7737265000178013,
+        "min_seconds": 0.7637551999941934,
+        "max_seconds": 0.796104099979857,
+        "score_workspace_mib": 11.71875,
+        "decision": "accepted",
+        "reason": "Lowest median and lowest workspace among the tested candidates."
+      },
+      "96": {
+        "fit_seconds": 0.0035542999976314604,
+        "warmup_seconds": 0.8398611000156961,
+        "raw_seconds": [
+          0.8270545999985188,
+          0.8248502999776974,
+          0.8101651000033598,
+          0.8050267999933567,
+          0.8041659999871626
+        ],
+        "median_seconds": 0.8101651000033598,
+        "min_seconds": 0.8041659999871626,
+        "max_seconds": 0.8270545999985188,
+        "score_workspace_mib": 17.578125,
+        "decision": "rejected",
+        "reason": "Slower median than batch size 64."
+      },
+      "128": {
+        "fit_seconds": 0.0036242000060155988,
+        "warmup_seconds": 0.8312875000119675,
+        "raw_seconds": [
+          0.8351887000026181,
+          0.8457957000064198,
+          0.8255968000157736,
+          0.8347555999935139,
+          0.8225120999850333
+        ],
+        "median_seconds": 0.8347555999935139,
+        "min_seconds": 0.8225120999850333,
+        "max_seconds": 0.8457957000064198,
+        "score_workspace_mib": 23.4375,
+        "decision": "rejected",
+        "reason": "Slower median than batch size 64."
+      },
+      "192": {
+        "fit_seconds": 0.003744800022104755,
+        "warmup_seconds": 0.8464483999996446,
+        "raw_seconds": [
+          0.8542662000108976,
+          0.8339942000166047,
+          0.835537300008582,
+          0.8322663999861106,
+          0.8266355999803636
+        ],
+        "median_seconds": 0.8339942000166047,
+        "min_seconds": 0.8266355999803636,
+        "max_seconds": 0.8542662000108976,
+        "score_workspace_mib": 35.15625,
+        "decision": "rejected",
+        "reason": "Slower median than batch size 64."
+      },
+      "256": {
+        "fit_seconds": 0.0036515999818220735,
+        "warmup_seconds": 0.8481464999786112,
+        "raw_seconds": [
+          0.831525599991437,
+          0.8319644999864977,
+          0.8325567999854684,
+          0.835759199981112,
+          0.8595802999916486
+        ],
+        "median_seconds": 0.8325567999854684,
+        "min_seconds": 0.831525599991437,
+        "max_seconds": 0.8595802999916486,
+        "score_workspace_mib": 46.875,
+        "decision": "rejected",
+        "reason": "Slower median than batch size 64."
+      },
+      "384": {
+        "fit_seconds": 0.003372600011061877,
+        "warmup_seconds": 0.846322199999122,
+        "raw_seconds": [
+          0.8511580000049435,
+          0.8443981999880634,
+          0.8337734999950044,
+          0.8393492999894079,
+          0.8325246000022162
+        ],
+        "median_seconds": 0.8393492999894079,
+        "min_seconds": 0.8325246000022162,
+        "max_seconds": 0.8511580000049435,
+        "score_workspace_mib": 70.3125,
+        "decision": "rejected",
+        "reason": "Slower median than batch size 64."
+      },
+      "512": {
+        "fit_seconds": 0.00361520002479665,
+        "warmup_seconds": 0.8545301000121981,
+        "raw_seconds": [
+          0.850027600012254,
+          0.8497744000051171,
+          0.8331642999837641,
+          0.8369297000172082,
+          0.8527290000056382
+        ],
+        "median_seconds": 0.8497744000051171,
+        "min_seconds": 0.8331642999837641,
+        "max_seconds": 0.8527290000056382,
+        "score_workspace_mib": 93.75,
+        "decision": "rejected",
+        "reason": "Slower median than batch size 64."
+      },
+      "768": {
+        "fit_seconds": 0.0035029000137001276,
+        "warmup_seconds": 0.8607278999988921,
+        "raw_seconds": [
+          0.8396508999867365,
+          0.8485950000176672,
+          0.8628249999892432,
+          0.8499349000048824,
+          0.8493983999942429
+        ],
+        "median_seconds": 0.8493983999942429,
+        "min_seconds": 0.8396508999867365,
+        "max_seconds": 0.8628249999892432,
+        "score_workspace_mib": 140.625,
+        "decision": "rejected",
+        "reason": "Slower median than batch size 64."
+      },
+      "1024": {
+        "fit_seconds": 0.003562800004146993,
+        "warmup_seconds": 0.891896099987207,
+        "raw_seconds": [
+          0.8751275000104215,
+          0.867953499982832,
+          0.8631332999793813,
+          0.858745400008047,
+          0.8670877999975346
+        ],
+        "median_seconds": 0.8670877999975346,
+        "min_seconds": 0.858745400008047,
+        "max_seconds": 0.8751275000104215,
+        "score_workspace_mib": 187.5,
+        "decision": "rejected",
+        "reason": "Slower median than batch size 64."
+      }
+    }
+  },
+  "score_formulation_candidates": {
+    "warmup_calls": 1,
+    "measured_runs_each": 7,
+    "score_units": "All experimental matrices produced ||x||^2 - 2(q dot x), preserving V4 boundary-gap units.",
+    "candidates": {
+      "v4": {
+        "fit_seconds": 0.004438700008904561,
+        "warmup_seconds": 0.7656346999865491,
+        "raw_seconds": [
+          0.7790576000115834,
+          0.7732751999865286,
+          0.770390599995153,
+          0.7682356000004802,
+          0.785900099988794,
+          0.7601598000037484,
+          0.7750250000099186
+        ],
+        "median_seconds": 0.7732751999865286,
+        "min_seconds": 0.7601598000037484,
+        "max_seconds": 0.785900099988794,
+        "extra_fit_matrix_mib": 0,
+        "prediction_and_probability_parity": true,
+        "decision": "reference",
+        "reason": "Unchanged V4 score formulation at the selected batch size."
+      },
+      "pre_negated": {
+        "fit_seconds": 0.004108799999812618,
+        "warmup_seconds": 0.7484150000091176,
+        "raw_seconds": [
+          0.757379500020761,
+          0.7423879000125453,
+          0.7516746999754105,
+          0.7443753000115976,
+          0.7410818000207655,
+          0.7654350000084378,
+          0.7525517000176478
+        ],
+        "median_seconds": 0.7516746999754105,
+        "min_seconds": 0.7410818000207655,
+        "max_seconds": 0.7654350000084378,
+        "extra_fit_matrix_mib": 6.04248046875,
+        "prediction_and_probability_parity": true,
+        "decision": "rejected",
+        "reason": "Slower than augmented while retaining a similarly sized extra training matrix."
+      },
+      "augmented": {
+        "fit_seconds": 0.005990000005112961,
+        "warmup_seconds": 0.7499788000131957,
+        "raw_seconds": [
+          0.733457400026964,
+          0.7460841999854892,
+          0.738451699988218,
+          0.7396401999867521,
+          0.7494209000142291,
+          0.7458944999962114,
+          0.7402756999945268
+        ],
+        "median_seconds": 0.7402756999945268,
+        "min_seconds": 0.733457400026964,
+        "max_seconds": 0.7494209000142291,
+        "extra_fit_matrix_mib": 6.2255859375,
+        "prediction_and_probability_parity": true,
+        "decision": "accepted",
+        "reason": "Fastest seven-run median; removes both full score-workspace postprocessing passes."
+      }
+    }
+  },
+  "fallback_candidates": {
+    "warmup_calls": 1,
+    "measured_runs_each": 7,
+    "candidates": {
+      "current": {
+        "warmup_seconds": 0.7850375999987591,
+        "raw_seconds": [
+          0.7837470000085887,
+          0.7938009999925271,
+          0.7890575000201352,
+          0.7906947000010405,
+          0.7738997999986168,
+          0.8041899999952875,
+          0.7671922000008635
+        ],
+        "median_seconds": 0.7890575000201352,
+        "min_seconds": 0.7671922000008635,
+        "max_seconds": 0.8041899999952875,
+        "fallback_raw_seconds": [
+          0.08650969999143854,
+          0.08359209995251149,
+          0.08448369998950511,
+          0.08587840001564473,
+          0.08394269991549663,
+          0.08767430015723221,
+          0.08208309998735785
+        ],
+        "fallback_median_seconds": 0.08448369998950511,
+        "fallback_counts": [
+          38,
+          38,
+          38,
+          38,
+          38,
+          38,
+          38
+        ],
+        "fallback_count": 38,
+        "exact_workspace_mib": 0,
+        "prediction_and_probability_parity": true,
+        "decision": "retained",
+        "reason": "Fastest fallback and simplest implementation."
+      },
+      "batched_8": {
+        "warmup_seconds": 0.8114846000098623,
+        "raw_seconds": [
+          0.8231372000009287,
+          0.8117146999866236,
+          0.8259958999988157,
+          0.8148847999982536,
+          0.8249125999864191,
+          0.8214779999980237,
+          0.8270735000260174
+        ],
+        "median_seconds": 0.8231372000009287,
+        "min_seconds": 0.8117146999866236,
+        "max_seconds": 0.8270735000260174,
+        "fallback_raw_seconds": [
+          0.14151960000162944,
+          0.14183079998474568,
+          0.14479859999846667,
+          0.14011440001195297,
+          0.14373270000214688,
+          0.14220109998132102,
+          0.1465918000030797
+        ],
+        "fallback_median_seconds": 0.14220109998132102,
+        "fallback_counts": [
+          38,
+          38,
+          38,
+          38,
+          38,
+          38,
+          38
+        ],
+        "fallback_count": 38,
+        "exact_workspace_mib": 1.46484375,
+        "prediction_and_probability_parity": true,
+        "decision": "rejected",
+        "reason": "Batched direct-distance construction increased fallback and total prediction time."
+      },
+      "batched_16": {
+        "warmup_seconds": 0.8314932000066619,
+        "raw_seconds": [
+          0.8196384999901056,
+          0.8312677000067197,
+          0.8172582999977749,
+          0.8285278000112157,
+          0.8219331000000238,
+          0.8258788000093773,
+          0.8387984999862965
+        ],
+        "median_seconds": 0.8258788000093773,
+        "min_seconds": 0.8172582999977749,
+        "max_seconds": 0.8387984999862965,
+        "fallback_raw_seconds": [
+          0.14441869998699985,
+          0.14496020000660792,
+          0.14164670000900514,
+          0.15009270000155084,
+          0.14404099999228492,
+          0.13882240001112223,
+          0.14371160001610406
+        ],
+        "fallback_median_seconds": 0.14404099999228492,
+        "fallback_counts": [
+          38,
+          38,
+          38,
+          38,
+          38,
+          38,
+          38
+        ],
+        "fallback_count": 38,
+        "exact_workspace_mib": 2.9296875,
+        "prediction_and_probability_parity": true,
+        "decision": "rejected",
+        "reason": "Batched direct-distance construction increased fallback and total prediction time."
+      },
+      "batched_32": {
+        "warmup_seconds": 0.8209525999845937,
+        "raw_seconds": [
+          0.8333596000156831,
+          0.8240994999941904,
+          0.828074299992295,
+          0.8278501000022516,
+          0.8403564000036567,
+          0.8216467000020202,
+          0.8256169999949634
+        ],
+        "median_seconds": 0.8278501000022516,
+        "min_seconds": 0.8216467000020202,
+        "max_seconds": 0.8403564000036567,
+        "fallback_raw_seconds": [
+          0.14996689997497015,
+          0.14992860000347719,
+          0.1446693000034429,
+          0.15064129998791032,
+          0.16345049999654293,
+          0.15293609999935143,
+          0.14821739998296835
+        ],
+        "fallback_median_seconds": 0.14996689997497015,
+        "fallback_counts": [
+          38,
+          38,
+          38,
+          38,
+          38,
+          38,
+          38
+        ],
+        "fallback_count": 38,
+        "exact_workspace_mib": 5.859375,
+        "prediction_and_probability_parity": true,
+        "decision": "rejected",
+        "reason": "Batched direct-distance construction increased fallback and total prediction time."
+      },
+      "batched_64": {
+        "warmup_seconds": 0.8302228999964427,
+        "raw_seconds": [
+          0.8257326000020839,
+          0.8284782999835443,
+          0.8232788000022992,
+          0.8373005999892484,
+          0.8336198999895714,
+          0.8246554000070319,
+          0.8229397000104655
+        ],
+        "median_seconds": 0.8257326000020839,
+        "min_seconds": 0.8229397000104655,
+        "max_seconds": 0.8373005999892484,
+        "fallback_raw_seconds": [
+          0.15069349997793324,
+          0.15137229999527335,
+          0.15151719999266788,
+          0.15396289998898283,
+          0.147969000012381,
+          0.14966700001969002,
+          0.14689679999719374
+        ],
+        "fallback_median_seconds": 0.15069349997793324,
+        "fallback_counts": [
+          38,
+          38,
+          38,
+          38,
+          38,
+          38,
+          38
+        ],
+        "fallback_count": 38,
+        "exact_workspace_mib": 11.71875,
+        "prediction_and_probability_parity": true,
+        "decision": "rejected",
+        "reason": "Batched direct-distance construction increased fallback and total prediction time."
+      }
+    }
+  },
+  "pilot_candidates": {
+    "warmup_calls": 1,
+    "measured_runs_each": 7,
+    "candidates": {
+      "8": {
+        "warmup_seconds": 0.8010935000202153,
+        "raw_seconds": [
+          0.7649520999984816,
+          0.7923837999987882,
+          0.7816975999739952,
+          0.773107799992431,
+          0.780209599994123,
+          0.7814426999830175,
+          0.7819592000159901
+        ],
+        "median_seconds": 0.7814426999830175,
+        "min_seconds": 0.7649520999984816,
+        "max_seconds": 0.7923837999987882,
+        "temporary_workspace_mib": 0.0625,
+        "prediction_and_probability_parity": true,
+        "decision": "rejected",
+        "reason": "Slower than the row-wise V4 pilot threshold."
+      },
+      "16": {
+        "warmup_seconds": 0.7874866000202019,
+        "raw_seconds": [
+          0.7900419000070542,
+          0.7770404000184499,
+          0.7734162999840919,
+          0.7847786000056658,
+          0.7756667999783531,
+          0.8150652000040282,
+          0.8104781000001822
+        ],
+        "median_seconds": 0.7847786000056658,
+        "min_seconds": 0.7734162999840919,
+        "max_seconds": 0.8150652000040282,
+        "temporary_workspace_mib": 0.125,
+        "prediction_and_probability_parity": true,
+        "decision": "rejected",
+        "reason": "Slower than the row-wise V4 pilot threshold."
+      },
+      "32": {
+        "warmup_seconds": 0.8076525999931619,
+        "raw_seconds": [
+          0.7911959999764804,
+          0.8078409000008833,
+          0.7891752000141423,
+          0.8107158999773674,
+          0.81009990000166,
+          0.7943492000049446,
+          0.8212653000082355
+        ],
+        "median_seconds": 0.8078409000008833,
+        "min_seconds": 0.7891752000141423,
+        "max_seconds": 0.8212653000082355,
+        "temporary_workspace_mib": 0.25,
+        "prediction_and_probability_parity": true,
+        "decision": "rejected",
+        "reason": "Slower than the row-wise V4 pilot threshold."
+      },
+      "64": {
+        "warmup_seconds": 0.838346200005617,
+        "raw_seconds": [
+          0.8180103999911807,
+          0.8385145000065677,
+          0.8120359000167809,
+          0.8205993000010494,
+          0.80610779998824,
+          0.8393505999993067,
+          0.8164807999855839
+        ],
+        "median_seconds": 0.8180103999911807,
+        "min_seconds": 0.80610779998824,
+        "max_seconds": 0.8393505999993067,
+        "temporary_workspace_mib": 0.5,
+        "prediction_and_probability_parity": true,
+        "decision": "rejected",
+        "reason": "Slower than the row-wise V4 pilot threshold."
+      },
+      "current": {
+        "warmup_seconds": 0.7760645000089426,
+        "raw_seconds": [
+          0.7688417000172194,
+          0.7622088000061922,
+          0.7669339000131004,
+          0.7683418999949936,
+          0.7754653000156395,
+          0.7760863000003155,
+          0.7921509000007063
+        ],
+        "median_seconds": 0.7688417000172194,
+        "min_seconds": 0.7622088000061922,
+        "max_seconds": 0.7921509000007063,
+        "temporary_workspace_mib": 0,
+        "prediction_and_probability_parity": true,
+        "decision": "retained"
+      },
+      "full_batch": {
+        "warmup_seconds": 0.838346200005617,
+        "raw_seconds": [
+          0.8180103999911807,
+          0.8385145000065677,
+          0.8120359000167809,
+          0.8205993000010494,
+          0.80610779998824,
+          0.8393505999993067,
+          0.8164807999855839
+        ],
+        "median_seconds": 0.8180103999911807,
+        "min_seconds": 0.80610779998824,
+        "max_seconds": 0.8393505999993067,
+        "temporary_workspace_mib": 0.5,
+        "prediction_and_probability_parity": true,
+        "decision": "rejected",
+        "reason": "Slower than the row-wise V4 pilot threshold.",
+        "alias_of": "64",
+        "note": "The selected GEMM batch is 64 rows."
+      }
+    }
+  },
+  "scan_candidates": {
+    "warmup_calls": 1,
+    "measured_runs_each": 7,
+    "candidates": {
+      "8": {
+        "warmup_seconds": 0.8000220000103582,
+        "raw_seconds": [
+          0.7689339999924414,
+          0.7807651000039186,
+          0.7914421999885235,
+          0.7875460000068415,
+          0.7753722000052221,
+          0.808784699998796,
+          0.7768029000144452
+        ],
+        "median_seconds": 0.7807651000039186,
+        "min_seconds": 0.7689339999924414,
+        "max_seconds": 0.808784699998796,
+        "temporary_workspace_mib": 0.18310546875,
+        "prediction_and_probability_parity": true,
+        "decision": "rejected",
+        "reason": "Slower than the row-wise V4 threshold scan."
+      },
+      "16": {
+        "warmup_seconds": 0.7987714000046253,
+        "raw_seconds": [
+          0.7944028000056278,
+          0.8007588000036776,
+          0.8091741999960504,
+          0.8028025999956299,
+          0.8095003999769688,
+          0.8022940999944694,
+          0.8307228999910876
+        ],
+        "median_seconds": 0.8028025999956299,
+        "min_seconds": 0.7944028000056278,
+        "max_seconds": 0.8307228999910876,
+        "temporary_workspace_mib": 0.3662109375,
+        "prediction_and_probability_parity": true,
+        "decision": "rejected",
+        "reason": "Slower than the row-wise V4 threshold scan."
+      },
+      "32": {
+        "warmup_seconds": 0.850192199985031,
+        "raw_seconds": [
+          0.8497937999782152,
+          0.8504791000159457,
+          0.8471534999844152,
+          0.853445400018245,
+          0.844353200023761,
+          0.8480689999996684,
+          0.8532772000180557
+        ],
+        "median_seconds": 0.8497937999782152,
+        "min_seconds": 0.844353200023761,
+        "max_seconds": 0.853445400018245,
+        "temporary_workspace_mib": 0.732421875,
+        "prediction_and_probability_parity": true,
+        "decision": "rejected",
+        "reason": "Slower than the row-wise V4 threshold scan."
+      },
+      "64": {
+        "warmup_seconds": 0.8307333000120707,
+        "raw_seconds": [
+          0.8213128999923356,
+          0.8430501999973785,
+          0.8184371999814175,
+          0.8159732999920379,
+          0.8117128000012599,
+          0.818577500001993,
+          0.883807899983367
+        ],
+        "median_seconds": 0.818577500001993,
+        "min_seconds": 0.8117128000012599,
+        "max_seconds": 0.883807899983367,
+        "temporary_workspace_mib": 1.46484375,
+        "prediction_and_probability_parity": true,
+        "decision": "rejected",
+        "reason": "Slower than the row-wise V4 threshold scan."
+      },
+      "current": {
+        "warmup_seconds": 0.7760645000089426,
+        "raw_seconds": [
+          0.7688417000172194,
+          0.7622088000061922,
+          0.7669339000131004,
+          0.7683418999949936,
+          0.7754653000156395,
+          0.7760863000003155,
+          0.7921509000007063
+        ],
+        "median_seconds": 0.7688417000172194,
+        "min_seconds": 0.7622088000061922,
+        "max_seconds": 0.7921509000007063,
+        "temporary_workspace_mib": 0,
+        "prediction_and_probability_parity": true,
+        "decision": "retained"
+      },
+      "full_batch": {
+        "warmup_seconds": 0.8307333000120707,
+        "raw_seconds": [
+          0.8213128999923356,
+          0.8430501999973785,
+          0.8184371999814175,
+          0.8159732999920379,
+          0.8117128000012599,
+          0.818577500001993,
+          0.883807899983367
+        ],
+        "median_seconds": 0.818577500001993,
+        "min_seconds": 0.8117128000012599,
+        "max_seconds": 0.883807899983367,
+        "temporary_workspace_mib": 1.46484375,
+        "prediction_and_probability_parity": true,
+        "decision": "rejected",
+        "reason": "Slower than the row-wise V4 threshold scan.",
+        "alias_of": "64",
+        "note": "The selected GEMM batch is 64 rows."
+      }
+    }
+  },
+  "combined_pilot_and_scan": {
+    "benchmarked": false,
+    "reason": "Neither independent vectorization candidate improved end-to-end runtime, so V5-F had no accepted pair to combine."
+  },
+  "accepted_changes": [
+    "DEFAULT_BATCH_SIZE reduced from 128 to 64.",
+    "Prediction ranking uses one augmented 34-column training matrix so GEMM directly emits ||x||^2 - 2(q dot x)."
+  ],
+  "rejected_changes": [
+    "Pre-negated matrix: slower than augmented for nearly the same retained memory.",
+    "Batched ambiguity fallback chunks 8, 16, 32, and 64: slower fallback and total runtime.",
+    "Grouped pilot partitions 8, 16, 32, and 64/full: slower end-to-end.",
+    "Grouped boolean scans 8, 16, 32, and 64/full: slower end-to-end."
+  ],
+  "final_v5": {
+    "scope": "Fresh paired predict_proba plus argmax; validation and workspace allocation included; fit and file I/O excluded.",
+    "warmup_calls": 1,
+    "measured_runs": 9,
+    "trial_order": [
+      [
+        "v4",
+        "v5"
+      ],
+      [
+        "v5",
+        "v4"
+      ],
+      [
+        "v4",
+        "v5"
+      ],
+      [
+        "v5",
+        "v4"
+      ],
+      [
+        "v4",
+        "v5"
+      ],
+      [
+        "v5",
+        "v4"
+      ],
+      [
+        "v4",
+        "v5"
+      ],
+      [
+        "v5",
+        "v4"
+      ],
+      [
+        "v4",
+        "v5"
+      ]
+    ],
+    "benchmark": {
+      "batch_size": 64,
+      "fit_seconds": 0.006582000001799315,
+      "warmup_seconds": 0.7662387000164017,
+      "raw_seconds": [
+        0.7556213000207208,
+        0.751822300022468,
+        0.7623728000035044,
+        0.7588867000013124,
+        0.7541230999922846,
+        0.7637067000032403,
+        0.7300699999905191,
+        0.7502352000155952,
+        0.7475574999989476
+      ],
+      "median_seconds": 0.7541230999922846,
+      "min_seconds": 0.7300699999905191,
+      "max_seconds": 0.7637067000032403,
+      "milliseconds_per_sample": 0.12568718333204743,
+      "speedup_vs_v4": 1.102610568501158
+    },
+    "speedup_vs_fresh_v4": 1.102610568501158,
+    "speedup_vs_original_historical_baseline": 44.1323041295901,
+    "prediction_agreement_count": 6000,
+    "probability_agreement_count": 6000,
+    "ambiguous_rows": 38,
+    "phase_profile": {
+      "raw_profile_total_seconds": [
+        0.7508342000073753,
+        0.748771000013221,
+        0.7579789999872446
+      ],
+      "median_profile_total_seconds": 0.7508342000073753,
+      "median_phase_seconds": {
+        "validation_and_allocation": 0.00015089998487383127,
+        "augmented_query_and_gemm_including_query_norms": 0.42957809995277785,
+        "score_postprocessing": 0,
+        "pilot_threshold": 0.07778540044091642,
+        "full_scan": 0.0892410987871699,
+        "candidate_gather": 0.0044201006821822375,
+        "full_partition": 0,
+        "reduced_partition": 0.03045329955057241,
+        "boundary_detection": 0.01680439946358092,
+        "direct_fallback": 0.09064149996265769,
+        "output_and_voting": 0.00039770000148564577
+      },
+      "candidate_counts": {
+        "median": 464,
+        "p95": 656,
+        "max": 876
+      },
+      "direct_fallback_counts": [
+        38,
+        38,
+        38
+      ],
+      "density_fallback_counts": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "memory_estimate": {
+    "method": "Analytical NumPy payload sizes; allocator and Python-object overhead excluded.",
+    "retained_augmented_training_matrix_mib": 6.2255859375,
+    "retained_negative_training_matrix_mib": 0,
+    "score_workspace_mib": 11.71875,
+    "v4_score_workspace_mib": 23.4375,
+    "maximum_augmented_query_temporary_mib": 0.0166015625,
+    "grouped_boolean_candidate_mask_retained": false,
+    "batched_exact_fallback_workspace_retained": false,
+    "direct_single_row_fallback_vector_mib": 0.18310546875,
+    "net_core_workspace_change_vs_v4_mib": -5.4931640625
+  },
+  "correctness": {
+    "real_predicted_class_agreement": "6000/6000",
+    "real_class_1_vote_fraction_agreement": "6000/6000 exact",
+    "threshold_property_cases_passed": 40,
+    "integration_scale_cases_passed": 90,
+    "ordered_kneighbors_matches_frozen_evidence": true,
+    "full_population_direct_fallback_checked": true,
+    "selected_k_unchanged": true,
+    "confusion_counts": {
+      "TN": 4404,
+      "FP": 269,
+      "FN": 878,
+      "TP": 449
+    },
+    "non_timing_metrics_unchanged": true,
+    "scope_note": "Observed parity on the recorded real and adversarial evidence; this is not a universal proof for all float64 inputs."
+  },
+  "full_pipeline_single_run": {
+    "custom_fit_seconds": 0.0053675000090152025,
+    "custom_prediction_seconds": 0.7491348999901675,
+    "sklearn_fit_seconds": 0.0011329999833833426,
+    "sklearn_prediction_seconds": 0.4736373000196181,
+    "weka_fit_seconds": 8.1512518,
+    "weka_prediction_seconds": 3.447557,
+    "weka_version": "3.8.6",
+    "java_version": "11.0.16.1",
+    "selected_k": 19,
+    "custom_confusion_counts": {
+      "TN": 4404,
+      "FP": 269,
+      "FN": 878,
+      "TP": 449
+    }
+  }
+}
