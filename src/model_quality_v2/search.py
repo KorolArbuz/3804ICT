@@ -16,7 +16,7 @@ from src.data.dataset import find_dataset, load_dataset, split_dataset
 from .analysis import decisions_frame, probability_parity, stage_summary
 from .config import STAGE_NAMES, V2Configuration, stage_candidates
 from .custom_v2_knn import CustomV2KNNClassifier
-from .nested_cv import run_stage
+from .nested_cv import deterministic_splits, run_stage
 from .thresholding import THRESHOLD_RULE, score_metrics
 from .transforms import V2Preprocessor
 
@@ -141,9 +141,11 @@ def freeze_final_configuration(configuration, threshold, decisions, outer, outpu
     path = output_dir / "final_v2_configuration.json"
     if path.exists():
         raise ValueError("Final V2 configuration is already frozen")
-    candidate = outer[outer.role == "candidate"]
+    final_role = "candidate" if not decisions or decisions[-1]["accepted"] else "baseline"
+    final_stage = int(outer.stage.max())
+    final_outer = outer[(outer.stage == final_stage) & (outer.role == final_role)].sort_values("outer_fold")
     evidence = {
-        metric: [float(value) for value in candidate.sort_values(["stage", "outer_fold"])[metric]]
+        metric: [float(value) for value in final_outer[metric]]
         for metric in ("average_precision", "roc_auc", "f1", "recall", "precision")
     }
     value = {
@@ -158,7 +160,8 @@ def freeze_final_configuration(configuration, threshold, decisions, outer, outpu
         },
         "threshold": float(threshold), "threshold_selection_rule": THRESHOLD_RULE,
         "nested_cv": {"outer_folds": 5, "inner_folds": 3, "seed": RANDOM_STATE,
-                      "stage_decisions": decisions, "all_candidate_outer_values": evidence},
+                      "stage_decisions": decisions, "final_evidence_role": final_role,
+                      "final_outer_fold_values": evidence},
         "source_hashes": _source_hashes(), "protected_reference_hashes": protected_hashes(),
         "legacy_test_evaluated": False,
     }
@@ -209,11 +212,48 @@ def evaluate_legacy(dataset, train, test, final, output_dir):
     parity_count = min(48, len(X_test))
     manual = CustomV2KNNClassifier(configuration.k).fit(X_train, dataset.y[train])
     manual_scores = manual.predict_proba(X_test[:parity_count])[:, 1]
-    parity = probability_parity(scores[:parity_count], manual_scores)
-    parity.update({"sample": "first 48 transformed legacy rows after final freeze",
-                   "sklearn_algorithm": "brute", "passed_predictions": bool(np.array_equal(
-                       sklearn_model.predict(X_test[:parity_count]), manual.predict(X_test[:parity_count])
-                   ))})
+    legacy_parity = probability_parity(scores[:parity_count], manual_scores)
+    legacy_parity.update({"sample": "first 48 transformed legacy rows after final freeze",
+                          "passed_predictions": bool(np.array_equal(
+                              sklearn_model.predict(X_test[:parity_count]),
+                              manual.predict(X_test[:parity_count]),
+                          ))})
+
+    train_frame = dataset.X.iloc[train].reset_index(drop=True)
+    train_labels = dataset.y[train]
+    outer_fit, outer_validation = deterministic_splits(train_labels, 5)[0]
+    outer_preprocessor = V2Preprocessor(configuration)
+    outer_X_fit = outer_preprocessor.fit_transform(train_frame.iloc[outer_fit], train_labels[outer_fit])
+    outer_X_validation = outer_preprocessor.transform(
+        train_frame.iloc[outer_validation[:parity_count]]
+    )
+    with threadpool_limits(limits=1):
+        outer_sklearn = KNeighborsClassifier(
+            n_neighbors=configuration.k, metric="euclidean", weights="distance",
+            algorithm="brute", n_jobs=1,
+        ).fit(outer_X_fit, train_labels[outer_fit])
+        outer_reference = outer_sklearn.predict_proba(outer_X_validation)[:, 1]
+    outer_manual = CustomV2KNNClassifier(configuration.k).fit(
+        outer_X_fit, train_labels[outer_fit]
+    )
+    outer_manual_scores = outer_manual.predict_proba(outer_X_validation)[:, 1]
+    outer_parity = probability_parity(outer_reference, outer_manual_scores)
+    outer_parity.update({"sample": "first 48 transformed outer-fold-1 validation rows",
+                         "passed_predictions": bool(np.array_equal(
+                             outer_sklearn.predict(outer_X_validation),
+                             outer_manual.predict(outer_X_validation),
+                         ))})
+    checks = [legacy_parity, outer_parity]
+    parity = {
+        "rows": sum(check["rows"] for check in checks),
+        "maximum_absolute_probability_difference": max(
+            check["maximum_absolute_probability_difference"] for check in checks
+        ),
+        "tolerance": legacy_parity["tolerance"],
+        "passed": all(check["passed"] for check in checks),
+        "passed_predictions": all(check["passed_predictions"] for check in checks),
+        "sklearn_algorithm": "brute", "checks": checks,
+    }
     write_json(output_dir / "manual_v2_parity.json", parity)
     return frame, parity
 

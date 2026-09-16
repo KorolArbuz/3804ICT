@@ -1,9 +1,26 @@
 {
-  "rows": 48,
+  "rows": 96,
   "maximum_absolute_probability_difference": 4.1661118999059e-13,
   "tolerance": 1e-12,
   "passed": true,
-  "sample": "first 48 transformed legacy rows after final freeze",
+  "passed_predictions": true,
   "sklearn_algorithm": "brute",
-  "passed_predictions": true
+  "checks": [
+    {
+      "rows": 48,
+      "maximum_absolute_probability_difference": 4.1661118999059e-13,
+      "tolerance": 1e-12,
+      "passed": true,
+      "sample": "first 48 transformed legacy rows after final freeze",
+      "passed_predictions": true
+    },
+    {
+      "rows": 48,
+      "maximum_absolute_probability_difference": 1.5654144647214707e-14,
+      "tolerance": 1e-12,
+      "passed": true,
+      "sample": "first 48 transformed outer-fold-1 validation rows",
+      "passed_predictions": true
+    }
+  ]
 }

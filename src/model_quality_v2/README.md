@@ -2,6 +2,8 @@
 
 This package runs a staged 5-outer × 3-inner nested cross-validation study entirely inside the original 24,000-row training partition. It examines k, money transforms, PAY-code representation, two small engineered feature blocks, and PAY/delinquency group weighting. Each stage compares one hypothesis family with the retained prior configuration.
 
+All continuous PAY/delinquency components and fold-learned neutral category indicators are standardized on the relevant training fold before the optional group multiplier is applied.
+
 Run the complete study and the post-freeze legacy comparison:
 
 ```bash

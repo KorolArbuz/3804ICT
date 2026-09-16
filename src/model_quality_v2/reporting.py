@@ -25,7 +25,11 @@ def _read_json(path):
 def _save(fig, output_dir, name):
     fig.tight_layout()
     for suffix in ("png", "svg"):
-        fig.savefig(output_dir / f"{name}.{suffix}", dpi=180, bbox_inches="tight")
+        path = output_dir / f"{name}.{suffix}"
+        fig.savefig(path, dpi=180, bbox_inches="tight")
+        if suffix == "svg":
+            clean = "\n".join(line.rstrip() for line in path.read_text(encoding="utf-8").splitlines())
+            path.write_text(clean + "\n", encoding="utf-8", newline="\n")
     plt.close(fig)
 
 
@@ -125,7 +129,8 @@ def create_reports(output_dir):
             "F1": values.f1.mean(), "AP wins": decision["paired_deltas"]["average_precision"]["wins"],
         })
     stage_frame = pd.DataFrame(stage_rows)
-    final_outer = candidate[candidate.stage == 5].sort_values("outer_fold")
+    final_role = "candidate" if decisions[-1]["accepted"] else "baseline"
+    final_outer = outer[(outer.stage == 5) & (outer.role == final_role)].sort_values("outer_fold")
     first_baseline = outer[(outer.stage == 1) & (outer.role == "baseline")]
     observed_ap = final_outer.average_precision.mean() - first_baseline.average_precision.mean()
     observed_auc = final_outer.roc_auc.mean() - first_baseline.roc_auc.mean()
@@ -179,7 +184,7 @@ The configuration was frozen before any V2 legacy-test scoring: k={config['k']},
 
 ## 10. Manual V2 parity
 
-The clarity-first manual kernel uses exact brute-force Euclidean neighbours, inverse-distance voting, exact zero-distance semantics, and original-index boundary tie handling. Against scikit-learn on {parity['rows']} transformed rows, the maximum absolute probability difference was {parity['maximum_absolute_probability_difference']:.3g} (tolerance {parity['tolerance']:.1g}); parity **{'passed' if parity['passed'] and parity['passed_predictions'] else 'failed'}**.
+The clarity-first manual kernel uses exact brute-force Euclidean neighbours, inverse-distance voting, exact zero-distance semantics, and original-index boundary tie handling. Against scikit-learn on {parity['rows']} transformed legacy and selected outer-fold example rows, the maximum absolute probability difference was {parity['maximum_absolute_probability_difference']:.3g} (tolerance {parity['tolerance']:.1g}); probability and prediction parity **{'passed' if parity['passed'] and parity['passed_predictions'] else 'failed'}**.
 
 ## 11. Nested-CV evidence
 

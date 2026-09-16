@@ -46,7 +46,7 @@ The configuration was frozen before any V2 legacy-test scoring: k=101, Euclidean
 
 ## 10. Manual V2 parity
 
-The clarity-first manual kernel uses exact brute-force Euclidean neighbours, inverse-distance voting, exact zero-distance semantics, and original-index boundary tie handling. Against scikit-learn on 48 transformed rows, the maximum absolute probability difference was 4.17e-13 (tolerance 1e-12); parity **passed**.
+The clarity-first manual kernel uses exact brute-force Euclidean neighbours, inverse-distance voting, exact zero-distance semantics, and original-index boundary tie handling. Against scikit-learn on 96 transformed legacy and selected outer-fold example rows, the maximum absolute probability difference was 4.17e-13 (tolerance 1e-12); probability and prediction parity **passed**.
 
 ## 11. Nested-CV evidence
 
@@ -54,13 +54,13 @@ Final-stage outer-fold values:
 
 |   outer_fold |   average_precision |   roc_auc |       f1 |   recall |   precision |   balanced_accuracy |   threshold |
 |-------------:|--------------------:|----------:|---------:|---------:|------------:|--------------------:|------------:|
-|     1.000000 |            0.547004 |  0.777686 | 0.546882 | 0.557439 |    0.536718 |            0.710367 |    0.275040 |
-|     2.000000 |            0.545207 |  0.777551 | 0.549929 | 0.547081 |    0.552807 |            0.710673 |    0.300631 |
-|     3.000000 |            0.563606 |  0.783228 | 0.546171 | 0.587571 |    0.510221 |            0.713662 |    0.253007 |
-|     4.000000 |            0.517389 |  0.766697 | 0.520561 | 0.524482 |    0.516698 |            0.692551 |    0.295915 |
-|     5.000000 |            0.543359 |  0.767992 | 0.528369 | 0.561734 |    0.498745 |            0.700765 |    0.242159 |
+|     1.000000 |            0.540597 |  0.777802 | 0.541076 | 0.539548 |    0.542614 |            0.705167 |    0.286631 |
+|     2.000000 |            0.540268 |  0.779164 | 0.547619 | 0.563089 |    0.532977 |            0.711453 |    0.283872 |
+|     3.000000 |            0.561964 |  0.784976 | 0.545852 | 0.588512 |    0.508958 |            0.713598 |    0.252673 |
+|     4.000000 |            0.511555 |  0.765586 | 0.522217 | 0.536723 |    0.508475 |            0.694659 |    0.282254 |
+|     5.000000 |            0.541543 |  0.770879 | 0.539066 | 0.549482 |    0.529038 |            0.705337 |    0.261148 |
 
-Relative to the Stage-1 starting baseline, the final-stage adaptive procedure changed mean AP by +0.033979 and mean ROC-AUC by +0.027711. Raw paired deltas and fold win counts for every stage are in `stage_decisions.csv`.
+Relative to the Stage-1 starting baseline, the final-stage adaptive procedure changed mean AP by +0.029851 and mean ROC-AUC by +0.028762. Raw paired deltas and fold win counts for every stage are in `stage_decisions.csv`.
 
 ## 12. Legacy test comparison
 
@@ -79,4 +79,4 @@ Five outer folds give only five paired observations, so the deltas are descripti
 
 ## 14. Conclusion
 
-The staged final procedure showed higher outer-fold score ranking than the starting k=25 representation. The observed mean changes were AP +0.033979 and ROC-AUC +0.027711. Threshold selection separately changed the class-1 operating point; it did not itself improve AP or ROC-AUC.
+The staged final procedure showed higher outer-fold score ranking than the starting k=25 representation. The observed mean changes were AP +0.029851 and ROC-AUC +0.028762. Threshold selection separately changed the class-1 operating point; it did not itself improve AP or ROC-AUC.

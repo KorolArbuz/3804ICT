@@ -1,0 +1,8 @@
+{
+  "validation_context": "Legacy held-out test comparison; this test has prior analyst exposure and is not independent validation for operating-point selection.",
+  "rows": 6000,
+  "score_source": "CustomV2KNNClassifier deterministic original-index semantics",
+  "roc_auc": 0.765654997338363,
+  "average_precision": 0.5326446680390007,
+  "score_vector_sha256": "6dcf614b77d2e0c94d774cae107d7a2b32bb3dbfba968b6f61dbeb39770c7b40"
+}
