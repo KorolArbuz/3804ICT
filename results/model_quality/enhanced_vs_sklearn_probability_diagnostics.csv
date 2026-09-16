@@ -1,0 +1,8 @@
+test_index,row_id,scikit_probability,enhanced_probability,absolute_difference,exact_zero_training_rows,exact_zero_labels,scikit_min_distance,enhanced_min_distance,same_neighbor_set,cause
+355,1759,9.9902078523606279e-07,0,9.9902078523606279e-07,1,0,8.4293697021788069e-08,0,True,exact-zero distance represented as tiny positive by scikit kernel
+704,3468,0.99999907855846648,1,9.2144153351902958e-07,1,1,8.4293697021788069e-08,0,True,exact-zero distance represented as tiny positive by scikit kernel
+893,4436,1.0843223297797996e-06,0,1.0843223297797996e-06,1,0,8.4293697021788069e-08,0,True,exact-zero distance represented as tiny positive by scikit kernel
+2737,13903,0.36803480560829244,0.39440644826445981,0.026371642656167371,0,,0.23080700419590511,0.23080700419589148,False,equal/near-equal k-boundary distance resolved differently
+3113,15617,6.7405778043126173e-07,0,6.7405778043126173e-07,1,0,8.4293697021788069e-08,0,True,exact-zero distance represented as tiny positive by scikit kernel
+3997,20178,0.41479373777872142,0.38614124452206955,0.028652493256651868,0,,0.37152972865005224,0.37152972865004735,True,pairwise-distance floating-point differences within same neighbour set
+4730,23871,0.99999577342577473,1,4.2265742252745042e-06,1,1,0,0,True,exact-zero distance represented as tiny positive by scikit kernel

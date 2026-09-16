@@ -1,0 +1,17 @@
+{
+  "implementation": "weka",
+  "selected_k": 25,
+  "fit_seconds": 8.1412736,
+  "prediction_seconds": 3.6111695,
+  "milliseconds_per_sample": 0.6018615833333333,
+  "weka_version": "3.8.6",
+  "java_version": "11.0.16.1",
+  "distance_normalization": false,
+  "internal_cross_validation": false,
+  "metric": "euclidean",
+  "distance_weighting": "inverse",
+  "search": "LinearNNSearch",
+  "classifier_options": "-K 25 -W 0 -I -A \"weka.core.neighboursearch.LinearNNSearch -A \\\"weka.core.EuclideanDistance -D -R first-last\\\"\"",
+  "timing_scope": "one buildClassifier; one distributionForInstance loop plus argmax; I/O/evaluation/JVM startup excluded; no warmup",
+  "probability_semantics": "Unmodified Weka IBk nominal distribution; includes native smoothing and boundary distance ties"
+}

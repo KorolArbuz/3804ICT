@@ -1,0 +1,10 @@
+{
+  "status": "evaluated with genuine Weka IBk",
+  "configuration": {
+    "k": 25,
+    "metric": "euclidean",
+    "weights": "distance"
+  },
+  "exact_probability_parity_expected": false,
+  "native_semantics_note": "Weka inverse-distance weighting and native nominal-distribution smoothing/tie behavior may differ from scikit-learn."
+}

@@ -40,7 +40,12 @@ def build(force=False):
     return JAR
 
 
-def run(train, test, k, predictions, selected_parameters=None, force_rebuild=False):
+def run(train, test, k, predictions, selected_parameters=None, force_rebuild=False,
+        metric="euclidean", weights="uniform"):
+    if metric not in {"euclidean", "manhattan"}:
+        raise ValueError("Weka metric must be euclidean or manhattan")
+    if weights not in {"uniform", "distance"}:
+        raise ValueError("Weka weights must be uniform or distance")
     jar = build(force_rebuild)
     java = shutil.which("java")
     if java is None:
@@ -59,6 +64,10 @@ def run(train, test, k, predictions, selected_parameters=None, force_rebuild=Fal
         str(k),
         "--predictions",
         str(predictions),
+        "--metric",
+        metric,
+        "--weights",
+        weights,
     ]
     if selected_parameters is not None:
         command.extend(["--selected-parameters", str(selected_parameters)])

@@ -1,7 +1,0 @@
-implementation_a,implementation_b,test_samples,class_agreement,disagreement_count,probability_correlation,max_absolute_probability_difference,exact_prediction_matches,exact_vote_count_matches
-custom,sklearn,6000,0.9996666666666667,2,0.9999392601961862,0.05263157894736853,5998,not applicable
-custom,weka,6000,0.9998333333333334,1,0.9999411095414711,0.07017609996952823,5999,not applicable
-sklearn,weka,6000,0.9998333333333334,1,0.999937642853482,0.07017609996952823,5999,not applicable
-custom,custom_cpp,6000,1.0,0,1.0,0.0,6000,6000
-sklearn,custom_cpp,6000,0.9996666666666667,2,0.9999392601961862,0.05263157894736853,5998,not applicable
-weka,custom_cpp,6000,0.9998333333333334,1,0.9999411095414711,0.07017609996952823,5999,not applicable

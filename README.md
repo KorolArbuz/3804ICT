@@ -59,6 +59,7 @@ src/evaluation/    metrics, alignment, and comparisons
 src/reporting/     standard experiment figures
 src/benchmarking/  controlled runtime measurements and report generation
 src/cpp_knn/       experimental exact C++20 candidate
+src/model_quality/ separate training-only k/metric/voting investigation
 weka/              Maven project for genuine Java/Weka IBk
 tests/             C++ correctness tests
 results/           compact experiment and benchmark evidence
@@ -103,6 +104,19 @@ python -m src.evaluation
 python -m src.reporting
 mvn -f weka/pom.xml clean package
 ```
+
+The optional model-quality experiment is deliberately separate from
+`run_all.py`. It freezes one winner using training-only CV before a one-time
+test evaluation:
+
+```bash
+python -m src.model_quality.search --data data/raw/default.xls
+python -m src.model_quality.evaluate --data data/raw/default.xls
+```
+
+Its artifacts are written only under `results/model_quality/`; see
+[src/model_quality/README.md](src/model_quality/README.md) for the leakage guard,
+manual selected implementation, and threshold-study boundary.
 
 For the C++ candidate:
 

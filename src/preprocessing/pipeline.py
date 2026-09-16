@@ -7,7 +7,6 @@ from src.common.config import CATEGORICAL_COLUMNS
 
 
 def feature_groups(frame):
-    """Keep nominal columns separate so they can be one-hot encoded."""
     if "ID" in frame or "target" in frame:
         raise ValueError("ID and target must be excluded before preprocessing")
 
@@ -37,8 +36,7 @@ def make_preprocessor(X):
         ("encoder", OneHotEncoder(drop=None, handle_unknown="ignore", sparse_output=False)),
     ])
 
-    transformer = ColumnTransformer(
-        [
+    transformer = ColumnTransformer([
             ("numeric", numeric_pipeline, numeric_columns),
             ("nominal", nominal_pipeline, nominal_columns),
         ],

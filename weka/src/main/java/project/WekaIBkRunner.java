@@ -10,6 +10,8 @@ import org.apache.commons.csv.CSVRecord;
 import weka.classifiers.Evaluation;
 import weka.classifiers.lazy.IBk;
 import weka.core.EuclideanDistance;
+import weka.core.ManhattanDistance;
+import weka.core.NormalizableDistance;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.SelectedTag;
@@ -64,15 +66,17 @@ public final class WekaIBkRunner {
             System.out.println("Weka " + Version.VERSION + " genuine IBk runner\n"
                     + "java -jar weka/target/knn-weka-runner.jar --train <train.arff> --test <test.arff> "
                     + "--k <selected-k> --predictions <predictions.csv> [--metrics <evaluation.txt>] "
-                    + "[--selected-parameters <selection.json>] [--ids <test_ids.csv>]\n"
+                    + "[--selected-parameters <selection.json>] [--ids <test_ids.csv>] "
+                    + "[--metric euclidean|manhattan] [--weights uniform|distance]\n"
                     + "Requires test row IDs from python -m src.preprocessing. "
-                    + "No CV, uniform voting, EuclideanDistance dontNormalize=true.");
+                    + "Defaults preserve the accepted no-CV, uniform-vote, "
+                    + "EuclideanDistance dontNormalize=true behavior.");
             return;
         }
         Path localWekaHome = Path.of("weka", "target", "weka-home").toAbsolutePath();
         Files.createDirectories(localWekaHome);
         weka.core.Environment.getSystemWide().addVariable("WEKA_HOME", localWekaHome.toString());
-        Set<String> allowed = Set.of("--train", "--test", "--k", "--predictions", "--metrics", "--ids", "--selected-parameters");
+        Set<String> allowed = Set.of("--train", "--test", "--k", "--predictions", "--metrics", "--ids", "--selected-parameters", "--metric", "--weights");
         Map<String, String> options = new HashMap<>();
         for (int i = 0; i < args.length; i += 2) {
             if (i + 1 >= args.length || !allowed.contains(args[i]) || options.put(args[i], args[i + 1]) != null)
@@ -86,11 +90,21 @@ public final class WekaIBkRunner {
         Path idsPath = Path.of(options.getOrDefault("--ids", testPath.resolveSibling("test_ids.csv").toString()));
         int k = Integer.parseInt(options.get("--k"));
         if (k < 1) throw new IllegalArgumentException("k must be >= 1");
+        String metric = options.getOrDefault("--metric", "euclidean");
+        String weights = options.getOrDefault("--weights", "uniform");
+        if (!Set.of("euclidean", "manhattan").contains(metric))
+            throw new IllegalArgumentException("metric must be euclidean or manhattan");
+        if (!Set.of("uniform", "distance").contains(weights))
+            throw new IllegalArgumentException("weights must be uniform or distance");
         Path selectionPath = options.containsKey("--selected-parameters") ? Path.of(options.get("--selected-parameters")) : null;
         if (selectionPath != null) {
             JsonObject selection = readJson(selectionPath);
             if (selection.get("selected_k").getAsInt() != k)
                 throw new IllegalArgumentException("Selected k mismatch");
+            if (selection.has("metric") && !selection.get("metric").getAsString().equals(metric))
+                throw new IllegalArgumentException("Selected metric mismatch");
+            if (selection.has("weights") && !selection.get("weights").getAsString().equals(weights))
+                throw new IllegalArgumentException("Selected weights mismatch");
         }
         Instances train = DataSource.read(trainPath.toString());
         Instances test = DataSource.read(testPath.toString());
@@ -107,14 +121,16 @@ public final class WekaIBkRunner {
         Set<String> seen = new HashSet<>();
         for (CSVRecord row : ids) if (!seen.add(row.get("row_id"))) throw new IllegalArgumentException("Duplicate test row ID");
 
-        EuclideanDistance distance = new EuclideanDistance();
+        NormalizableDistance distance = metric.equals("euclidean")
+                ? new EuclideanDistance() : new ManhattanDistance();
         distance.setDontNormalize(true);
         LinearNNSearch search = new LinearNNSearch();
         search.setSkipIdentical(false);
         search.setDistanceFunction(distance);
         IBk classifier = new IBk(k);
         classifier.setCrossValidate(false);
-        classifier.setDistanceWeighting(new SelectedTag(IBk.WEIGHT_NONE, IBk.TAGS_WEIGHTING));
+        int weightingMode = weights.equals("uniform") ? IBk.WEIGHT_NONE : IBk.WEIGHT_INVERSE;
+        classifier.setDistanceWeighting(new SelectedTag(weightingMode, IBk.TAGS_WEIGHTING));
         classifier.setNearestNeighbourSearchAlgorithm(search);
         long start = System.nanoTime();
         classifier.buildClassifier(train);
@@ -155,7 +171,8 @@ public final class WekaIBkRunner {
         runtime.put("java_version", System.getProperty("java.version"));
         runtime.put("distance_normalization", !distance.getDontNormalize());
         runtime.put("internal_cross_validation", classifier.getCrossValidate());
-        runtime.put("distance_weighting", "none");
+        runtime.put("metric", metric);
+        runtime.put("distance_weighting", weights.equals("uniform") ? "none" : "inverse");
         runtime.put("search", "LinearNNSearch");
         runtime.put("classifier_options", Utils.joinOptions(classifier.getOptions()));
         runtime.put("timing_scope", "one buildClassifier; one distributionForInstance loop plus argmax; I/O/evaluation/JVM startup excluded; no warmup");
@@ -166,7 +183,7 @@ public final class WekaIBkRunner {
         write(evaluationPath, "Weka " + Version.VERSION + "\n" + JSON.toJson(runtime) + "\n"
                 + evaluation.toSummaryString("Native Weka Evaluation\n", false)
                 + evaluation.toClassDetailsString() + evaluation.toMatrixString());
-        System.out.printf(java.util.Locale.ROOT, "Weka %s IBk: k=%d, %d predictions, %.6fs; dontNormalize=%s -> %s%n",
-                Version.VERSION, k, test.numInstances(), predictionSeconds, distance.getDontNormalize(), predictionPath);
+        System.out.printf(java.util.Locale.ROOT, "Weka %s IBk: k=%d, metric=%s, weights=%s, %d predictions, %.6fs; dontNormalize=%s -> %s%n",
+                Version.VERSION, k, metric, weights, test.numInstances(), predictionSeconds, distance.getDontNormalize(), predictionPath);
     }
 }

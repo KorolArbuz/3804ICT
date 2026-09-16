@@ -1,3 +1,0 @@
-mode,runs,median_seconds,iqr_seconds,min_seconds,max_seconds,outlier_count_1_5_iqr
-fresh_process,20,0.59753525,0.04473885,0.5830857,1.5456861,1
-persistent_process,20,1.27639245,0.81506865,0.6202447,1.4546633,0

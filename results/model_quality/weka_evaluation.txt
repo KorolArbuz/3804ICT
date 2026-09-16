@@ -1,0 +1,39 @@
+Weka 3.8.6
+{
+  "implementation": "weka",
+  "selected_k": 25,
+  "fit_seconds": 8.1412736,
+  "prediction_seconds": 3.6111695,
+  "milliseconds_per_sample": 0.6018615833333333,
+  "weka_version": "3.8.6",
+  "java_version": "11.0.16.1",
+  "distance_normalization": false,
+  "internal_cross_validation": false,
+  "metric": "euclidean",
+  "distance_weighting": "inverse",
+  "search": "LinearNNSearch",
+  "classifier_options": "-K 25 -W 0 -I -A \"weka.core.neighboursearch.LinearNNSearch -A \\\"weka.core.EuclideanDistance -D -R first-last\\\"\"",
+  "timing_scope": "one buildClassifier; one distributionForInstance loop plus argmax; I/O/evaluation/JVM startup excluded; no warmup",
+  "probability_semantics": "Unmodified Weka IBk nominal distribution; includes native smoothing and boundary distance ties"
+}
+Native Weka Evaluation
+
+Correctly Classified Instances        4871               81.1833 %
+Incorrectly Classified Instances      1129               18.8167 %
+Kappa statistic                          0.3439
+Mean absolute error                      0.2739
+Root mean squared error                  0.3788
+Relative absolute error                 79.5086 %
+Root relative squared error             91.2634 %
+Total Number of Instances             6000     
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0,946    0,659    0,835      0,946    0,887      0,369    0,740     0,889     0
+                 0,341    0,054    0,640      0,341    0,445      0,369    0,740     0,508     1
+Weighted Avg.    0,812    0,526    0,792      0,812    0,789      0,369    0,740     0,805     
+=== Confusion Matrix ===
+
+    a    b   <-- classified as
+ 4419  254 |    a = 0
+  875  452 |    b = 1
