@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <span>
+#include <optional>
 #include <string_view>
 #include <vector>
 
@@ -20,19 +21,26 @@ enum class SelectionMethod {
     nth_element,
 };
 
+enum class WeightMode { uniform, distance };
+[[nodiscard]] WeightMode parse_weight_mode(std::string_view value);
+[[nodiscard]] std::string_view weight_mode_name(WeightMode value);
+
 [[nodiscard]] SelectionMethod parse_selection_method(std::string_view value);
 [[nodiscard]] std::string_view selection_method_name(SelectionMethod value);
 
 struct PredictionResult {
     std::vector<int> labels;
     std::vector<std::size_t> positive_vote_counts;
+    std::vector<double> scores;
     double distance_seconds{};
     double selection_vote_seconds{};
 };
 
 class ExactKnnClassifier {
 public:
-    ExactKnnClassifier(Matrix training, std::vector<int> labels, std::size_t k);
+    ExactKnnClassifier(Matrix training, std::vector<int> labels, std::size_t k,
+                       WeightMode weights = WeightMode::uniform,
+                       std::optional<double> threshold = std::nullopt);
 
     [[nodiscard]] PredictionResult predict_reference(const Matrix& queries) const;
     [[nodiscard]] PredictionResult predict_optimized(
@@ -67,10 +75,14 @@ private:
         std::vector<Neighbour>& candidates
     ) const;
     void validate_queries(const Matrix& queries) const;
+    void vote(const std::vector<Neighbour>& neighbours, PredictionResult& output,
+              std::size_t row) const;
 
     Matrix training_;
     std::vector<int> labels_;
     std::size_t k_;
+    WeightMode weights_;
+    std::optional<double> threshold_;
 };
 
 }  // namespace cpp_knn

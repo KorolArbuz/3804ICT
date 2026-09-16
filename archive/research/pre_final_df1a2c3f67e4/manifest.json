@@ -1,0 +1,2477 @@
+{
+  "snapshot_id": "pre_final_df1a2c3f67e4",
+  "git_head": "df1a2c3f67e45683ed64781afd0f19144a610407",
+  "git_status_before_snapshot": "?? archive/\n?? scripts/\n",
+  "files": [
+    {
+      "old_relative_path": ".gitignore",
+      "archived_relative_path": "snapshot/.gitignore",
+      "sha256": "b29f22690568ce42e293450a6d70440ae34006ae9b75f5d034a1172069520838",
+      "size": 483,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": ".vscode/tasks.json",
+      "archived_relative_path": "snapshot/.vscode/tasks.json",
+      "sha256": "0f08501b2f014fb12726b2545abde58c9c1c3e10fac2c7bee0d6402582e0a7c1",
+      "size": 733,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "CMakeLists.txt",
+      "archived_relative_path": "snapshot/CMakeLists.txt",
+      "sha256": "b61cffe96ee190170d6d22b45caeb8b2cc0c7ae9dfe5c0a370eddbe1b82998ba",
+      "size": 1923,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "README.md",
+      "archived_relative_path": "snapshot/README.md",
+      "sha256": "caf9b88bec9e0ae93ff3ba044fdff87c6a8c13264ca3be6f82651a5821979adf",
+      "size": 7888,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "requirements.txt",
+      "archived_relative_path": "snapshot/requirements.txt",
+      "sha256": "7a82fc6612f9c70fe82fb9c4a40eabd4502f7399acc413c8ee8ed31da753e914",
+      "size": 130,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/confusion_matrices.csv",
+      "archived_relative_path": "snapshot/results/confusion_matrices.csv",
+      "sha256": "e8d939e1e7019478b2e8e23873dc84334175767ff6dd5da6dc9d92584f98ceb2",
+      "size": 102,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/confusion_matrix_custom.png",
+      "archived_relative_path": "snapshot/results/confusion_matrix_custom.png",
+      "sha256": "7551b0406bf45e7d20b828a5b94fbe96bd16c4b54f5b0ec879c2256cb4f8376e",
+      "size": 70000,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/cv_f1_vs_k.png",
+      "archived_relative_path": "snapshot/results/cv_f1_vs_k.png",
+      "sha256": "1d44d4fa8f9810dbc4a3d2407d7fe52bdbdc9f9ac3ffacfcec82cefba12de4d6",
+      "size": 76482,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/cv_results.csv",
+      "archived_relative_path": "snapshot/results/cv_results.csv",
+      "sha256": "578cd952b41f46f7980a31e43a18b54080f262bc6cd563304727aa2340da55c6",
+      "size": 7802,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/cv_results_summary.csv",
+      "archived_relative_path": "snapshot/results/cv_results_summary.csv",
+      "sha256": "3fbf0776cbbb3760c97f0ad2f70c9ff006da4595f98910cc43493afd80de1e32",
+      "size": 3564,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/metrics_comparison.csv",
+      "archived_relative_path": "snapshot/results/metrics_comparison.csv",
+      "sha256": "cfc4f32490da0d59be9fca816fd90c10115ef4f5bd3a26ac1bebd931a1e371c6",
+      "size": 893,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/metrics_comparison.png",
+      "archived_relative_path": "snapshot/results/metrics_comparison.png",
+      "sha256": "c02d44c5460c97e5e0d191563281d5781dd3c573172c6e3f63504a0dc2ebf170",
+      "size": 97888,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/baseline_manifest.json",
+      "archived_relative_path": "snapshot/results/model_quality/baseline_manifest.json",
+      "sha256": "ca6bacdb254e88d9cf8f48aa6a7749296f34f6183bb03f952091157760a2aa03",
+      "size": 10462,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/baseline_vs_selected_confusion.png",
+      "archived_relative_path": "snapshot/results/model_quality/baseline_vs_selected_confusion.png",
+      "sha256": "567291f07cfc9b77beef0f5c4479b6c947492592ff1c387bcace08e6dff3c52c",
+      "size": 40257,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/baseline_vs_selected_confusion.svg",
+      "archived_relative_path": "snapshot/results/model_quality/baseline_vs_selected_confusion.svg",
+      "sha256": "5a7e43b814abf22150f39637ca113252cd26adf81a368a88b4afddbd32cf1bc8",
+      "size": 34582,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/baseline_vs_selected_metrics.png",
+      "archived_relative_path": "snapshot/results/model_quality/baseline_vs_selected_metrics.png",
+      "sha256": "6893795da84634f98099bcbbc0b23deaad59dcd9b212e2a017a0c71e3c409ca0",
+      "size": 38722,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/baseline_vs_selected_metrics.svg",
+      "archived_relative_path": "snapshot/results/model_quality/baseline_vs_selected_metrics.svg",
+      "sha256": "cf967db21d001a093400bab21e6109e88f7680465a8bb2625b1e08004c7a1aad",
+      "size": 31777,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/cv_balanced_accuracy_by_configuration.png",
+      "archived_relative_path": "snapshot/results/model_quality/cv_balanced_accuracy_by_configuration.png",
+      "sha256": "1f16bc9fb42e73c92310c3aa00403d161b2134f564ca8a056ab193f4af4356ce",
+      "size": 195641,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/cv_balanced_accuracy_by_configuration.svg",
+      "archived_relative_path": "snapshot/results/model_quality/cv_balanced_accuracy_by_configuration.svg",
+      "sha256": "c2bd8d14649086db95bef2ab380f805ab9a0a7fe803a9ee97d8c3a7b3a1a6dd0",
+      "size": 63692,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/cv_f1_by_configuration.png",
+      "archived_relative_path": "snapshot/results/model_quality/cv_f1_by_configuration.png",
+      "sha256": "ad7aafe21ddd5ed2b57ad17b4be9407fcbab894e4de1f533169445008f0a16ce",
+      "size": 194420,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/cv_f1_by_configuration.svg",
+      "archived_relative_path": "snapshot/results/model_quality/cv_f1_by_configuration.svg",
+      "sha256": "2433b3f40b3a32df69809eac8b496bd7bf6e4ce495e36e4ad7072b4d51451df1",
+      "size": 62626,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/cv_precision_recall_tradeoff.png",
+      "archived_relative_path": "snapshot/results/model_quality/cv_precision_recall_tradeoff.png",
+      "sha256": "62cbbff4215b9d6ca75f0269dcc2caff7d73791ea12c78ea75cda33437446bd9",
+      "size": 89309,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/cv_precision_recall_tradeoff.svg",
+      "archived_relative_path": "snapshot/results/model_quality/cv_precision_recall_tradeoff.svg",
+      "sha256": "82ad498c52dd0ac95c8ac0f63aacc500662c5f8d2540d9de77b6e392491cd688",
+      "size": 50580,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/cv_quality_grid.csv",
+      "archived_relative_path": "snapshot/results/model_quality/cv_quality_grid.csv",
+      "sha256": "90938b4a203aca168c9967476c45d80a00ba70a308a7510b9697b2331611c934",
+      "size": 63920,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/cv_quality_report.md",
+      "archived_relative_path": "snapshot/results/model_quality/cv_quality_report.md",
+      "sha256": "596810d997eb6cfac7b5a1c2d9672db2739f21558e38a442b0db52e5c1189ced",
+      "size": 1764,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/cv_quality_summary.csv",
+      "archived_relative_path": "snapshot/results/model_quality/cv_quality_summary.csv",
+      "sha256": "1279e995dd4c762d57a0ebc903ea749d6f6a0a318650b1be03e62b58086867cf",
+      "size": 23961,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/cv_recall_by_configuration.png",
+      "archived_relative_path": "snapshot/results/model_quality/cv_recall_by_configuration.png",
+      "sha256": "577727b4c5e466d02e1ee4a2c8092258c193a39ee673c456f1af00b99b0c38d1",
+      "size": 212531,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/cv_recall_by_configuration.svg",
+      "archived_relative_path": "snapshot/results/model_quality/cv_recall_by_configuration.svg",
+      "sha256": "5d5bcb08c23f8fd29e43b25927864e00314d22324daabead40dd297e7aa542d8",
+      "size": 64437,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/enhanced_vs_sklearn_agreement.json",
+      "archived_relative_path": "snapshot/results/model_quality/enhanced_vs_sklearn_agreement.json",
+      "sha256": "d058fd178a436dae785a0cd2c862260cf13390b71ee9faadbe187998aaba91f7",
+      "size": 593,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/enhanced_vs_sklearn_probability_diagnostics.csv",
+      "archived_relative_path": "snapshot/results/model_quality/enhanced_vs_sklearn_probability_diagnostics.csv",
+      "sha256": "6f717b54c9187f655bee3a24ede35afaa9802dbbafaefcb85d74ffaac1913dc7",
+      "size": 1327,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/final_quality_report.md",
+      "archived_relative_path": "snapshot/results/model_quality/final_quality_report.md",
+      "sha256": "b328e6024b0074249a3a4f17ab8fe527385c78c825c35d103ebf80ae9b615cf2",
+      "size": 2729,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/predictions_baseline_custom_v5_1.csv",
+      "archived_relative_path": "snapshot/results/model_quality/predictions_baseline_custom_v5_1.csv",
+      "sha256": "db528fc1d4aac110af7665b70710575b563953910b3d05e8601fb93ed69db632",
+      "size": 362984,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/predictions_enhanced_custom.csv",
+      "archived_relative_path": "snapshot/results/model_quality/predictions_enhanced_custom.csv",
+      "sha256": "70ae6d6a9276ac8dda9afcdfdfa51c037724597d6e6b25bc3dd8426c80947a83",
+      "size": 372763,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/predictions_selected_sklearn.csv",
+      "archived_relative_path": "snapshot/results/model_quality/predictions_selected_sklearn.csv",
+      "sha256": "6f4c2df5f5003496a2e0155a07850152d189395bb54676fcd408a58880676f0a",
+      "size": 372888,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/predictions_selected_weka.csv",
+      "archived_relative_path": "snapshot/results/model_quality/predictions_selected_weka.csv",
+      "sha256": "600da04bd4283478f187f363fb718b4110863d3936177355ea4d8e05ed5e2d16",
+      "size": 262988,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/predictions_selected_weka.runtime.json",
+      "archived_relative_path": "snapshot/results/model_quality/predictions_selected_weka.runtime.json",
+      "sha256": "f62060c3f9e26f18d93e0603184bc66fa597d94a8b430f56cb4e1832f6b0ee06",
+      "size": 789,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/selected_quality_parameters.json",
+      "archived_relative_path": "snapshot/results/model_quality/selected_quality_parameters.json",
+      "sha256": "6074e3c0423e9db6203c46e7d346950b7bd1d41fac9f22e7995f4c3a4e72eebf",
+      "size": 3037,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/test_metric_difference_bootstrap.csv",
+      "archived_relative_path": "snapshot/results/model_quality/test_metric_difference_bootstrap.csv",
+      "sha256": "0f405eb1263c2f115c23fe6645a9aac5faa417edb9b646494eb158b97446791b",
+      "size": 464,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/test_quality_comparison.csv",
+      "archived_relative_path": "snapshot/results/model_quality/test_quality_comparison.csv",
+      "sha256": "ad9fcfaa72a2bc5dbe0216a7f1041473cc7e5ac58e9385968b92e227bbee77a4",
+      "size": 1130,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/oof_scores.csv",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/oof_scores.csv",
+      "sha256": "3e8e9c4bee43bd6de34369a68a09591e50853222939619f26ab7dccae1822df6",
+      "size": 956425,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/test_score_metrics.json",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/test_score_metrics.json",
+      "sha256": "88d6bddd66f13879dbc8910979d6936b9053486ae280501865e9f05f686016cc",
+      "size": 79,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/test_scores.csv",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/test_scores.csv",
+      "sha256": "69abe893e7a3510e249cc6351a29b201a6a271c694c9b06b5cc7d02295bee44a",
+      "size": 308187,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/test_threshold_comparison.csv",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/test_threshold_comparison.csv",
+      "sha256": "5acd9ebdbffa42863077264f8570bf29357e11c54582ed4aa3af1d89552254f6",
+      "size": 862,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/threshold_bootstrap.csv",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/threshold_bootstrap.csv",
+      "sha256": "6f786cc30b242d4518193700569d76b0c4d95f5319c037d5739ab6eef98dadec",
+      "size": 1433,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/threshold_confusion_tradeoff.png",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/threshold_confusion_tradeoff.png",
+      "sha256": "0c5c04b0d25bab2d7b28508176c7e5b561115a8d4fba15ce7aa452f442520aff",
+      "size": 70164,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/threshold_confusion_tradeoff.svg",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/threshold_confusion_tradeoff.svg",
+      "sha256": "bb3b33794c899c03b9ff7a6f8cce272b822bb1263305b6802bedf59cabe33ab8",
+      "size": 100341,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/threshold_consistency.json",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/threshold_consistency.json",
+      "sha256": "c7fe142acf06edc3e8fcb858e288277c1c1afad3dfe354c970ccbf83e737f947",
+      "size": 1173,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/threshold_grid.csv",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/threshold_grid.csv",
+      "sha256": "7936f07f41116a63e878f7cafcef672436e4d80b56a75c5eae0d1d9857f50f61",
+      "size": 4934414,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/threshold_metrics_by_value.png",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/threshold_metrics_by_value.png",
+      "sha256": "2f84f24079da9ce38cac76eadd1527d0a9c4932e416eb6dabdd82b444a31783b",
+      "size": 96190,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/threshold_metrics_by_value.svg",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/threshold_metrics_by_value.svg",
+      "sha256": "a8bcbd4a2be8d1c430ac453e9336281bcc2f02b00589de9a02a597ba84bfd7b7",
+      "size": 175422,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/threshold_oof_report.md",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/threshold_oof_report.md",
+      "sha256": "cfd8d6d46afe489a427bfe7da3e8f2bc7901e910c83af1a5f562ff2a77cf795a",
+      "size": 5223,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/threshold_precision_recall_curve.png",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/threshold_precision_recall_curve.png",
+      "sha256": "9eb88a7e20b409f3f27c48bc22a9e4196722e9e35094e31fa85be1340661158c",
+      "size": 65378,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/threshold_precision_recall_curve.svg",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/threshold_precision_recall_curve.svg",
+      "sha256": "0a56565f874fd3a394ea521323503c3b9495015d2a4c41e41bd3fbeba9aa5e9d",
+      "size": 121781,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/threshold_report.md",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/threshold_report.md",
+      "sha256": "ebdeb798dd2147ff9b1a06f3c4c117d143d97fce2fec2b8e63bbca10d41091e1",
+      "size": 14814,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/threshold_score_diagnostics.csv",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/threshold_score_diagnostics.csv",
+      "sha256": "c837ec60b520b8d0c8496ac673439aceeb6787d8128e85944f47a982928d58ec",
+      "size": 2303,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/threshold_selection.json",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/threshold_selection.json",
+      "sha256": "85717b3d91675c7b9058005acaa26fc3215c3dfa4be7dd4baa1f1a3fe318b8ef",
+      "size": 5291,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/threshold_study/validation.json",
+      "archived_relative_path": "snapshot/results/model_quality/threshold_study/validation.json",
+      "sha256": "b2def2c9299b3ab96231097abcde764937dd1cd41154c6cdd18107217c3ca687",
+      "size": 1524,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/weka_evaluation.txt",
+      "archived_relative_path": "snapshot/results/model_quality/weka_evaluation.txt",
+      "sha256": "8399dc5a512168832c5c6e412125bdae3067401a831085a32887f73c30b629ae",
+      "size": 1778,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/weka_execution.log",
+      "archived_relative_path": "snapshot/results/model_quality/weka_execution.log",
+      "sha256": "08b37d7f2edebc00f35747ac4b62426db06481dbbd5215b7484eaa107f8e099a",
+      "size": 553,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality/weka_selected_status.json",
+      "archived_relative_path": "snapshot/results/model_quality/weka_selected_status.json",
+      "sha256": "931b878aa476920a22ef6c8e6e75e32f7f96c9b289060096e5857d993354cd47",
+      "size": 345,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/feature_block_comparison.png",
+      "archived_relative_path": "snapshot/results/model_quality_v2/feature_block_comparison.png",
+      "sha256": "f309f4f463b24f9f17985ff986cb47f197a1315e88437f9985657d93d5b8e1b6",
+      "size": 46956,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/feature_block_comparison.svg",
+      "archived_relative_path": "snapshot/results/model_quality_v2/feature_block_comparison.svg",
+      "sha256": "55338bf78a802be7dd85583c216ff3244d74e7fc8b83b952b024caf46ec44fb7",
+      "size": 30361,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/final_v2_configuration.json",
+      "archived_relative_path": "snapshot/results/model_quality_v2/final_v2_configuration.json",
+      "sha256": "8215e7df5a8349f1342c4e8d86476e59f214c52cb91c6a4e2aa12e5416de472d",
+      "size": 30643,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/final_v2_report.md",
+      "archived_relative_path": "snapshot/results/model_quality_v2/final_v2_report.md",
+      "sha256": "ae75995c7f3e9ae5752cfa021f3b124d6ef44fcfd1bc9b07029e3bf2f59a1271",
+      "size": 7472,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/legacy_test_comparison.csv",
+      "archived_relative_path": "snapshot/results/model_quality_v2/legacy_test_comparison.csv",
+      "sha256": "7b6276d9487f8c47d15beecb081f1b54d258d5083dfa85f190896f43e61c94d8",
+      "size": 1400,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/manual_v2_parity.json",
+      "archived_relative_path": "snapshot/results/model_quality_v2/manual_v2_parity.json",
+      "sha256": "0f58ee25e04b36d2c8127c7b3d59fbd7bceba7acbff6ddb47bde9a91a5928cb7",
+      "size": 710,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/nested_inner_selection.csv",
+      "archived_relative_path": "snapshot/results/model_quality_v2/nested_inner_selection.csv",
+      "sha256": "690b435b4424905c1322da313f61481ee9503f6c4fa4bf3444329f991ef9cd68",
+      "size": 92269,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/nested_outer_results.csv",
+      "archived_relative_path": "snapshot/results/model_quality_v2/nested_outer_results.csv",
+      "sha256": "16f4abcf63c8e8aa930a88319bbdcb2d475a76fa7031ddb5b05dc87cec57a620",
+      "size": 14263,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/nested_stage_ap.png",
+      "archived_relative_path": "snapshot/results/model_quality_v2/nested_stage_ap.png",
+      "sha256": "388b531bd47bc68ae7a4048fa235c50e289e481f452874d8dbc084fdabec415d",
+      "size": 72014,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/nested_stage_ap.svg",
+      "archived_relative_path": "snapshot/results/model_quality_v2/nested_stage_ap.svg",
+      "sha256": "f988f1dfaf69567327c84d8d03417742a2f231e16a9fca2907ee0536d03f8552",
+      "size": 37033,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/nested_stage_auc.png",
+      "archived_relative_path": "snapshot/results/model_quality_v2/nested_stage_auc.png",
+      "sha256": "c3168746a33059215dc407c4b850da0f2dea89dd16156ea2cf8b7449c11bd676",
+      "size": 68716,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/nested_stage_auc.svg",
+      "archived_relative_path": "snapshot/results/model_quality_v2/nested_stage_auc.svg",
+      "sha256": "af0cf984e1d6ce2cf330af963012d903816e6747f5a50f316566ba94222c8be4",
+      "size": 34812,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/nested_stage_f1.png",
+      "archived_relative_path": "snapshot/results/model_quality_v2/nested_stage_f1.png",
+      "sha256": "79dca84a8538e699f9178b851a3596b6976f656a7f1cd96462ef87195841bacd",
+      "size": 72068,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/nested_stage_f1.svg",
+      "archived_relative_path": "snapshot/results/model_quality_v2/nested_stage_f1.svg",
+      "sha256": "9a6a16ef9bf47f0aaba8abfa052f52bd6502db0315e3a98c1f50a9d193503f0b",
+      "size": 35559,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/nested_stage_recall_precision.png",
+      "archived_relative_path": "snapshot/results/model_quality_v2/nested_stage_recall_precision.png",
+      "sha256": "d011a0b8f8bb1b4fd221c54a5a8984e2a183bdc95d58b49351c7e7baf6d06706",
+      "size": 72035,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/nested_stage_recall_precision.svg",
+      "archived_relative_path": "snapshot/results/model_quality_v2/nested_stage_recall_precision.svg",
+      "sha256": "9cc693d75e3d61bd2dd02f640a231d32159cf02e84a80a825c67f192e5899e46",
+      "size": 30935,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/operating_point/fp_vs_recall.png",
+      "archived_relative_path": "snapshot/results/model_quality_v2/operating_point/fp_vs_recall.png",
+      "sha256": "9d32d97bbd6c9d2446064d0e9aab6e2ae940114235f61f0c75805f715d8aa6ce",
+      "size": 69457,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/operating_point/fp_vs_recall.svg",
+      "archived_relative_path": "snapshot/results/model_quality_v2/operating_point/fp_vs_recall.svg",
+      "sha256": "0b918e9298ba240830ddfbc58b6e253efaad2c8e545aadadab8b25a4076de5b9",
+      "size": 64606,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/operating_point/legacy_operating_point_bootstrap.csv",
+      "archived_relative_path": "snapshot/results/model_quality_v2/operating_point/legacy_operating_point_bootstrap.csv",
+      "sha256": "64a3683e78c8fa75e9702521edd887a6ba1951e833aed2e39e86142c8a485277",
+      "size": 6934,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/operating_point/legacy_operating_point_comparison.csv",
+      "archived_relative_path": "snapshot/results/model_quality_v2/operating_point/legacy_operating_point_comparison.csv",
+      "sha256": "beed84de36278f0c96e9d7ee48436130c71737d4930f44e7ecadbb234f4a10f9",
+      "size": 3266,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/operating_point/legacy_shared_score_metrics.json",
+      "archived_relative_path": "snapshot/results/model_quality_v2/operating_point/legacy_shared_score_metrics.json",
+      "sha256": "e8a2b76912ed6acfdfa3da350fc93881a8c84097cca184de825a8384d0378824",
+      "size": 431,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/operating_point/manual_v2_all_rows_parity.json",
+      "archived_relative_path": "snapshot/results/model_quality_v2/operating_point/manual_v2_all_rows_parity.json",
+      "sha256": "eb7ce1bbd67fd5581601968a36f0e7bc14cd3c5f227ba4c2f5faac23ae9b81f6",
+      "size": 3329,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/operating_point/oof_operating_point_report.md",
+      "archived_relative_path": "snapshot/results/model_quality_v2/operating_point/oof_operating_point_report.md",
+      "sha256": "cd68851d4a46cd265e5b905e8193d1abebc766c5381d9574241874aacc4eb7fb",
+      "size": 4156,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/operating_point/oof_scores.csv",
+      "archived_relative_path": "snapshot/results/model_quality_v2/operating_point/oof_scores.csv",
+      "sha256": "98c8e52901cae792d51fdc2d5600e89b14ecd23e35ad48843fa309c7fe34d39f",
+      "size": 981592,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/operating_point/operating_point_report.md",
+      "archived_relative_path": "snapshot/results/model_quality_v2/operating_point/operating_point_report.md",
+      "sha256": "211908d8c0b495af8bbe3092ee5e5ddd36d37f4f283a33f847d360feb218b20f",
+      "size": 13886,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/operating_point/operating_points.json",
+      "archived_relative_path": "snapshot/results/model_quality_v2/operating_point/operating_points.json",
+      "sha256": "6351d5796325e9c92b4d2cdc5791d3baac89b994aa4680b017f44c4ceede050d",
+      "size": 7691,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/operating_point/precision_recall_fp_frontier.png",
+      "archived_relative_path": "snapshot/results/model_quality_v2/operating_point/precision_recall_fp_frontier.png",
+      "sha256": "756e33939c764abf7cfdd931ab7fa43e60e18ab0bba3cef799b17ad5a449c37c",
+      "size": 103850,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/operating_point/precision_recall_fp_frontier.svg",
+      "archived_relative_path": "snapshot/results/model_quality_v2/operating_point/precision_recall_fp_frontier.svg",
+      "sha256": "8f39c9468e9c500425826963834a51848d1eca02af0b8399a8a0654cee066cac",
+      "size": 91860,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/operating_point/threshold_frontier.csv",
+      "archived_relative_path": "snapshot/results/model_quality_v2/operating_point/threshold_frontier.csv",
+      "sha256": "7118f247b3053c61fd54c87b940005fd7405911051ba665b86edb6d95a904e56",
+      "size": 5706122,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/operating_point/threshold_metrics.png",
+      "archived_relative_path": "snapshot/results/model_quality_v2/operating_point/threshold_metrics.png",
+      "sha256": "8f026a2df903a93693cc7d1d5d0dd50d79622073ba3dfe973da2ecf1d4ff6234",
+      "size": 143068,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/operating_point/threshold_metrics.svg",
+      "archived_relative_path": "snapshot/results/model_quality_v2/operating_point/threshold_metrics.svg",
+      "sha256": "96ad1e4c0aa72350eb70a1821a84c8dfd05f49a9be4664ba5ad25ba6ddaf80f9",
+      "size": 238802,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/operating_point/threshold_pareto_frontier.csv",
+      "archived_relative_path": "snapshot/results/model_quality_v2/operating_point/threshold_pareto_frontier.csv",
+      "sha256": "34569c08bc490f62fd5e1da21966a6a477b713d6df838750c417f670664e4bc2",
+      "size": 1371991,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/reference_manifest.json",
+      "archived_relative_path": "snapshot/results/model_quality_v2/reference_manifest.json",
+      "sha256": "fa4f1b158e52d7ca9da476053f4672bcdc1169367e68e3a5e0c067d645ba4523",
+      "size": 14429,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/search_state.json",
+      "archived_relative_path": "snapshot/results/model_quality_v2/search_state.json",
+      "sha256": "c0a448808ff8b76336d8dbf5460fe5a3224bf598a40bcf0b5127d6bbad7ff91f",
+      "size": 20544,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/stage1_k_threshold_inner.csv",
+      "archived_relative_path": "snapshot/results/model_quality_v2/stage1_k_threshold_inner.csv",
+      "sha256": "7f1fedcc332141456b391491d1c161292b1876ad11aa266a03aa98f83047fddf",
+      "size": 34560,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/stage1_k_threshold_outer.csv",
+      "archived_relative_path": "snapshot/results/model_quality_v2/stage1_k_threshold_outer.csv",
+      "sha256": "08b747c70331746322a3e860e19a8c2eab1e113d6cab87126160243970d0b42d",
+      "size": 2934,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/stage_ablation_summary.png",
+      "archived_relative_path": "snapshot/results/model_quality_v2/stage_ablation_summary.png",
+      "sha256": "de2e6a824a8bdcb87d678feb950e84d37b5dc63fefbcdba56996abb093045999",
+      "size": 56586,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/stage_ablation_summary.svg",
+      "archived_relative_path": "snapshot/results/model_quality_v2/stage_ablation_summary.svg",
+      "sha256": "ea866495ca2d9fa963ce497b35f321fbe6afa8e5e744f5050819032c768734ab",
+      "size": 34016,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/stage_decisions.csv",
+      "archived_relative_path": "snapshot/results/model_quality_v2/stage_decisions.csv",
+      "sha256": "29891dbbd977034bd2c735c3d52c6b2759ffaa36ed1e1c7766f77979148b9837",
+      "size": 6532,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/stage_decisions.json",
+      "archived_relative_path": "snapshot/results/model_quality_v2/stage_decisions.json",
+      "sha256": "fdee845a711e9fa65400b2c8941570bcb220f00b0357ceb49cadc75c48f5c978",
+      "size": 18810,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/model_quality_v2/stage_results.csv",
+      "archived_relative_path": "snapshot/results/model_quality_v2/stage_results.csv",
+      "sha256": "294d4bbf1ca8dad5ce81b84871e9ee4bbb0dacea56fc02fed0dc57268c596ab0",
+      "size": 2816,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/prediction_agreement.csv",
+      "archived_relative_path": "snapshot/results/prediction_agreement.csv",
+      "sha256": "f3d387e59247bf489e61fc549a8ec3d13c5c9800ec34113c97c8c43e984f10c2",
+      "size": 380,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/predictions_custom.csv",
+      "archived_relative_path": "snapshot/results/predictions_custom.csv",
+      "sha256": "b47f57f873462c047008bdb4488ad7e048da0063ea953221fa6bbb54f3f19990",
+      "size": 254969,
+      "category": "required-evidence",
+      "git_state": "ignored research evidence",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/predictions_custom.runtime.json",
+      "archived_relative_path": "snapshot/results/predictions_custom.runtime.json",
+      "sha256": "92bb88cabb8e7806ad2e0285c90d4a937abf4573db7f93004b7cf69fde588d53",
+      "size": 293,
+      "category": "required-evidence",
+      "git_state": "ignored research evidence",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/predictions_sklearn.csv",
+      "archived_relative_path": "snapshot/results/predictions_sklearn.csv",
+      "sha256": "35ac413051e3e616e1de9fb155383289c8d5488f9b2558258a5b0f56b51c0414",
+      "size": 254969,
+      "category": "required-evidence",
+      "git_state": "ignored research evidence",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/predictions_sklearn.runtime.json",
+      "archived_relative_path": "snapshot/results/predictions_sklearn.runtime.json",
+      "sha256": "9b3ed2d2799f4b55b45365c1dcc7f4d440e71bfb3692a4c3869e47407b868f16",
+      "size": 296,
+      "category": "required-evidence",
+      "git_state": "ignored research evidence",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/predictions_weka.csv",
+      "archived_relative_path": "snapshot/results/predictions_weka.csv",
+      "sha256": "4b71a5e5a3be314efa92123fb09dc4fbc8d4aaf33653c3145f4f8f4b773b3c31",
+      "size": 265038,
+      "category": "required-evidence",
+      "git_state": "ignored research evidence",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/predictions_weka.runtime.json",
+      "archived_relative_path": "snapshot/results/predictions_weka.runtime.json",
+      "sha256": "67ac07b8608ee7e6ad3ca4b747f8395b2766cc9f2eb3f74e323a104ed2bfa8cc",
+      "size": 758,
+      "category": "required-evidence",
+      "git_state": "ignored research evidence",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/auxiliary_memory_comparison.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/auxiliary_memory_comparison.png",
+      "sha256": "7e07a1a17c7e648f445364e59cdc1deb8185df45e0e63507985bcff8e5847ad5",
+      "size": 56377,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/auxiliary_memory_comparison.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/auxiliary_memory_comparison.svg",
+      "sha256": "74ef04b94952c20ff8768762dd38456f5bd077e128798d412396a4e40f351019",
+      "size": 32389,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/confusion_matrix_v5_1.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/confusion_matrix_v5_1.png",
+      "sha256": "87117620d1347d1b50200f8334c509c563680beb4eeec92f5c0f5bbd2ddd7048",
+      "size": 61033,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/confusion_matrix_v5_1.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/confusion_matrix_v5_1.svg",
+      "sha256": "fab06b3ad03f159d6c1c8ea6833261d06ef3522b0ba639e0fe48ef62bb1704f6",
+      "size": 30163,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/cpp_configuration_screen.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/cpp_configuration_screen.png",
+      "sha256": "baa747e92562364c2b565643880763f76e592b3bebd33b0e85798f04814df32d",
+      "size": 109514,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/cpp_configuration_screen.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/cpp_configuration_screen.svg",
+      "sha256": "5e0e725f0400e12e842a1734856c91cd190ae0e430230df869ef7a6f6281706f",
+      "size": 42161,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/cpp_process_mode_distribution.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/cpp_process_mode_distribution.png",
+      "sha256": "8257b3cad9ee68b9ae5b1e34145373ecfc2b5270751c70457a6e5a198592f049",
+      "size": 60654,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/cpp_process_mode_distribution.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/cpp_process_mode_distribution.svg",
+      "sha256": "162df50d587d4665407364929b182820cb6892b766708542044e0f5eac27af7a",
+      "size": 34656,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/custom_optimization_history_log.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/custom_optimization_history_log.png",
+      "sha256": "e5566b09f653a5b335c82601956080c29c142248f946c8a4ac70b363ccf979d6",
+      "size": 110500,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/custom_optimization_history_log.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/custom_optimization_history_log.svg",
+      "sha256": "cd43af77a151659dc82bead607f99be8713037700ee2439a06df92e9ec330adf",
+      "size": 38219,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/cv_f1_by_k_comprehensive.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/cv_f1_by_k_comprehensive.png",
+      "sha256": "684a986f8452829b9ab2bd5a3b3316c75413f91952aeb4bee1daa930160aaada",
+      "size": 91168,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/cv_f1_by_k_comprehensive.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/cv_f1_by_k_comprehensive.svg",
+      "sha256": "2b3b3142e5d45a8b187915bd129347e4e424b0d6eb7d09fe195bb29f8f014fe0",
+      "size": 47614,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/full_pipeline_runtime_comprehensive.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/full_pipeline_runtime_comprehensive.png",
+      "sha256": "fd08d639859d13125198a6ea8f0b28e6ee26cb035c544dde617118030bb8b8ed",
+      "size": 73818,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/full_pipeline_runtime_comprehensive.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/full_pipeline_runtime_comprehensive.svg",
+      "sha256": "1e1e5337d3f8b3eb3d07bda3ed347a3f38ed852915f83aa231cc66952f6a559b",
+      "size": 34075,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/implementation_agreement_heatmap.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/implementation_agreement_heatmap.png",
+      "sha256": "7ca0a29a34d83d07f193853d9046557e0f74814dcd9d845b8b680d85556a030b",
+      "size": 126821,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/implementation_agreement_heatmap.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/implementation_agreement_heatmap.svg",
+      "sha256": "9226f6665d8d2d022c6c81e2dd2e48421f3e637a15eb2eb14c4d96b4d71ed3a3",
+      "size": 42637,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/paired_speedup_distribution.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/paired_speedup_distribution.png",
+      "sha256": "d2b54927984781b843feb36934c16e938597d938d4d10466e6959574901eefe4",
+      "size": 90194,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/paired_speedup_distribution.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/paired_speedup_distribution.svg",
+      "sha256": "d1a72bf3c9de8ce4d22959ec560b1a6d4ba4b342993ef7839e58441fddd97c2d",
+      "size": 47372,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/prediction_runtime_controlled.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/prediction_runtime_controlled.png",
+      "sha256": "60728d573e4967dc86da77548432d7cac9cdca666aed52c170c10437e82e1524",
+      "size": 74104,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/prediction_runtime_controlled.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/prediction_runtime_controlled.svg",
+      "sha256": "6a037635c98c137c9aadef44bc551c8ea2c0654040585177391effdc3c97c2f8",
+      "size": 36411,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/prediction_runtime_distribution_comprehensive.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/prediction_runtime_distribution_comprehensive.png",
+      "sha256": "ed40cb7bba5a99203991ddf97a84592076635bad787f632e6a21465e181b9312",
+      "size": 64016,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/prediction_runtime_distribution_comprehensive.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/prediction_runtime_distribution_comprehensive.svg",
+      "sha256": "d7f6e7e2b7dceba2bd3f450bf7b13bcd60ab2376196f6a02d63e61c02a568bfd",
+      "size": 34157,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/prediction_runtime_run_order_comprehensive.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/prediction_runtime_run_order_comprehensive.png",
+      "sha256": "d5c8baab69ea5598385634b2b20abbc594f2fa7f6776f6c1652377b9eaed602f",
+      "size": 114483,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/prediction_runtime_run_order_comprehensive.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/prediction_runtime_run_order_comprehensive.svg",
+      "sha256": "56965fcea34311bc70b350d658d7052780b18be40132a3164c672fb0fe3a0bcf",
+      "size": 49186,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/prediction_throughput.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/prediction_throughput.png",
+      "sha256": "119f74f69610ad12f1d48e8be94fd9b76ace9510a425249c1b83a19cf462187a",
+      "size": 70807,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/prediction_throughput.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/prediction_throughput.svg",
+      "sha256": "2045f9a2428912a54445da89fe1bebe639bb609488b8af63186a4a6a4f2e1f95",
+      "size": 32975,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/README.md",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/README.md",
+      "sha256": "91872aeffc0eb80a1695e431e4dbc6dcd734ac0d8d6b9124196381f22b6fd8ca",
+      "size": 5856,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/rejected_optimization_experiments.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/rejected_optimization_experiments.png",
+      "sha256": "99661b706e70f32344c2b5777e6dc5ac724e1f5eee41852dbb957dec1c5bd605",
+      "size": 92535,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/rejected_optimization_experiments.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/rejected_optimization_experiments.svg",
+      "sha256": "211f6542f57cf5a890e96ab2889462ac6a0eafb9f0354a6075f463984da10007",
+      "size": 40402,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/runtime_by_session.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/runtime_by_session.png",
+      "sha256": "b5857fbe79afdbe90059bca3eee16e020efbf81be362f3e8419f76ca2eb1e398",
+      "size": 97936,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/runtime_by_session.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/runtime_by_session.svg",
+      "sha256": "a137940394f08936d895ce87eade38fc494ef15bf649cf9d3776e41b92795abb",
+      "size": 37612,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/runtime_vs_query_count.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/runtime_vs_query_count.png",
+      "sha256": "5a1b165c9905b4e5883d7d58e479eed83399fb585accebbc93ff9127add15c7e",
+      "size": 115852,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/runtime_vs_query_count.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/runtime_vs_query_count.svg",
+      "sha256": "869daff56145ae044ca3a8edfad68efa21b3bb33a576f55f5657c307aadb91ee",
+      "size": 43499,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/runtime_vs_training_size.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/runtime_vs_training_size.png",
+      "sha256": "60c3ea864556a6c40428d6d36ecd7a8c024a3af4ffe605ccdcea5d6e5adb43bb",
+      "size": 120270,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/runtime_vs_training_size.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/runtime_vs_training_size.svg",
+      "sha256": "c743fb769d9c640c0ad641897aa7233f257e4ea2d0860be2478af1f77ee55aa5",
+      "size": 43767,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/v5_phase_breakdown.png",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/v5_phase_breakdown.png",
+      "sha256": "5d0990155dd6dea8ff7263bb428f9714b6fc36f0f21942be73daeadc4476e71a",
+      "size": 94325,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/figures/v5_phase_breakdown.svg",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/figures/v5_phase_breakdown.svg",
+      "sha256": "b6621f42d89c2e7b0dafae769e599fdba209a553f6778566bf252bc3aba2c1b7",
+      "size": 40174,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/sessions/comprehensive_20260915/environment.json",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/sessions/comprehensive_20260915/environment.json",
+      "sha256": "856f32bd743f5309b2b30e06bf6cf75e8d8c84e76fa89f7cde1acea967094b44",
+      "size": 3281,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_benchmarks/sessions/comprehensive_20260915/raw_prediction_runs.csv",
+      "archived_relative_path": "snapshot/results/runtime_benchmarks/sessions/comprehensive_20260915/raw_prediction_runs.csv",
+      "sha256": "5b7536870b5f35b520374c808f561a928a7dabf9d94cae2a1a04ef406d82981e",
+      "size": 30441,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_comparison.csv",
+      "archived_relative_path": "snapshot/results/runtime_comparison.csv",
+      "sha256": "32d0fb10142207ca8d13ffb43921de35a31bc52781effe5cae069cb5289e4233",
+      "size": 253,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/runtime_comparison.png",
+      "archived_relative_path": "snapshot/results/runtime_comparison.png",
+      "sha256": "2d036de863a90ed058b12371580502fdb55e235c3b2e52e6fefb71e91e54da99",
+      "size": 72280,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/selected_parameters.json",
+      "archived_relative_path": "snapshot/results/selected_parameters.json",
+      "sha256": "08de1634c4658b1e8a3cff59c00cbffc45f1f87927759ab97d983ec3e188df79",
+      "size": 151,
+      "category": "required-evidence",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/weka_evaluation.txt",
+      "archived_relative_path": "snapshot/results/weka_evaluation.txt",
+      "sha256": "38cccda76aa037b64a7d9e28bd3f7e147e4f84c9a2fbb1a23bb9995be4d6fbc3",
+      "size": 1747,
+      "category": "required-evidence",
+      "git_state": "ignored research evidence",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "results/weka_execution.log",
+      "archived_relative_path": "snapshot/results/weka_execution.log",
+      "sha256": "44fdcbea2ec45a89d816b598fdcfd264d577036627b0236938feda35174916e6",
+      "size": 494,
+      "category": "required-evidence",
+      "git_state": "ignored research evidence",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "run_all.py",
+      "archived_relative_path": "snapshot/run_all.py",
+      "sha256": "8dc87bf84ef440a0272d6f61511d019c2f151fcf34bd20f6f9c1b523095ad45f",
+      "size": 4456,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/__init__.py",
+      "archived_relative_path": "snapshot/src/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/__init__.py",
+      "archived_relative_path": "snapshot/src/benchmarking/__init__.py",
+      "sha256": "2951587b8ddc463243c08577478c7b48fc20ead4dd9ebb90269694fb35717b51",
+      "size": 485,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/__main__.py",
+      "archived_relative_path": "snapshot/src/benchmarking/__main__.py",
+      "sha256": "8d296f07454733a709b9821825f9907e51acb7c844d2c0bca6868f70cb5f44e2",
+      "size": 253,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/aggregate_sessions.py",
+      "archived_relative_path": "snapshot/src/benchmarking/aggregate_sessions.py",
+      "sha256": "6e60c10006f2bed87bdacd8d1d72942232b2f8a8bf7f7ea2e7f734342e5fa0a0",
+      "size": 4308,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/benchmark_affinity.py",
+      "archived_relative_path": "snapshot/src/benchmarking/benchmark_affinity.py",
+      "sha256": "b2f395b308b41223f172d91a0fc37822001ad4164bc4f65da2dfc24f83b6daca",
+      "size": 8233,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/benchmark_cpp_configurations.py",
+      "archived_relative_path": "snapshot/src/benchmarking/benchmark_cpp_configurations.py",
+      "sha256": "503f8ab06cdc803f6d5daadd264719411a62a60067a5f139f67d3690f2fdcea5",
+      "size": 4410,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/benchmark_cpp_process_modes.py",
+      "archived_relative_path": "snapshot/src/benchmarking/benchmark_cpp_process_modes.py",
+      "sha256": "4982af3bc0a376a41a4ae794870109814ab26e962f52c035d43c855cec6db7b4",
+      "size": 4304,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/benchmark_full_pipeline.py",
+      "archived_relative_path": "snapshot/src/benchmarking/benchmark_full_pipeline.py",
+      "sha256": "0cdfdf54eb5b00907083ca4c4543bd1ef6312c3c073400faf838f7d87e342d58",
+      "size": 7384,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/benchmark_prediction_runs.py",
+      "archived_relative_path": "snapshot/src/benchmarking/benchmark_prediction_runs.py",
+      "sha256": "939580d11b2bbf997732b1602805089c0cba2cc3894b3ca7efddce47962dcd07",
+      "size": 7802,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/benchmark_scaling.py",
+      "archived_relative_path": "snapshot/src/benchmarking/benchmark_scaling.py",
+      "sha256": "f378f4462102bdd6f78689b70151805b75a290cb98dfba24956585a6fa05f79f",
+      "size": 9955,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/benchmark_sessions.py",
+      "archived_relative_path": "snapshot/src/benchmarking/benchmark_sessions.py",
+      "sha256": "196bec5996af18f892fda7967bc6f6859998baf0a4a57f2fd6066b73e126cff7",
+      "size": 1925,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/benchmark_utils.py",
+      "archived_relative_path": "snapshot/src/benchmarking/benchmark_utils.py",
+      "sha256": "462f2562f689d2e89dbaf67f4af336de2cb1da87b4d3238c9b0b7003f9d8e002",
+      "size": 12486,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/build_report_data.py",
+      "archived_relative_path": "snapshot/src/benchmarking/build_report_data.py",
+      "sha256": "43bf16d53ffe61097af6161d63654aa1bffa0ebc0b5dc2aa7f497852d7160392",
+      "size": 23502,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/capture_environment.py",
+      "archived_relative_path": "snapshot/src/benchmarking/capture_environment.py",
+      "sha256": "6711452e2b2be575b33af048af7dc9ae2794ac4a55765ba7cb8096482e4090c6",
+      "size": 2503,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/generate_comprehensive_summary.py",
+      "archived_relative_path": "snapshot/src/benchmarking/generate_comprehensive_summary.py",
+      "sha256": "0c254474db5ba70f7dbc01171fa4e3c00ed8e307025f133bb370bc26961a0e53",
+      "size": 22580,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/generate_figures.py",
+      "archived_relative_path": "snapshot/src/benchmarking/generate_figures.py",
+      "sha256": "dd6f925a1c8a77eca69bb316dc6d211b5b43402a6e556812a7269a656bdc12b3",
+      "size": 23147,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/README.md",
+      "archived_relative_path": "snapshot/src/benchmarking/README.md",
+      "sha256": "07d038d6e5a32b9ed3f90bd48013eb38b1783420b0883246e1b8ad58759a9ec2",
+      "size": 3693,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/run_runtime_suite.py",
+      "archived_relative_path": "snapshot/src/benchmarking/run_runtime_suite.py",
+      "sha256": "6cea8628ace5435e568f534f8eaf1c3b978aa3cb852b5d72333072830ca3732c",
+      "size": 3098,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/benchmarking/validate_runtime_suite.py",
+      "archived_relative_path": "snapshot/src/benchmarking/validate_runtime_suite.py",
+      "sha256": "19425b0ad78f6a0c215b4ff6c2bcf6d6f7ff08f539b1f57f9f2d08f04a663242",
+      "size": 6209,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/common/__init__.py",
+      "archived_relative_path": "snapshot/src/common/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/common/config.py",
+      "archived_relative_path": "snapshot/src/common/config.py",
+      "sha256": "472c3a87244e9a23aa86daa2a3ba6375b6358b240df7551b20112b0328df7869",
+      "size": 427,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/common/model_runner.py",
+      "archived_relative_path": "snapshot/src/common/model_runner.py",
+      "sha256": "49e1026115235e1709a05d7396ad0041ff5a384c020e83785bde383ff69f5078",
+      "size": 3504,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/common/utils.py",
+      "archived_relative_path": "snapshot/src/common/utils.py",
+      "sha256": "2731aa12156356baa7faa6a522eb3466864d19b03f66a1ff7d1c6500df615b23",
+      "size": 1881,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/cpp_knn/__init__.py",
+      "archived_relative_path": "snapshot/src/cpp_knn/__init__.py",
+      "sha256": "ea1f8f1f109befeedaa1ea3eba1d3a37d8fa17c7f45e2b25a6ab6cc1a9d9ab9b",
+      "size": 80,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/cpp_knn/benchmark.py",
+      "archived_relative_path": "snapshot/src/cpp_knn/benchmark.py",
+      "sha256": "1ba86e6f1670ae3d50a2e9ddb2dd40b350e1cb5a7f0378ab94fcde1b3d7d645c",
+      "size": 16596,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/cpp_knn/data_io.cpp",
+      "archived_relative_path": "snapshot/src/cpp_knn/data_io.cpp",
+      "sha256": "3a9b335ef521ad9611740fed707a9fb495582cae12548d531208d06c9b9f802f",
+      "size": 4655,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/cpp_knn/data_io.hpp",
+      "archived_relative_path": "snapshot/src/cpp_knn/data_io.hpp",
+      "sha256": "c3ecfb514afdd3ed56e513c0315ed6182a87b0ff0d200b25327e6e8624050a9a",
+      "size": 442,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/cpp_knn/evidence.py",
+      "archived_relative_path": "snapshot/src/cpp_knn/evidence.py",
+      "sha256": "1bce2bc0760b14492f674b143049aec06c7a0ab38f89a3a4b683b87c71aa6db7",
+      "size": 1944,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/cpp_knn/export_data.py",
+      "archived_relative_path": "snapshot/src/cpp_knn/export_data.py",
+      "sha256": "3ec68a41265f12602e78d70ae76df99c79b4b17a4490bfa170a977aee41eced2",
+      "size": 756,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/cpp_knn/knn.cpp",
+      "archived_relative_path": "snapshot/src/cpp_knn/knn.cpp",
+      "sha256": "a30c5d287bc8c4adde1e02b595655d7f5c87215a78d0fb43153d2aefbe62aa97",
+      "size": 11188,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/cpp_knn/knn.hpp",
+      "archived_relative_path": "snapshot/src/cpp_knn/knn.hpp",
+      "sha256": "a7a4b3939516ac36c33f043cdafb101526cf0522c4f0d3c5c5a0be50db00cd4d",
+      "size": 2065,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/cpp_knn/main.cpp",
+      "archived_relative_path": "snapshot/src/cpp_knn/main.cpp",
+      "sha256": "b1e0913c25566db678e1d3b74a80905450e46890faf6821c267cf154019f4b0e",
+      "size": 14646,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/cpp_knn/README.md",
+      "archived_relative_path": "snapshot/src/cpp_knn/README.md",
+      "sha256": "b80ef95c1f28fd6139c91775049796fdf98bd40efa01c132f2b6b77b3fb42acd",
+      "size": 6600,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/cpp_knn/verify.py",
+      "archived_relative_path": "snapshot/src/cpp_knn/verify.py",
+      "sha256": "81804b24fff22c6580725fb1fcc751ac75af02267ab11ccfff8d7082e60d8d02",
+      "size": 5745,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/custom_knn/__init__.py",
+      "archived_relative_path": "snapshot/src/custom_knn/__init__.py",
+      "sha256": "4bca571d5e6e3bbb11e923da08a4830b1b73bc7f06cc2ddb1c6cf2eee6f07f60",
+      "size": 110,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/custom_knn/__main__.py",
+      "archived_relative_path": "snapshot/src/custom_knn/__main__.py",
+      "sha256": "6d1079e9d9c27d3aec61242532abd5770398a2580a8c55d1293e2b2ffb2d002f",
+      "size": 566,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/custom_knn/classifier.py",
+      "archived_relative_path": "snapshot/src/custom_knn/classifier.py",
+      "sha256": "7d1a675e7a0b15e4e43ff521cd2137e0481a7f58c5a70557c9c45dd2b5929652",
+      "size": 13535,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/custom_knn/runner.py",
+      "archived_relative_path": "snapshot/src/custom_knn/runner.py",
+      "sha256": "b6b8bc4c2a06ef57d5923f0000847a8837c99372359cd7cdec508d649d8e39a1",
+      "size": 549,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/data/__init__.py",
+      "archived_relative_path": "snapshot/src/data/__init__.py",
+      "sha256": "a664b7b0ff9c55da122102a41843e607fb6f4b9a6ad25ee92db64b3d04ffc108",
+      "size": 114,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/data/__main__.py",
+      "archived_relative_path": "snapshot/src/data/__main__.py",
+      "sha256": "5090dc0a3df2c2f9c27858c6edd7bb3ab8d35f2977f89b1bdf19f237aa7e09da",
+      "size": 698,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/data/dataset.py",
+      "archived_relative_path": "snapshot/src/data/dataset.py",
+      "sha256": "36834017abddea37d5aca2a7dd25ba3b241b45c3764980c25ea118e03785a33f",
+      "size": 6467,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/evaluation/__init__.py",
+      "archived_relative_path": "snapshot/src/evaluation/__init__.py",
+      "sha256": "2d2231e4a82cdeb58af09c6a7c9d897a24380a006e377db547e479fe4b5c875c",
+      "size": 157,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/evaluation/__main__.py",
+      "archived_relative_path": "snapshot/src/evaluation/__main__.py",
+      "sha256": "5b3a35a15d6cb68ec9c7841c9ab9f474aef0c4b36f8ddc35138bffcd594fa609",
+      "size": 1422,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/evaluation/comparison.py",
+      "archived_relative_path": "snapshot/src/evaluation/comparison.py",
+      "sha256": "3e8547d2f28f34e840ba3e0db7d2932ceac13f42a6c88575353b26b0ed974a6e",
+      "size": 5212,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/evaluation/metrics.py",
+      "archived_relative_path": "snapshot/src/evaluation/metrics.py",
+      "sha256": "6a01ea6abd04132bbba55a24ae93d9e25cd8cdcab3dc900ae4fd4cc0953d8a09",
+      "size": 4761,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality/__init__.py",
+      "archived_relative_path": "snapshot/src/model_quality/__init__.py",
+      "sha256": "f4e728bec2837240bf23ad5404c66a9d90befe513e5a5a306b32d8931adc10fb",
+      "size": 181,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality/__main__.py",
+      "archived_relative_path": "snapshot/src/model_quality/__main__.py",
+      "sha256": "463088c73a44ee6a21e783b1517e801391590d5cb14d770d48c85cc898299ee7",
+      "size": 782,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality/enhanced_custom_knn.py",
+      "archived_relative_path": "snapshot/src/model_quality/enhanced_custom_knn.py",
+      "sha256": "d9e6eef1d14c4c180996187cda74bd10833adfb11074a66148fa81c826f30aa8",
+      "size": 5678,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality/evaluate.py",
+      "archived_relative_path": "snapshot/src/model_quality/evaluate.py",
+      "sha256": "5203657c26e892824ea3a974f6b499c117661341d1ff38d01b13507dce0de49e",
+      "size": 22842,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality/README.md",
+      "archived_relative_path": "snapshot/src/model_quality/README.md",
+      "sha256": "e1c2a056b68b9573bfdf4abf81d642abf35414c3ba8ccf09a24a9e42a63e40cb",
+      "size": 3017,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality/reporting.py",
+      "archived_relative_path": "snapshot/src/model_quality/reporting.py",
+      "sha256": "6928b495e3499861ba57b952f55d2ea55993e85ee9842e738d363da5964634ac",
+      "size": 9070,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality/search.py",
+      "archived_relative_path": "snapshot/src/model_quality/search.py",
+      "sha256": "62de2842f3ca9fe98c9a9218b9bc05ccc8aa425d38c4e88690f5810da4bba96b",
+      "size": 9983,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality/selection.py",
+      "archived_relative_path": "snapshot/src/model_quality/selection.py",
+      "sha256": "8caf5c7928cf8a2b4e032d2fcbcdcd72cf5ed8af4c6e85a24bb05cfda772e80c",
+      "size": 3962,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality/threshold.py",
+      "archived_relative_path": "snapshot/src/model_quality/threshold.py",
+      "sha256": "fc2e6948da65cc39708da8db78a67a933a2c63ab72ed8379cd7fdf27ff0ba6f9",
+      "size": 28979,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality/threshold_reporting.py",
+      "archived_relative_path": "snapshot/src/model_quality/threshold_reporting.py",
+      "sha256": "b27c23daba6b4751649c9cd8e255a61d3ab1dfc90e1b74880371daf78ef8f544",
+      "size": 27618,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality_v2/__init__.py",
+      "archived_relative_path": "snapshot/src/model_quality_v2/__init__.py",
+      "sha256": "08ce0c31f31b8b2f6e8aa37802c83d154c1c6c73d9dc9aac63b2a3c93da53c40",
+      "size": 216,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality_v2/__main__.py",
+      "archived_relative_path": "snapshot/src/model_quality_v2/__main__.py",
+      "sha256": "78955a6e84132918751ae373e7b7b5d792f883f5754dfc73f308e1ddd10131bf",
+      "size": 866,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality_v2/analysis.py",
+      "archived_relative_path": "snapshot/src/model_quality_v2/analysis.py",
+      "sha256": "a8be908fc42ab1e89fa7642f0de931adf04dc5838b2c783822b21bb7b0cf34d3",
+      "size": 2018,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality_v2/config.py",
+      "archived_relative_path": "snapshot/src/model_quality_v2/config.py",
+      "sha256": "2dba25101a1c3c172ef6faa924340e46f3c26d875e4d75691809195577afb5cf",
+      "size": 3477,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality_v2/custom_v2_knn.py",
+      "archived_relative_path": "snapshot/src/model_quality_v2/custom_v2_knn.py",
+      "sha256": "3504494658d981d560338f2bba4fe51917e601857fb45d1bbe5809703173f481",
+      "size": 2905,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality_v2/features.py",
+      "archived_relative_path": "snapshot/src/model_quality_v2/features.py",
+      "sha256": "efcd2eea1b58a72a2906f3c44be971c0b21cc766739612b55bb933b23cb447ab",
+      "size": 2574,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality_v2/nested_cv.py",
+      "archived_relative_path": "snapshot/src/model_quality_v2/nested_cv.py",
+      "sha256": "549ce30d04591299879878c8803139620505ef012eaa520db3dd572a6578c849",
+      "size": 9686,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality_v2/operating_point.py",
+      "archived_relative_path": "snapshot/src/model_quality_v2/operating_point.py",
+      "sha256": "7f744e8c2623d06e04079e59e76a51d1adc8ffea9914d9e593ccf62de929a18f",
+      "size": 33368,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality_v2/README.md",
+      "archived_relative_path": "snapshot/src/model_quality_v2/README.md",
+      "sha256": "89a47cb53096163866a14c59a94c6676d7ca2eccb0578d2f5e016fba8ceb21a3",
+      "size": 1240,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality_v2/reporting.py",
+      "archived_relative_path": "snapshot/src/model_quality_v2/reporting.py",
+      "sha256": "35d25c49865e04ba98e97b6d1babeeb53dffd4d6124f3ceb547227b2b6d84c84",
+      "size": 12161,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality_v2/reporting_operating_point.py",
+      "archived_relative_path": "snapshot/src/model_quality_v2/reporting_operating_point.py",
+      "sha256": "64a8a10232685a12b19844c2b412fc268315529e966de8230d6aaacb49f0cf68",
+      "size": 13011,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality_v2/search.py",
+      "archived_relative_path": "snapshot/src/model_quality_v2/search.py",
+      "sha256": "e9eca40609a6d08f933e018f8d11d75dffaa40d0558103445224f6310f9481f9",
+      "size": 16117,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality_v2/thresholding.py",
+      "archived_relative_path": "snapshot/src/model_quality_v2/thresholding.py",
+      "sha256": "0080e2016f99d737e0b03f17570e97e6827772ca865a189ddc90af0121c46996",
+      "size": 3100,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/model_quality_v2/transforms.py",
+      "archived_relative_path": "snapshot/src/model_quality_v2/transforms.py",
+      "sha256": "2e55c1feb7ce66bb4f5fd800c50f702a326e3668baae8b662f864d652b6a4c48",
+      "size": 6957,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/preprocessing/__init__.py",
+      "archived_relative_path": "snapshot/src/preprocessing/__init__.py",
+      "sha256": "a5beb50185d08e7fcda078ff8806b1db6562dfe3057d0cabdc45b302462dcb2f",
+      "size": 146,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/preprocessing/__main__.py",
+      "archived_relative_path": "snapshot/src/preprocessing/__main__.py",
+      "sha256": "aad857fd6b3896e49edd74a2701faa875faee537ccea1d74cfb77c60b2f78edc",
+      "size": 1074,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/preprocessing/export.py",
+      "archived_relative_path": "snapshot/src/preprocessing/export.py",
+      "sha256": "a44b239c33992c69077a0f40756eb033ab8b92176179de243488f4c0aafcce21",
+      "size": 7073,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/preprocessing/pipeline.py",
+      "archived_relative_path": "snapshot/src/preprocessing/pipeline.py",
+      "sha256": "84d6afe286864bcee286ff1b5792e9614934c66acbb7a81035c5296eaafd3458",
+      "size": 1750,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/reporting/__init__.py",
+      "archived_relative_path": "snapshot/src/reporting/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/reporting/__main__.py",
+      "archived_relative_path": "snapshot/src/reporting/__main__.py",
+      "sha256": "e647ffa99c1e713ef9cf2801701a75126572378fc7caa5675a7a0367a8fe2af3",
+      "size": 448,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/reporting/plots.py",
+      "archived_relative_path": "snapshot/src/reporting/plots.py",
+      "sha256": "4896c3b58cae8e48b5a4b6734d73f8e0f5263d168d417ccd5a2d5a7aac7f2782",
+      "size": 4940,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/sklearn_knn/__init__.py",
+      "archived_relative_path": "snapshot/src/sklearn_knn/__init__.py",
+      "sha256": "5cddcdc487d20e9eb900d936c8e581773a4d61138c5b240b63d45d0565e1d060",
+      "size": 79,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/sklearn_knn/__main__.py",
+      "archived_relative_path": "snapshot/src/sklearn_knn/__main__.py",
+      "sha256": "496debac99742c00e106b0bd9664e00874d162c57b56fe150188e496cbf01c1c",
+      "size": 416,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/sklearn_knn/runner.py",
+      "archived_relative_path": "snapshot/src/sklearn_knn/runner.py",
+      "sha256": "ad387899aac72709a71025ed8c24219f9278eeeb4e097c111afe7309d01b39a5",
+      "size": 589,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/tuning/__init__.py",
+      "archived_relative_path": "snapshot/src/tuning/__init__.py",
+      "sha256": "e9fac29747fa7b06c2c32b70ecedecd64213eb694917be03c7aca9b3813f7a37",
+      "size": 67,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/tuning/__main__.py",
+      "archived_relative_path": "snapshot/src/tuning/__main__.py",
+      "sha256": "efcfdf2fd7f5d3705f8bcefecda70a34e7bace0c7a1d9f9c638c95f486405d76",
+      "size": 662,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/tuning/search.py",
+      "archived_relative_path": "snapshot/src/tuning/search.py",
+      "sha256": "9a2c975d3d2ad9ea830ba577d1be89ec41e87f6016ff0a188354cfccd441cf42",
+      "size": 4307,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/weka_bridge/__init__.py",
+      "archived_relative_path": "snapshot/src/weka_bridge/__init__.py",
+      "sha256": "545f27a9fdaabb720ef0ef18b60d1b69aafa7704952b93e47feb1c8ad534e219",
+      "size": 97,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "src/weka_bridge/runner.py",
+      "archived_relative_path": "snapshot/src/weka_bridge/runner.py",
+      "sha256": "0df00176a447f7cd805c659ddfae94b51ac1d10a348f8856bdaeaafdb17d3f56",
+      "size": 2722,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "tests/cpp_knn_tests.cpp",
+      "archived_relative_path": "snapshot/tests/cpp_knn_tests.cpp",
+      "sha256": "f8036d27b8799514ab9c587ac4ed8237ec0a37dacbc6e608f65072b753be9d13",
+      "size": 9525,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "tests/test_model_quality.py",
+      "archived_relative_path": "snapshot/tests/test_model_quality.py",
+      "sha256": "ce2177af577cf8e4bb91bdc2a122eb13dfbcb955b9225bda5196bb77bde71c53",
+      "size": 4475,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "tests/test_model_quality_threshold.py",
+      "archived_relative_path": "snapshot/tests/test_model_quality_threshold.py",
+      "sha256": "570479ef0d0fb8bc9eb9d5429946d0053fe792da1dd8c3fb23ba57e1291c6a3f",
+      "size": 25909,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "tests/test_model_quality_v2.py",
+      "archived_relative_path": "snapshot/tests/test_model_quality_v2.py",
+      "sha256": "5f6d3282bcdbe0d6dc62d86e65a8f0f1140fdc74f57db9d7aab244622094d90d",
+      "size": 7375,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "tests/test_model_quality_v2_operating_point.py",
+      "archived_relative_path": "snapshot/tests/test_model_quality_v2_operating_point.py",
+      "sha256": "4554309897da2c8590ba3dfd1988937053132cce0cdd09226b08d908f26e7ef3",
+      "size": 6918,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "weka/pom.xml",
+      "archived_relative_path": "snapshot/weka/pom.xml",
+      "sha256": "de46b800d29df48a6afd5c2d31e03688d35a830e72a80f469088704d7077662f",
+      "size": 2821,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    },
+    {
+      "old_relative_path": "weka/src/main/java/project/WekaIBkRunner.java",
+      "archived_relative_path": "snapshot/weka/src/main/java/project/WekaIBkRunner.java",
+      "sha256": "fc8a4bd7f406f82becf6c159107c7351b38a968ae804f82e11f431d486eeed45",
+      "size": 11570,
+      "category": "research-source",
+      "git_state": "tracked",
+      "role": "Historical reproduction; never an active runtime dependency",
+      "limitations": "Raw dataset, numerical packages and native toolchains supplied separately"
+    }
+  ],
+  "excluded": [
+    ".git",
+    ".venv",
+    "build products",
+    "weka/target",
+    "data/raw dataset",
+    "data/processed",
+    "cache",
+    "empty verification directory"
+  ],
+  "inventory": {
+    "active_candidates": [
+      "src/custom_knn/classifier.py",
+      "src/data",
+      "src/preprocessing/pipeline.py",
+      "src/model_quality_v2/features.py",
+      "src/model_quality_v2/transforms.py",
+      "src/model_quality_v2/custom_v2_knn.py",
+      "src/cpp_knn",
+      "weka/src"
+    ],
+    "research_only": [
+      "src/tuning",
+      "src/model_quality",
+      "src/model_quality_v2 search",
+      "old src/benchmarking",
+      "results before migration"
+    ],
+    "historical_sources_missing": "No V1-V7 sources invented; only locally available files captured"
+  }
+}

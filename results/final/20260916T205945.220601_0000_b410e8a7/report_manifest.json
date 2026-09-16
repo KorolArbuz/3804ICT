@@ -1,0 +1,35 @@
+{
+  "run_id": "20260916T205945.220601_0000_b410e8a7",
+  "config_hashes": {
+    "baseline": "78751a8c046a2fad278243868fba0102baeebb97c77bfcbd51bdb4113d0d8e42",
+    "final": "2652117a4ee78ff9ca3af25e0b14630333dee5e7f037dd51297219109b837111"
+  },
+  "source": "Saved results in this run only; no raw-data loading, fitting, inference, JVM or compiler",
+  "inputs": {
+    "metrics.csv": "ade76c89ea761b4a8fc2d00c9b72dc0f9cb31c6ffc6d81e076fb8156f0368046",
+    "agreement.csv": "79903b2bf96a64c0cef8cb0dc91fdcf63076c0cc1bbeeb9f21d02a2453c92bc1",
+    "predictions/baseline_python_v5_1.csv": "d88337b83d619ba12968bd08c74e1e9340f5ab985e954051db38d33469d655ea",
+    "predictions/final_python.csv": "42765e7c55bc05930d21e402eef87e1894d5d66510e0e46b35836760d4184ac0",
+    "predictions/final_sklearn.csv": "ec733097d0f9492c85966d19cd1f277d87090e476ac77546c5e8eea9c33078c2",
+    "predictions/final_cpp.csv": "1b17fa234e3e7d123a2331bb039c1e6e3c9b8d275667383aac812b86e07f252d",
+    "predictions/final_weka.csv": "516a6cb2b8bfae04957d8b7139138e33cd60d7005753b01d1dd315acdac1e5f2",
+    "benchmark_raw.csv": "b4e22c27bc8e1736b9331c1f525dab0c9f0a358f0b0c1af3cb279fde2622ebf2"
+  },
+  "figures": [
+    "quality_comparison.png",
+    "quality_comparison.svg",
+    "pairwise_disagreements.png",
+    "pairwise_disagreements.svg",
+    "confusion_matrix_final_python.png",
+    "confusion_matrix_final_python.svg",
+    "precision_recall.png",
+    "precision_recall.svg",
+    "final_prediction_runtime.png",
+    "final_prediction_runtime.svg",
+    "runtime_distribution.png",
+    "runtime_distribution.svg",
+    "run_order_stability.png",
+    "run_order_stability.svg"
+  ],
+  "omissions": []
+}

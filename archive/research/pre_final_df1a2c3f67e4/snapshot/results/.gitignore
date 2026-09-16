@@ -1,0 +1,3 @@
+# Archive retention overlay added during finalization; not an original snapshot file.
+# Re-include preserved evidence without editing the historical parent .gitignore.
+!**

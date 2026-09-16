@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "model_group": "baseline",
+  "model_id": "baseline_python_v5_1",
+  "implementation_score_semantics": {
+    "baseline_python_v5_1": "Class-1 count among k=19 selected neighbours divided by 19; argmax prefers class 0 on equal votes."
+  },
+  "model": {
+    "k": 19,
+    "metric": "euclidean",
+    "weights": "uniform",
+    "preprocessing": "original_standard_numeric_one_hot_nominal",
+    "batch_size": 64,
+    "decision_rule": "argmax_class_0_on_tie",
+    "threshold": null,
+    "score_semantics": "fraction of class 1 among selected k neighbours",
+    "split": {
+      "seed": 42,
+      "test_size": 0.2,
+      "stratified": true,
+      "training_order": "sorted original source row position",
+      "training_rows": 24000,
+      "test_rows": 6000
+    }
+  },
+  "config_hash": "78751a8c046a2fad278243868fba0102baeebb97c77bfcbd51bdb4113d0d8e42",
+  "provenance": {
+    "snapshot": "archive/research/pre_final_df1a2c3f67e4",
+    "manifest_sha256": "736a80edd835724dab30de70af7c0e971b701852cd64c8e54c044fb78096a261",
+    "runtime_reads_archive": false,
+    "selection": "training-only OOF selection; primary operating mode chosen by user after previous test inspection",
+    "limitation": "Fixed-data software reproduction, not a new independent ML validation."
+  }
+}

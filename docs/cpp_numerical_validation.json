@@ -1,0 +1,62 @@
+{
+  "source_id": "95e0113d16a7665f0e54632f986b5d010750307958af872f851adbc05a385a2b",
+  "config_hash": "2652117a4ee78ff9ca3af25e0b14630333dee5e7f037dd51297219109b837111",
+  "tolerance": 1e-12,
+  "training_rows": 24000,
+  "test_rows": 6000,
+  "d": 60,
+  "checks": {
+    "scalar_reference": {
+      "status": "PASS",
+      "labels_equal": true,
+      "max_absolute_score_difference": 7.771561172376096e-16
+    },
+    "portable": {
+      "status": "PASS",
+      "labels_equal": true,
+      "max_absolute_score_difference": 7.771561172376096e-16,
+      "scores_over_tolerance": 0,
+      "executable_sha256": "802634e4969d1f91e152cb4aaf4f08c36570119c33ebd3f7c4602d4d21c02779",
+      "source_id": "95e0113d16a7665f0e54632f986b5d010750307958af872f851adbc05a385a2b",
+      "compiler": "MSVC 193532216",
+      "flags": "/DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG /W4 /permissive- /fp:precise",
+      "lto_enabled": false
+    },
+    "native": {
+      "status": "PASS",
+      "labels_equal": true,
+      "max_absolute_score_difference": 7.771561172376096e-16,
+      "scores_over_tolerance": 0,
+      "executable_sha256": "2657568717360df990c7a0a213891e0f821cbef5c0d880274d737055c0b47e1e",
+      "source_id": "95e0113d16a7665f0e54632f986b5d010750307958af872f851adbc05a385a2b",
+      "compiler": "MSVC 193532216",
+      "flags": "/DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG /W4 /permissive- /fp:precise /O2 /arch:AVX2",
+      "lto_enabled": true
+    },
+    "persistent": {
+      "status": "PASS",
+      "warmups": 3,
+      "query_rows": 6000,
+      "checksum": "fnv1a64:f72460ae0302ef26",
+      "warmup_seconds": [
+        1.7754634,
+        1.767969,
+        1.7840111
+      ],
+      "timed_seconds": [
+        1.7771431,
+        3.1047284
+      ],
+      "scope": "correctness/repeatability check; not headline benchmark"
+    },
+    "debug_ctest": {
+      "status": "PASS",
+      "command": "ctest --test-dir build/final-cpp-portable -C Debug --output-on-failure"
+    },
+    "asan": {
+      "status": "BLOCKED",
+      "reason": "MSVC AddressSanitizer runtime DLL initialization exits 0xc0000142 before test code; reproduced outside sandbox. Debug CTest passed.",
+      "log": "verification/native_comparison/builds/cpp_portable-sanitized_ctest.log"
+    }
+  }
+}

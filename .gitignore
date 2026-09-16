@@ -1,5 +1,9 @@
 .venv/
+/.maven-cache/
+/dist/
 /verification/
+/results/final/*/data/
+/results/final/*/native/
 __pycache__/
 *.py[cod]
 weka/target/

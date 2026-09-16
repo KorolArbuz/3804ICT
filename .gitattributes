@@ -1,0 +1,4 @@
+# Preserve the original research snapshot bytes across Git checkouts.
+archive/research/** -text
+# The accepted baseline is protected by its original raw-byte SHA-256.
+src/custom_knn/classifier.py -text

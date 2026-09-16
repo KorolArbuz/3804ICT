@@ -1,0 +1,16 @@
+{
+  "prediction": "ready resident model/data; scores and labels freshly computed/materialized/validated; output allocation included; timer ends before checksum and IPC serialization",
+  "warmups": 3,
+  "measured_trials": 20,
+  "prepared_pipeline_trials": 5,
+  "prepared_pipeline": "fresh process startup + canonical prepared file loading + fit + scores/labels + CSV output; Python/C++ CSV, Weka ARFF; excludes raw data preprocessing/builds",
+  "execution": "sequential randomized implementation order in each trial, seed 20260916",
+  "percentiles": "numpy.percentile method=linear",
+  "outliers": "none discarded",
+  "groups": "baseline is a different representation/k/vote workload; ratios compare final implementations only",
+  "thread_limits": 1,
+  "artifact_hashes": {
+    "cpp": "802634e4969d1f91e152cb4aaf4f08c36570119c33ebd3f7c4602d4d21c02779"
+  },
+  "environment_file": "environment.json"
+}

@@ -1,0 +1,86 @@
+{
+  "baseline": {
+    "schema_version": 1,
+    "model_group": "baseline",
+    "model_id": "baseline_python_v5_1",
+    "implementation_score_semantics": {
+      "baseline_python_v5_1": "Class-1 count among k=19 selected neighbours divided by 19; argmax prefers class 0 on equal votes."
+    },
+    "model": {
+      "k": 19,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "preprocessing": "original_standard_numeric_one_hot_nominal",
+      "batch_size": 64,
+      "decision_rule": "argmax_class_0_on_tie",
+      "threshold": null,
+      "score_semantics": "fraction of class 1 among selected k neighbours",
+      "split": {
+        "seed": 42,
+        "test_size": 0.2,
+        "stratified": true,
+        "training_order": "sorted original source row position",
+        "training_rows": 24000,
+        "test_rows": 6000
+      }
+    },
+    "config_hash": "78751a8c046a2fad278243868fba0102baeebb97c77bfcbd51bdb4113d0d8e42",
+    "provenance": {
+      "snapshot": "archive/research/pre_final_df1a2c3f67e4",
+      "manifest_sha256": "736a80edd835724dab30de70af7c0e971b701852cd64c8e54c044fb78096a261",
+      "runtime_reads_archive": false,
+      "selection": "training-only OOF selection; primary operating mode chosen by user after previous test inspection",
+      "limitation": "Fixed-data software reproduction, not a new independent ML validation."
+    }
+  },
+  "final": {
+    "schema_version": 1,
+    "model_group": "final",
+    "model_id": "final_v2_balanced_low_fp",
+    "threshold_source": {
+      "path": "archive/research/pre_final_df1a2c3f67e4/snapshot/results/model_quality_v2/operating_point/operating_points.json",
+      "json_pointer": "/operating_points/min_fp_recall_50/threshold",
+      "selection": "Minimum false positives subject to recall >= 0.50 on five-fold training OOF scores; primary mode subsequently selected by the user after reviewing prior test results.",
+      "sha256": "6351d5796325e9c92b4d2cdc5791d3baac89b994aa4680b017f44c4ceede050d"
+    },
+    "implementation_score_semantics": {
+      "final_python": "Exact brute-force binary64 Euclidean distances; k neighbours ordered by distance then training position; selected zero-distance neighbours exclusively, otherwise inverse-distance weighted class-1 fraction.",
+      "final_cpp": "Same intended neighbour/vote rules as final_python; sequential C++ distance reduction can differ from NumPy at floating-point precision.",
+      "final_sklearn": "Native scikit-learn brute-force Euclidean KNeighborsClassifier, distance weights, n_jobs=1; native distance arithmetic and boundary-tie selection retained.",
+      "final_weka": "Unmodified Weka 3.8.6 IBk native inverse-distance distribution, including finite weighting, smoothing and kth-distance tie inclusion; external frozen threshold applied to class-1 score."
+    },
+    "model": {
+      "k": 101,
+      "metric": "euclidean",
+      "weights": "distance",
+      "money_transform": "signed_log",
+      "pay_representation": "structured",
+      "feature_blocks": [
+        "A",
+        "B"
+      ],
+      "pay_group_weight": 1.0,
+      "decision_rule": "score_greater_equal_threshold",
+      "operating_mode": "balanced_low_fp",
+      "threshold": 0.3315411365543412,
+      "score_semantics": "inverse Euclidean distance; selected exact-zero neighbours exclusively; Weka native distribution separately identified",
+      "neighbour_tie_rule": "distance then original training index for custom implementations",
+      "split": {
+        "seed": 42,
+        "test_size": 0.2,
+        "stratified": true,
+        "training_order": "sorted original source row position",
+        "training_rows": 24000,
+        "test_rows": 6000
+      }
+    },
+    "config_hash": "2652117a4ee78ff9ca3af25e0b14630333dee5e7f037dd51297219109b837111",
+    "provenance": {
+      "snapshot": "archive/research/pre_final_df1a2c3f67e4",
+      "manifest_sha256": "736a80edd835724dab30de70af7c0e971b701852cd64c8e54c044fb78096a261",
+      "runtime_reads_archive": false,
+      "selection": "training-only OOF selection; primary operating mode chosen by user after previous test inspection",
+      "limitation": "Fixed-data software reproduction, not a new independent ML validation."
+    }
+  }
+}

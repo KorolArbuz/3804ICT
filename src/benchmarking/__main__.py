@@ -1,11 +1,6 @@
-"""Run the comprehensive measurement stage.
-
-Reporting remains separate so figures can be regenerated without repeating
-expensive benchmark measurements.
-"""
-
-from .run_runtime_suite import main
-
+"""Run the same coordinated benchmark as run_all.py --benchmark."""
+import sys
+from src.experiment import main
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(["--benchmark", *sys.argv[1:]]))

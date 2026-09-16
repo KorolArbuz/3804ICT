@@ -41,6 +41,16 @@ void validate_matrix_storage(const Matrix& matrix, std::string_view name,
 
 }  // namespace
 
+WeightMode parse_weight_mode(std::string_view value) {
+    if (value == "uniform") return WeightMode::uniform;
+    if (value == "distance") return WeightMode::distance;
+    throw std::invalid_argument("weights must be uniform or distance");
+}
+
+std::string_view weight_mode_name(WeightMode value) {
+    return value == WeightMode::uniform ? "uniform" : "distance";
+}
+
 std::span<const double> Matrix::row(std::size_t index) const {
     if (index >= rows) {
         throw std::out_of_range("matrix row index is out of range");
@@ -72,14 +82,20 @@ bool ExactKnnClassifier::BetterNeighbour::operator()(
 
 ExactKnnClassifier::ExactKnnClassifier(Matrix training,
                                        std::vector<int> labels,
-                                       std::size_t k)
-    : training_(std::move(training)), labels_(std::move(labels)), k_(k) {
+                                       std::size_t k, WeightMode weights,
+                                       std::optional<double> threshold)
+    : training_(std::move(training)), labels_(std::move(labels)), k_(k),
+      weights_(weights), threshold_(threshold) {
     validate_matrix_storage(training_, "training matrix", false);
     if (labels_.size() != training_.rows) {
         throw std::invalid_argument("training labels must match training rows");
     }
     if (k_ == 0 || k_ > training_.rows) {
         throw std::invalid_argument("k must be in [1, training rows]");
+    }
+    if (threshold_ && (!std::isfinite(*threshold_) || *threshold_ < 0.0 ||
+                       *threshold_ > 1.0)) {
+        throw std::invalid_argument("threshold must be finite and in [0, 1]");
     }
     for (int label : labels_) {
         if (label != 0 && label != 1) {
@@ -108,6 +124,9 @@ ExactKnnClassifier::reference_neighbours(std::span<const double> query) const {
         for (std::size_t feature = 0; feature < training_.columns; ++feature) {
             const double difference = query[feature] - training_row[feature];
             squared_distance += difference * difference;
+        }
+        if (!std::isfinite(squared_distance)) {
+            throw std::overflow_error("non-finite squared Euclidean distance");
         }
         candidates.push_back({squared_distance, row});
     }
@@ -143,19 +162,55 @@ PredictionResult ExactKnnClassifier::predict_reference(const Matrix& queries) co
     PredictionResult result;
     result.labels.resize(queries.rows);
     result.positive_vote_counts.resize(queries.rows);
+    result.scores.resize(queries.rows);
     const auto prediction_start = Clock::now();
     for (std::size_t row = 0; row < queries.rows; ++row) {
         const std::vector<Neighbour> neighbours =
             reference_neighbours(queries.row(row));
-        std::size_t positive_votes = 0;
-        for (const Neighbour& neighbour : neighbours) {
-            positive_votes += static_cast<std::size_t>(labels_[neighbour.index]);
-        }
-        result.positive_vote_counts[row] = positive_votes;
-        result.labels[row] = positive_votes * 2 > k_ ? 1 : 0;
+        vote(neighbours, result, row);
     }
     result.distance_seconds = elapsed_seconds(prediction_start);
     return result;
+}
+
+void ExactKnnClassifier::vote(const std::vector<Neighbour>& neighbours,
+                             PredictionResult& output, std::size_t row) const {
+    std::size_t positive = 0, zeros = 0, zero_positive = 0;
+    for (const auto& neighbour : neighbours) {
+        const auto label = static_cast<std::size_t>(labels_[neighbour.index]);
+        positive += label;
+        if (neighbour.squared_distance == 0.0) {
+            ++zeros;
+            zero_positive += label;
+        }
+    }
+    double score = static_cast<double>(positive) / static_cast<double>(k_);
+    if (weights_ == WeightMode::distance) {
+        if (zeros) {
+            score = static_cast<double>(zero_positive) / static_cast<double>(zeros);
+        } else {
+            double sum = 0.0, positive_sum = 0.0;
+            for (const auto& neighbour : neighbours) {
+                const double weight = 1.0 / std::sqrt(neighbour.squared_distance);
+                if (!std::isfinite(weight)) {
+                    throw std::overflow_error("non-finite inverse-distance weight");
+                }
+                sum += weight;
+                if (labels_[neighbour.index] == 1) positive_sum += weight;
+            }
+            if (!std::isfinite(sum) || !std::isfinite(positive_sum) || sum <= 0.0) {
+                throw std::overflow_error("non-finite inverse-distance vote sum");
+            }
+            score = positive_sum / sum;
+        }
+    }
+    if (!std::isfinite(score) || score < 0.0 || score > 1.0) {
+        throw std::overflow_error("invalid class-1 probability");
+    }
+    output.positive_vote_counts[row] = positive;
+    output.scores[row] = score;
+    output.labels[row] = threshold_ ? static_cast<int>(score >= *threshold_)
+                                    : static_cast<int>(score > 0.5);
 }
 
 PredictionResult ExactKnnClassifier::predict_optimized(
@@ -168,6 +223,7 @@ PredictionResult ExactKnnClassifier::predict_optimized(
     PredictionResult output;
     output.labels.resize(queries.rows);
     output.positive_vote_counts.resize(queries.rows);
+    output.scores.resize(queries.rows);
     if (queries.rows == 0) {
         return output;
     }
@@ -217,6 +273,11 @@ PredictionResult ExactKnnClassifier::predict_optimized(
                     row_distances[query] += difference * difference;
                 }
             }
+            for (std::size_t query = 0; query < count; ++query) {
+                if (!std::isfinite(row_distances[query])) {
+                    throw std::overflow_error("non-finite squared Euclidean distance");
+                }
+            }
             if (selection_method == SelectionMethod::heap) {
                 for (std::size_t query = 0; query < count; ++query) {
                     auto& best = selected[query];
@@ -250,13 +311,7 @@ PredictionResult ExactKnnClassifier::predict_optimized(
             }
         }
         for (std::size_t query = 0; query < count; ++query) {
-            std::size_t positive_votes = 0;
-            for (const Neighbour& neighbour : selected[query]) {
-                positive_votes +=
-                    static_cast<std::size_t>(labels_[neighbour.index]);
-            }
-            output.positive_vote_counts[start + query] = positive_votes;
-            output.labels[start + query] = positive_votes * 2 > k_ ? 1 : 0;
+            vote(selected[query], output, start + query);
         }
         output.selection_vote_seconds += elapsed_seconds(selection_start);
     }

@@ -1,0 +1,7 @@
+{
+  "score_tolerance": 1e-12,
+  "custom_cpp": "same intended semantics; any above-tolerance difference requires row-level investigation",
+  "sklearn": "native neighbour selection/distance reduction, not assumed identical to manual kernel",
+  "weka": "native IBk distribution includes its distance weighting, tie and prior semantics; labels use the same frozen threshold",
+  "validation_scope": "all fixed test rows; no new model or threshold selection"
+}

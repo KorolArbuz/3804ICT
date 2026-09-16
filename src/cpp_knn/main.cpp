@@ -4,39 +4,48 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+#include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <map>
-#include <numeric>
+#include <optional>
+#include <sstream>
 #include <stdexcept>
 #include <string>
-#include <string_view>
 #include <vector>
 
 namespace {
-
 using Clock = std::chrono::steady_clock;
-
 struct Arguments {
-    std::filesystem::path train_features;
-    std::filesystem::path train_labels;
-    std::filesystem::path test_features;
-    std::filesystem::path test_labels;
-    std::filesystem::path output;
-    std::size_t k{};
-    std::size_t warmups{1};
-    std::size_t runs{15};
-    std::size_t batch_size{32};
+    std::filesystem::path train_features, train_labels, test_features, test_labels;
+    std::filesystem::path output, predictions;
+    std::size_t k{}, warmups{1}, runs{1}, batch_size{32};
     cpp_knn::SelectionMethod selection{cpp_knn::SelectionMethod::heap};
-    bool reference{};
+    cpp_knn::WeightMode weights{cpp_knn::WeightMode::uniform};
+    std::optional<double> threshold;
+    std::string model_id{"custom_cpp"}, config_id{"unspecified"};
+    bool reference{}, persistent{};
 };
 
-[[nodiscard]] std::string compiler_name() {
+std::string quoted(const std::string& text) {
+    std::ostringstream output;
+    output << '"';
+    for (const unsigned char character : text) {
+        if (character == '"' || character == '\\') output << '\\' << character;
+        else if (character < 32) output << "\\u" << std::hex << std::setw(4)
+                                       << std::setfill('0') << static_cast<int>(character);
+        else output << character;
+    }
+    output << '"';
+    return output.str();
+}
+
+std::string compiler_name() {
 #if defined(_MSC_VER)
-    return "MSVC _MSC_VER=" + std::to_string(_MSC_VER) +
-           " _MSC_FULL_VER=" + std::to_string(_MSC_FULL_VER);
+    return "MSVC " + std::to_string(_MSC_FULL_VER);
 #elif defined(__clang__)
     return "Clang " __clang_version__;
 #elif defined(__GNUC__)
@@ -45,295 +54,252 @@ struct Arguments {
     return "unknown";
 #endif
 }
-
-[[nodiscard]] std::string build_mode() {
-#ifdef NDEBUG
-    constexpr std::string_view mode = "Release";
-#else
-    constexpr std::string_view mode = "Debug";
-#endif
+std::string build_mode() {
 #ifdef CPP_KNN_NATIVE_BUILD
-    return std::string(mode) + " native";
+    return "native";
 #else
-    return std::string(mode) + " portable";
+    return "portable";
 #endif
 }
 
-[[nodiscard]] std::size_t parse_size(const std::string& text,
-                                     std::string_view option,
-                                     bool allow_zero = false) {
+void identity(std::ostream& output) {
+    output << "\"source_id\":" << quoted(CPP_KNN_SOURCE_ID)
+           << ",\"compiler\":" << quoted(compiler_name())
+           << ",\"build_mode\":" << quoted(build_mode())
+#ifdef NDEBUG
+           << ",\"build_configuration\":\"Release\""
+#else
+           << ",\"build_configuration\":\"Debug\""
+#endif
+           << ",\"flags\":" << quoted(CPP_KNN_BUILD_FLAGS)
+#ifdef CPP_KNN_LTO_ENABLED
+           << ",\"lto_enabled\":true"
+#else
+           << ",\"lto_enabled\":false"
+#endif
+           << ",\"cpp_standard\":20,\"thread_count\":1";
+}
+
+std::size_t parse_size(const std::string& value, bool allow_zero = false) {
+    if (value.empty() || value.find_first_not_of("0123456789") != std::string::npos)
+        throw std::invalid_argument("size must contain only decimal digits");
     std::size_t consumed = 0;
-    unsigned long long value = 0;
-    try {
-        value = std::stoull(text, &consumed);
-    } catch (const std::exception&) {
-        throw std::invalid_argument(std::string(option) + " must be an integer");
-    }
-    if (consumed != text.size() || (!allow_zero && value == 0)) {
-        throw std::invalid_argument(std::string(option) + " has an invalid value");
-    }
-    return static_cast<std::size_t>(value);
+    const auto parsed = std::stoull(value, &consumed);
+    if (consumed != value.size() || (!allow_zero && parsed == 0) ||
+        parsed > std::numeric_limits<std::size_t>::max())
+        throw std::invalid_argument("invalid size");
+    return static_cast<std::size_t>(parsed);
 }
 
-void print_help() {
-    std::cout
-        << "Pure C++20 exact exhaustive KNN\n\n"
-        << "cpp_knn --train-features <csv> --train-labels <csv> "
-           "--test-features <csv> --test-labels <csv> --k <integer> "
-           "--output <json> [--warmups N] [--runs N] [--batch-size N] "
-           "[--selection heap|nth] [--algorithm optimized|reference]\n";
-}
-
-[[nodiscard]] Arguments parse_arguments(int argc, char** argv) {
-    if (argc == 1) {
-        print_help();
-        throw std::invalid_argument("arguments are required");
-    }
+Arguments parse_arguments(int argc, char** argv) {
     std::map<std::string, std::string> values;
     for (int index = 1; index < argc; index += 2) {
-        const std::string key(argv[index]);
-        if (key == "--help") {
-            print_help();
-            std::exit(0);
-        }
-        if (index + 1 >= argc || !key.starts_with("--") ||
-            !values.emplace(key, argv[index + 1]).second) {
-            throw std::invalid_argument("invalid, duplicate, or incomplete option: " + key);
-        }
+        if (index + 1 >= argc || !values.emplace(argv[index], argv[index + 1]).second)
+            throw std::invalid_argument("option requires a unique key and value");
     }
-    const auto required = [&values](std::string_view name) -> const std::string& {
-        const auto found = values.find(std::string(name));
-        if (found == values.end()) {
-            throw std::invalid_argument("required option: " + std::string(name));
-        }
-        return found->second;
-    };
     const std::vector<std::string> allowed{
-        "--train-features", "--train-labels", "--test-features",
-        "--test-labels", "--k", "--output", "--warmups", "--runs",
-        "--batch-size", "--selection", "--algorithm"
-    };
-    for (const auto& [key, unused] : values) {
-        (void)unused;
-        if (std::find(allowed.begin(), allowed.end(), key) == allowed.end()) {
+        "--train-features", "--train-labels", "--test-features", "--test-labels",
+        "--k", "--output", "--predictions", "--warmups", "--runs", "--batch-size",
+        "--selection", "--algorithm", "--weights", "--threshold", "--model-id",
+        "--config-id", "--persistent"};
+    for (const auto& [key, value] : values) {
+        (void)value;
+        if (std::find(allowed.begin(), allowed.end(), key) == allowed.end())
             throw std::invalid_argument("unknown option: " + key);
-        }
     }
-
-    Arguments arguments;
-    arguments.train_features = required("--train-features");
-    arguments.train_labels = required("--train-labels");
-    arguments.test_features = required("--test-features");
-    arguments.test_labels = required("--test-labels");
-    arguments.output = required("--output");
-    arguments.k = parse_size(required("--k"), "--k");
-    if (values.contains("--warmups")) {
-        arguments.warmups = parse_size(values.at("--warmups"), "--warmups", true);
+    const auto required = [&](const std::string& key) {
+        if (!values.contains(key)) throw std::invalid_argument("required option: " + key);
+        return values.at(key);
+    };
+    Arguments args;
+    args.train_features = required("--train-features");
+    args.train_labels = required("--train-labels");
+    args.test_features = required("--test-features");
+    args.k = parse_size(required("--k"));
+    if (values.contains("--test-labels")) args.test_labels = values.at("--test-labels");
+    if (values.contains("--output")) args.output = values.at("--output");
+    if (values.contains("--predictions")) args.predictions = values.at("--predictions");
+    if (values.contains("--warmups")) args.warmups = parse_size(values.at("--warmups"), true);
+    if (values.contains("--runs")) args.runs = parse_size(values.at("--runs"));
+    if (values.contains("--batch-size")) args.batch_size = parse_size(values.at("--batch-size"));
+    if (values.contains("--selection")) args.selection = cpp_knn::parse_selection_method(values.at("--selection"));
+    if (values.contains("--weights")) args.weights = cpp_knn::parse_weight_mode(values.at("--weights"));
+    if (values.contains("--threshold")) {
+        std::size_t consumed = 0;
+        args.threshold = std::stod(values.at("--threshold"), &consumed);
+        if (consumed != values.at("--threshold").size())
+            throw std::invalid_argument("invalid threshold");
     }
-    if (values.contains("--runs")) {
-        arguments.runs = parse_size(values.at("--runs"), "--runs");
-    }
-    if (values.contains("--batch-size")) {
-        arguments.batch_size = parse_size(values.at("--batch-size"), "--batch-size");
-    }
-    if (values.contains("--selection")) {
-        arguments.selection =
-            cpp_knn::parse_selection_method(values.at("--selection"));
-    }
+    if (values.contains("--model-id")) args.model_id = values.at("--model-id");
+    if (values.contains("--config-id")) args.config_id = values.at("--config-id");
     if (values.contains("--algorithm")) {
-        const std::string& algorithm = values.at("--algorithm");
-        if (algorithm != "optimized" && algorithm != "reference") {
-            throw std::invalid_argument("--algorithm must be optimized or reference");
-        }
-        arguments.reference = algorithm == "reference";
+        const auto& algorithm = values.at("--algorithm");
+        if (algorithm != "optimized" && algorithm != "reference")
+            throw std::invalid_argument("algorithm must be optimized or reference");
+        args.reference = algorithm == "reference";
     }
-    return arguments;
+    if (values.contains("--persistent")) {
+        const auto& value = values.at("--persistent");
+        if (value != "true" && value != "false")
+            throw std::invalid_argument("persistent must be true or false");
+        args.persistent = value == "true";
+    }
+    if (!args.persistent && args.output.empty())
+        throw std::invalid_argument("--output required outside persistent mode");
+    return args;
 }
 
-[[nodiscard]] double percentile(std::vector<double> values, double probability) {
-    if (values.empty()) {
-        throw std::invalid_argument("cannot summarize empty timings");
+template<class T> void array(std::ostream& output, const std::vector<T>& values) {
+    output << '[';
+    for (std::size_t index = 0; index < values.size(); ++index) {
+        if (index) output << ',';
+        output << values[index];
     }
+    output << ']';
+}
+
+double percentile(std::vector<double> values, double q) {
     std::sort(values.begin(), values.end());
-    const double position = probability * static_cast<double>(values.size() - 1);
-    const auto lower = static_cast<std::size_t>(std::floor(position));
-    const auto upper = static_cast<std::size_t>(std::ceil(position));
-    const double fraction = position - static_cast<double>(lower);
-    return values[lower] + fraction * (values[upper] - values[lower]);
+    const double position = q * static_cast<double>(values.size() - 1);
+    const auto low = static_cast<std::size_t>(std::floor(position));
+    const auto high = static_cast<std::size_t>(std::ceil(position));
+    return values[low] + (position - static_cast<double>(low)) * (values[high] - values[low]);
 }
 
-void write_number_array(std::ostream& output, const std::vector<double>& values) {
-    output << '[';
-    for (std::size_t index = 0; index < values.size(); ++index) {
-        if (index) output << ',';
-        output << values[index];
+// Binary64 scores and labels are hashed after stopping the prediction timer.
+std::string checksum(const cpp_knn::PredictionResult& result) {
+    std::uint64_t hash = 14695981039346656037ULL;
+    const auto add = [&](unsigned char byte) { hash ^= byte; hash *= 1099511628211ULL; };
+    for (std::size_t row = 0; row < result.labels.size(); ++row) {
+        const auto* bytes = reinterpret_cast<const unsigned char*>(&result.scores[row]);
+        for (std::size_t byte = 0; byte < sizeof(double); ++byte) add(bytes[byte]);
+        add(static_cast<unsigned char>(result.labels[row]));
     }
-    output << ']';
+    std::ostringstream output;
+    output << "fnv1a64:" << std::hex << std::setfill('0') << std::setw(16) << hash;
+    return output.str();
 }
 
-template <typename T>
-void write_integer_array(std::ostream& output, const std::vector<T>& values) {
-    output << '[';
-    for (std::size_t index = 0; index < values.size(); ++index) {
-        if (index) output << ',';
-        output << values[index];
-    }
-    output << ']';
+void configuration(std::ostream& output, const Arguments& args,
+                   const cpp_knn::ExactKnnClassifier& classifier, std::size_t queries) {
+    output << "\"model_id\":" << quoted(args.model_id)
+           << ",\"config_id\":" << quoted(args.config_id)
+           << ",\"weights\":" << quoted(std::string(cpp_knn::weight_mode_name(args.weights)))
+           << ",\"threshold\":";
+    if (args.threshold) output << *args.threshold; else output << "null";
+    output << ",\"decision_rule\":" << quoted(args.threshold ? "score >= threshold" : "argmax; ties to class 0")
+           << ",\"training_rows\":" << classifier.training_rows()
+           << ",\"test_rows\":" << queries << ",\"feature_count\":" << classifier.feature_count()
+           << ",\"k\":" << classifier.k() << ",\"batch_size\":" << args.batch_size
+           << ",\"algorithm\":" << quoted(args.reference ? "scalar_reference" : "optimized")
+           << ",\"selection\":" << quoted(std::string(cpp_knn::selection_method_name(args.selection))) << ',';
+    identity(output);
 }
 
-void write_result(const Arguments& arguments,
-                  const cpp_knn::ExactKnnClassifier& classifier,
-                  const std::vector<int>& test_labels,
-                  const cpp_knn::PredictionResult& predictions,
-                  const std::vector<double>& raw_seconds,
-                  const std::vector<double>& raw_distance_seconds,
-                  const std::vector<double>& raw_selection_seconds,
-                  double fit_seconds) {
-    std::size_t tn = 0, fp = 0, fn = 0, tp = 0;
-    for (std::size_t index = 0; index < test_labels.size(); ++index) {
-        if (test_labels[index] == 0 && predictions.labels[index] == 0) ++tn;
-        if (test_labels[index] == 0 && predictions.labels[index] == 1) ++fp;
-        if (test_labels[index] == 1 && predictions.labels[index] == 0) ++fn;
-        if (test_labels[index] == 1 && predictions.labels[index] == 1) ++tp;
-    }
-    const std::size_t bounded_batch = std::min(arguments.batch_size, test_labels.size());
-    const std::size_t neighbour_bytes = sizeof(double) + sizeof(std::size_t);
-    const std::size_t selected_neighbour_bytes =
-        bounded_batch * classifier.k() * neighbour_bytes;
-    const std::size_t selector_bytes =
-        selected_neighbour_bytes +
-        bounded_batch * sizeof(std::vector<std::size_t>) +
-        (arguments.selection == cpp_knn::SelectionMethod::nth_element
-             ? classifier.training_rows() * neighbour_bytes
-             : 0);
-    const std::size_t distance_bytes =
-        arguments.selection == cpp_knn::SelectionMethod::nth_element
-        ? classifier.training_rows() * bounded_batch * sizeof(double)
-        : bounded_batch * sizeof(double);
-    const std::size_t peak_auxiliary_bytes =
-        classifier.auxiliary_bytes() +
-        distance_bytes +
-        classifier.feature_count() * bounded_batch * sizeof(double) +
-        selector_bytes +
-        test_labels.size() * (sizeof(int) + sizeof(std::size_t));
-
-    if (!arguments.output.parent_path().empty()) {
-        std::filesystem::create_directories(arguments.output.parent_path());
-    }
-    std::ofstream output(arguments.output);
-    if (!output) {
-        throw std::runtime_error("cannot open output JSON: " + arguments.output.string());
-    }
-    output << std::setprecision(17);
-    output << "{\n"
-           << "  \"implementation\": \"custom_cpp_exact_knn\",\n"
-           << "  \"algorithm\": \"" << (arguments.reference ? "scalar_reference" : "optimized") << "\",\n"
-           << "  \"selection\": \"" << cpp_knn::selection_method_name(arguments.selection) << "\",\n"
-           << "  \"training_rows\": " << classifier.training_rows() << ",\n"
-           << "  \"test_rows\": " << test_labels.size() << ",\n"
-           << "  \"feature_count\": " << classifier.feature_count() << ",\n"
-           << "  \"k\": " << classifier.k() << ",\n"
-           << "  \"batch_size\": " << arguments.batch_size << ",\n"
-           << "  \"warmup_count\": " << arguments.warmups << ",\n"
-           << "  \"measured_run_count\": " << arguments.runs << ",\n"
-           << "  \"fit_seconds\": " << fit_seconds << ",\n"
-           << "  \"prediction_seconds\": ";
-    write_number_array(output, raw_seconds);
-    output << ",\n  \"distance_or_fused_heap_phase_seconds\": ";
-    write_number_array(output, raw_distance_seconds);
-    output << ",\n  \"selection_vote_phase_seconds\": ";
-    write_number_array(output, raw_selection_seconds);
-    output << ",\n"
-           << "  \"median_prediction_seconds\": " << percentile(raw_seconds, 0.5) << ",\n"
-           << "  \"min_prediction_seconds\": " << *std::min_element(raw_seconds.begin(), raw_seconds.end()) << ",\n"
-           << "  \"max_prediction_seconds\": " << *std::max_element(raw_seconds.begin(), raw_seconds.end()) << ",\n"
-           << "  \"iqr_prediction_seconds\": " << percentile(raw_seconds, 0.75) - percentile(raw_seconds, 0.25) << ",\n"
-           << "  \"prediction_count\": " << predictions.labels.size() << ",\n"
-           << "  \"predicted_labels\": ";
-    write_integer_array(output, predictions.labels);
-    output << ",\n  \"positive_vote_counts\": ";
-    write_integer_array(output, predictions.positive_vote_counts);
-    output << ",\n  \"positive_vote_fractions\": [";
-    for (std::size_t index = 0; index < predictions.positive_vote_counts.size(); ++index) {
-        if (index) output << ',';
-        output << static_cast<double>(predictions.positive_vote_counts[index]) /
-                      static_cast<double>(classifier.k());
-    }
-    output << "],\n"
-           << "  \"prediction_hash\": \""
-           << cpp_knn::prediction_hash(predictions.labels,
-                                       predictions.positive_vote_counts) << "\",\n"
-           << "  \"confusion_matrix\": {\"TN\":" << tn << ",\"FP\":" << fp
-           << ",\"FN\":" << fn << ",\"TP\":" << tp << "},\n"
-           << "  \"compiler\": \"" << compiler_name() << "\",\n"
-           << "  \"cpp_standard\": 20,\n"
-           << "  \"build_mode\": \"" << build_mode() << "\",\n"
-           << "  \"thread_count\": 1,\n"
-           << "  \"peak_auxiliary_bytes_estimate\": " << peak_auxiliary_bytes << ",\n"
-           << "  \"timing_scope\": \"exact distances, selection, uniform voting, and output-vector construction; input parsing, model fit, warm-up, process startup, and JSON serialization excluded\"\n"
-           << "}\n";
+void write_csv(const Arguments& args, const cpp_knn::PredictionResult& result) {
+    if (args.predictions.empty()) return;
+    if (!args.predictions.parent_path().empty()) std::filesystem::create_directories(args.predictions.parent_path());
+    std::ofstream csv(args.predictions);
+    if (!csv) throw std::runtime_error("cannot write prediction CSV");
+    csv << "test_position,score_class_1,y_pred\n" << std::setprecision(17);
+    for (std::size_t row = 0; row < result.labels.size(); ++row)
+        csv << row << ',' << result.scores[row] << ',' << result.labels[row] << '\n';
+    if (!csv) throw std::runtime_error("failed to write prediction CSV");
 }
 
+void write_result(const Arguments& args, const cpp_knn::ExactKnnClassifier& classifier,
+                  const cpp_knn::PredictionResult& result, const std::vector<int>& labels,
+                  const std::vector<double>& times, double fit_seconds) {
+    if (!args.output.parent_path().empty()) std::filesystem::create_directories(args.output.parent_path());
+    std::ofstream output(args.output);
+    if (!output) throw std::runtime_error("cannot write output JSON");
+    output << std::setprecision(17) << '{';
+    configuration(output, args, classifier, result.labels.size());
+    output << ",\"fit_seconds\":" << fit_seconds << ",\"warmup_count\":" << args.warmups
+           << ",\"measured_run_count\":" << times.size() << ",\"prediction_seconds\":";
+    array(output, times);
+    output << ",\"median_prediction_seconds\":" << percentile(times, .5)
+           << ",\"iqr_prediction_seconds\":" << percentile(times, .75) - percentile(times, .25)
+           << ",\"predicted_labels\":"; array(output, result.labels);
+    output << ",\"scores_class_1\":"; array(output, result.scores);
+    output << ",\"positive_vote_counts\":"; array(output, result.positive_vote_counts);
+    output << ",\"prediction_hash\":" << quoted(checksum(result))
+           << ",\"timing_scope\":\"query validation, fresh exact search, voting, score and label allocation; excludes load, fit, startup, IPC, checksum and serialization\"";
+    if (!labels.empty()) {
+        std::size_t counts[4]{};
+        for (std::size_t row = 0; row < labels.size(); ++row)
+            ++counts[labels[row] * 2 + result.labels[row]];
+        output << ",\"confusion_matrix\":{\"TN\":" << counts[0] << ",\"FP\":" << counts[1]
+               << ",\"FN\":" << counts[2] << ",\"TP\":" << counts[3] << '}';
+    }
+    output << "}\n";
+    if (!output) throw std::runtime_error("failed to write output JSON");
+    write_csv(args, result);
+}
 }  // namespace
 
 int main(int argc, char** argv) {
     try {
-        const Arguments arguments = parse_arguments(argc, argv);
-        cpp_knn::Matrix training = cpp_knn::load_feature_csv(arguments.train_features);
-        std::vector<int> training_labels = cpp_knn::load_label_csv(arguments.train_labels);
-        cpp_knn::Matrix testing = cpp_knn::load_feature_csv(arguments.test_features);
-        std::vector<int> test_labels = cpp_knn::load_label_csv(arguments.test_labels);
-        if (testing.rows != test_labels.size()) {
-            throw std::invalid_argument("test labels must match test feature rows");
+        if (argc == 2 && std::string(argv[1]) == "--identity") {
+            std::cout << '{'; identity(std::cout); std::cout << "}\n"; return 0;
         }
-
+        if (argc == 2 && std::string(argv[1]) == "--help") {
+            std::cout << "Exact single-thread C++20 KNN: --train-features CSV --train-labels CSV --test-features CSV --k N --output JSON [--predictions CSV] [--weights uniform|distance] [--threshold T] [--batch-size 32] [--algorithm optimized|reference] [--selection heap|nth] [--warmups N] [--runs N] [--model-id ID] [--config-id HASH] [--persistent true]\n";
+            return 0;
+        }
+        const Arguments args = parse_arguments(argc, argv);
+        auto training = cpp_knn::load_feature_csv(args.train_features);
+        auto labels = cpp_knn::load_label_csv(args.train_labels);
+        const auto queries = cpp_knn::load_feature_csv(args.test_features);
+        std::vector<int> test_labels;
+        if (!args.test_labels.empty()) {
+            test_labels = cpp_knn::load_label_csv(args.test_labels);
+            if (test_labels.size() != queries.rows) throw std::invalid_argument("test labels differ in length");
+        }
         const auto fit_start = Clock::now();
-        cpp_knn::ExactKnnClassifier classifier(
-            std::move(training), std::move(training_labels), arguments.k
-        );
-        const double fit_seconds =
-            std::chrono::duration<double>(Clock::now() - fit_start).count();
-
-        const auto predict = [&]() {
-            if (arguments.reference) {
-                return classifier.predict_reference(testing);
-            }
-            return classifier.predict_optimized(
-                testing, arguments.batch_size, arguments.selection
-            );
-        };
-        for (std::size_t warmup = 0; warmup < arguments.warmups; ++warmup) {
-            (void)predict();
-        }
-
-        std::vector<double> raw_seconds;
-        std::vector<double> raw_distance_seconds;
-        std::vector<double> raw_selection_seconds;
-        raw_seconds.reserve(arguments.runs);
-        cpp_knn::PredictionResult final_predictions;
-        for (std::size_t run = 0; run < arguments.runs; ++run) {
+        const cpp_knn::ExactKnnClassifier classifier(std::move(training), std::move(labels), args.k, args.weights, args.threshold);
+        const double fit_seconds = std::chrono::duration<double>(Clock::now() - fit_start).count();
+        const auto predict = [&]() { return args.reference ? classifier.predict_reference(queries)
+            : classifier.predict_optimized(queries, args.batch_size, args.selection); };
+        std::vector<double> warmup_seconds;
+        for (std::size_t warmup = 0; warmup < args.warmups; ++warmup) {
             const auto start = Clock::now();
-            cpp_knn::PredictionResult predictions = predict();
-            raw_seconds.push_back(
-                std::chrono::duration<double>(Clock::now() - start).count()
-            );
-            raw_distance_seconds.push_back(predictions.distance_seconds);
-            raw_selection_seconds.push_back(predictions.selection_vote_seconds);
-            if (run && (predictions.labels != final_predictions.labels ||
-                        predictions.positive_vote_counts !=
-                            final_predictions.positive_vote_counts)) {
-                throw std::runtime_error("predictions changed between measured runs");
-            }
-            final_predictions = std::move(predictions);
+            const auto result = predict();
+            warmup_seconds.push_back(std::chrono::duration<double>(Clock::now() - start).count());
+            (void)result;
         }
-        write_result(arguments, classifier, test_labels, final_predictions,
-                     raw_seconds, raw_distance_seconds, raw_selection_seconds,
-                     fit_seconds);
-        std::cout << "custom_cpp_exact_knn: k=" << classifier.k() << ", "
-                  << final_predictions.labels.size() << " predictions, median "
-                  << std::fixed << std::setprecision(6)
-                  << percentile(raw_seconds, 0.5) << "s -> "
-                  << arguments.output << '\n';
+        if (args.persistent) {
+            std::cout << std::setprecision(17) << "{\"status\":\"READY\",\"fit_seconds\":" << fit_seconds << ',';
+            configuration(std::cout, args, classifier, queries.rows);
+            std::cout << ",\"warmup_seconds\":"; array(std::cout, warmup_seconds);
+            std::cout << "}\n" << std::flush;
+            std::string command;
+            while (std::getline(std::cin, command)) {
+                if (command == "EXIT") { std::cout << "{\"status\":\"EXIT\"}\n" << std::flush; return 0; }
+                if (command != "PREDICT") throw std::invalid_argument("persistent command must be PREDICT or EXIT");
+                const auto start = Clock::now();
+                const auto result = predict();
+                const double seconds = std::chrono::duration<double>(Clock::now() - start).count();
+                std::cout << "{\"status\":\"PREDICTION\",\"seconds\":" << seconds
+                          << ",\"prediction_count\":" << result.labels.size()
+                          << ",\"checksum\":" << quoted(checksum(result)) << "}\n" << std::flush;
+            }
+            return 0;
+        }
+        std::vector<double> seconds;
+        cpp_knn::PredictionResult final_result;
+        std::string prior_checksum;
+        for (std::size_t run = 0; run < args.runs; ++run) {
+            const auto start = Clock::now();
+            auto result = predict();
+            seconds.push_back(std::chrono::duration<double>(Clock::now() - start).count());
+            const auto current_checksum = checksum(result);
+            if (run && current_checksum != prior_checksum) throw std::runtime_error("predictions changed between runs");
+            prior_checksum = current_checksum;
+            final_result = std::move(result);
+        }
+        write_result(args, classifier, final_result, test_labels, seconds, fit_seconds);
+        std::cerr << "C++ " << args.model_id << ": " << final_result.labels.size() << " rows -> " << args.output << '\n';
         return 0;
     } catch (const std::exception& error) {
         std::cerr << "cpp_knn error: " << error.what() << '\n';

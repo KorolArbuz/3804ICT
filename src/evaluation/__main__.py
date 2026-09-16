@@ -1,43 +1,27 @@
+"""Re-evaluate current-run saved predictions without model inference."""
 import argparse
 from pathlib import Path
-
-from src.common.config import PROCESSED_DATA_DIR, RESULTS_DIR
-
-from .comparison import IMPLEMENTATIONS, compare
+from src.common.experiment import load_configs
+from src.common.utils import read_json
+from .final import evaluate
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(description="Compare model predictions and calculate metrics.")
-    parser.add_argument("--results-dir", "--output-dir", type=Path, default=RESULTS_DIR)
-    parser.add_argument("--train", type=Path, default=PROCESSED_DATA_DIR / "train.npz")
-    parser.add_argument("--test", type=Path, default=PROCESSED_DATA_DIR / "test.npz")
-    parser.add_argument("--selected-parameters", type=Path)
-    parser.add_argument("--implementations", nargs="+", choices=IMPLEMENTATIONS)
-    for name in IMPLEMENTATIONS:
-        parser.add_argument(f"--{name}", type=Path, help=f"Explicit {name} prediction file")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--run-dir", type=Path, required=True)
     args = parser.parse_args(argv)
-
-    paths = {}
-    for name in IMPLEMENTATIONS:
-        prediction_path = getattr(args, name)
-        if prediction_path is not None:
-            paths[name] = prediction_path
-
-    if args.implementations:
-        implementations = args.implementations
-    elif paths:
-        implementations = list(paths)
-    else:
-        implementations = None
-
-    compare(
-        args.results_dir,
-        args.train,
-        args.test,
-        implementations,
-        args.selected_parameters,
-        paths,
+    manifest = read_json(args.run_dir / "run_manifest.json")
+    configs = load_configs()
+    if manifest["config_hashes"] != {k: v["config_hash"] for k, v in configs.items()}:
+        raise ValueError("Run configuration differs from current frozen configurations")
+    table, _, _ = evaluate(
+        args.run_dir,
+        manifest["run_id"],
+        manifest["completed_implementations"],
+        configs,
+        read_json(args.run_dir / "data_manifest.json"),
     )
+    print(table.to_string(index=False))
     return 0
 
 

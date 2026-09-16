@@ -1,0 +1,69 @@
+{
+  "baseline": {
+    "schema_version": 1,
+    "model_group": "baseline",
+    "model": {
+      "k": 19,
+      "metric": "euclidean",
+      "weights": "uniform",
+      "preprocessing": "original_standard_numeric_one_hot_nominal",
+      "batch_size": 64,
+      "decision_rule": "argmax_class_0_on_tie",
+      "threshold": null,
+      "score_semantics": "fraction of class 1 among selected k neighbours",
+      "split": {
+        "seed": 42,
+        "test_size": 0.2,
+        "stratified": true,
+        "training_order": "sorted original source row position",
+        "training_rows": 24000,
+        "test_rows": 6000
+      }
+    },
+    "config_hash": "78751a8c046a2fad278243868fba0102baeebb97c77bfcbd51bdb4113d0d8e42",
+    "provenance": {
+      "snapshot": "archive/research/pre_final_df1a2c3f67e4",
+      "manifest_sha256": "736a80edd835724dab30de70af7c0e971b701852cd64c8e54c044fb78096a261",
+      "runtime_reads_archive": false,
+      "selection": "training-only OOF selection; primary operating mode chosen by user after previous test inspection",
+      "limitation": "Fixed-data software reproduction, not a new independent ML validation."
+    }
+  },
+  "final": {
+    "schema_version": 1,
+    "model_group": "final",
+    "model": {
+      "k": 101,
+      "metric": "euclidean",
+      "weights": "distance",
+      "money_transform": "signed_log",
+      "pay_representation": "structured",
+      "feature_blocks": [
+        "A",
+        "B"
+      ],
+      "pay_group_weight": 1.0,
+      "decision_rule": "score_greater_equal_threshold",
+      "operating_mode": "balanced_low_fp",
+      "threshold": 0.3315411365543412,
+      "score_semantics": "inverse Euclidean distance; selected exact-zero neighbours exclusively; Weka native distribution separately identified",
+      "neighbour_tie_rule": "distance then original training index for custom implementations",
+      "split": {
+        "seed": 42,
+        "test_size": 0.2,
+        "stratified": true,
+        "training_order": "sorted original source row position",
+        "training_rows": 24000,
+        "test_rows": 6000
+      }
+    },
+    "config_hash": "2652117a4ee78ff9ca3af25e0b14630333dee5e7f037dd51297219109b837111",
+    "provenance": {
+      "snapshot": "archive/research/pre_final_df1a2c3f67e4",
+      "manifest_sha256": "736a80edd835724dab30de70af7c0e971b701852cd64c8e54c044fb78096a261",
+      "runtime_reads_archive": false,
+      "selection": "training-only OOF selection; primary operating mode chosen by user after previous test inspection",
+      "limitation": "Fixed-data software reproduction, not a new independent ML validation."
+    }
+  }
+}

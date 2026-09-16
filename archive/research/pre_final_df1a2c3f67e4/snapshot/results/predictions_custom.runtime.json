@@ -1,0 +1,8 @@
+{
+  "implementation": "custom",
+  "selected_k": 19,
+  "fit_seconds": 0.00792800000635907,
+  "prediction_seconds": 0.6962694999529049,
+  "milliseconds_per_sample": 0.11604491665881748,
+  "timing_scope": "one fit; one predict_proba query plus argmax; I/O excluded; threadpool limit 1"
+}

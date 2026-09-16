@@ -1,0 +1,8 @@
+{
+  "implementation": "sklearn",
+  "selected_k": 19,
+  "fit_seconds": 0.001236799987964332,
+  "prediction_seconds": 0.45998620003229007,
+  "milliseconds_per_sample": 0.07666436667204835,
+  "timing_scope": "one fit; one predict_proba query plus argmax; I/O excluded; threadpool limit 1"
+}

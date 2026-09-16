@@ -1,0 +1,535 @@
+{
+  "schema_version": 1,
+  "status": "complete_with_documented_differences",
+  "full_validation": true,
+  "completion_scopes": {
+    "build correctness": "PASS",
+    "same-semantics numerical correctness": "PASS",
+    "toolkit comparability": "PASS",
+    "real-data reproduction": "PASS",
+    "runtime evidence": "PASS",
+    "packaging completeness": "PASS"
+  },
+  "checks": [
+    {
+      "check_id": "compile",
+      "scope": "build correctness",
+      "command": [
+        "python",
+        "-m",
+        "compileall",
+        "-q",
+        "src",
+        "run_all.py"
+      ],
+      "started": "2026-09-16T21:45:10.359518+00:00",
+      "finished": "2026-09-16T21:45:10.427017+00:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "reason": "",
+      "log": "{project}/verification/release_20260916T214510_a9f72f/logs/compile.log"
+    },
+    {
+      "check_id": "archive_bytes",
+      "scope": "packaging completeness",
+      "command": [
+        "python",
+        "scripts/verify_archive.py",
+        "--output",
+        "{project}/verification/release_20260916T214510_a9f72f/archive.json"
+      ],
+      "started": "2026-09-16T21:45:10.428017+00:00",
+      "finished": "2026-09-16T21:45:10.585016+00:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "reason": "",
+      "log": "{project}/verification/release_20260916T214510_a9f72f/logs/archive_bytes.log"
+    },
+    {
+      "check_id": "baseline_source",
+      "scope": "same-semantics numerical correctness",
+      "command": [],
+      "started": "2026-09-16T21:45:10.671514+00:00",
+      "finished": "2026-09-16T21:45:10.671514+00:00",
+      "exit_code": null,
+      "status": "PASS",
+      "reason": "",
+      "log": null,
+      "evidence": {
+        "expected_sha256": "7d1a675e7a0b15e4e43ff521cd2137e0481a7f58c5a70557c9c45dd2b5929652",
+        "actual_sha256": "7d1a675e7a0b15e4e43ff521cd2137e0481a7f58c5a70557c9c45dd2b5929652"
+      }
+    },
+    {
+      "check_id": "environment_preflight",
+      "scope": "build correctness",
+      "command": [],
+      "started": "2026-09-16T21:45:10.725016+00:00",
+      "finished": "2026-09-16T21:45:10.725016+00:00",
+      "exit_code": null,
+      "status": "PASS",
+      "reason": "Thread limits set before numeric imports; no OS affinity or priority changes",
+      "log": null,
+      "evidence": {
+        "python": "3.10.14",
+        "platform": "Windows",
+        "release": "10",
+        "machine": "AMD64",
+        "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+        "cpu_count": 20,
+        "packages": {
+          "numpy": "1.26.0",
+          "scipy": "1.13.1",
+          "pandas": "1.5.3",
+          "scikit-learn": "1.2.1",
+          "matplotlib": "3.7.0",
+          "threadpoolctl": "3.5.0"
+        },
+        "thread_environment": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1",
+          "MKL_NUM_THREADS": "1",
+          "VECLIB_MAXIMUM_THREADS": "1",
+          "NUMEXPR_NUM_THREADS": "1"
+        },
+        "threadpools": [
+          {
+            "user_api": "blas",
+            "internal_api": "openblas",
+            "num_threads": 1,
+            "prefix": "libopenblas",
+            "version": "0.3.23.dev",
+            "threading_layer": "pthreads",
+            "architecture": "Prescott"
+          }
+        ],
+        "affinity": "not changed",
+        "priority": "not changed"
+      }
+    },
+    {
+      "check_id": "frozen_configuration",
+      "scope": "build correctness",
+      "command": [],
+      "started": "2026-09-16T21:45:10.726014+00:00",
+      "finished": "2026-09-16T21:45:10.726014+00:00",
+      "exit_code": null,
+      "status": "PASS",
+      "reason": "",
+      "log": null,
+      "evidence": {
+        "baseline": "78751a8c046a2fad278243868fba0102baeebb97c77bfcbd51bdb4113d0d8e42",
+        "final": "2652117a4ee78ff9ca3af25e0b14630333dee5e7f037dd51297219109b837111"
+      }
+    },
+    {
+      "check_id": "cpp_portable",
+      "scope": "build correctness",
+      "command": [
+        "python",
+        "-c",
+        "from src.cpp_knn.bridge import build; print(build('portable',sanitize=False,log_dir='{user}//Desktop//3804ICT//verification//release_20260916T214510_a9f72f//logs',build_dir='{user}//Desktop//3804ICT//verification//release_20260916T214510_a9f72f//build//cpp_portable'))"
+      ],
+      "started": "2026-09-16T21:45:10.726514+00:00",
+      "finished": "2026-09-16T21:45:18.811441+00:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "reason": "",
+      "log": "{project}/verification/release_20260916T214510_a9f72f/logs/cpp_portable.log"
+    },
+    {
+      "check_id": "cpp_native",
+      "scope": "build correctness",
+      "command": [
+        "python",
+        "-c",
+        "from src.cpp_knn.bridge import build; print(build('native',sanitize=False,log_dir='{user}//Desktop//3804ICT//verification//release_20260916T214510_a9f72f//logs',build_dir='{user}//Desktop//3804ICT//verification//release_20260916T214510_a9f72f//build//cpp_native'))"
+      ],
+      "started": "2026-09-16T21:45:18.815441+00:00",
+      "finished": "2026-09-16T21:45:27.940237+00:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "reason": "",
+      "log": "{project}/verification/release_20260916T214510_a9f72f/logs/cpp_native.log"
+    },
+    {
+      "check_id": "cpp_portable_sanitized",
+      "scope": "optional sanitizer coverage",
+      "command": [
+        "python",
+        "-c",
+        "from src.cpp_knn.bridge import build; print(build('portable',sanitize=True,log_dir='{user}//Desktop//3804ICT//verification//release_20260916T214510_a9f72f//logs',build_dir='{user}//Desktop//3804ICT//verification//release_20260916T214510_a9f72f//build//cpp_portable_sanitized'))"
+      ],
+      "started": "2026-09-16T21:45:27.941735+00:00",
+      "finished": "2026-09-16T21:45:35.397168+00:00",
+      "exit_code": 1,
+      "status": "BLOCKED",
+      "reason": "Environment/toolchain/runtime access blocked this command; see local log",
+      "log": "{project}/verification/release_20260916T214510_a9f72f/logs/cpp_portable_sanitized.log"
+    },
+    {
+      "check_id": "cpp_debug_configure",
+      "scope": "build correctness",
+      "command": [
+        "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+        "-S",
+        "{project}",
+        "-B",
+        "{project}/verification/release_20260916T214510_a9f72f/build/cpp_debug",
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DBUILD_TESTING=ON",
+        "-DCPP_KNN_NATIVE=OFF",
+        "-DCPP_KNN_SANITIZE=OFF",
+        "-G",
+        "Visual Studio 17 2022",
+        "-A",
+        "x64"
+      ],
+      "started": "2026-09-16T21:45:35.426167+00:00",
+      "finished": "2026-09-16T21:45:36.992655+00:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "reason": "",
+      "log": "{project}/verification/release_20260916T214510_a9f72f/logs/cpp_debug_configure.log"
+    },
+    {
+      "check_id": "cpp_debug_build",
+      "scope": "build correctness",
+      "command": [
+        "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/cmake.exe",
+        "--build",
+        "{project}/verification/release_20260916T214510_a9f72f/build/cpp_debug",
+        "--config",
+        "Debug"
+      ],
+      "started": "2026-09-16T21:45:36.993653+00:00",
+      "finished": "2026-09-16T21:45:42.303104+00:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "reason": "",
+      "log": "{project}/verification/release_20260916T214510_a9f72f/logs/cpp_debug_build.log"
+    },
+    {
+      "check_id": "cpp_debug_ctest",
+      "scope": "build correctness",
+      "command": [
+        "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/CMake/bin/ctest.exe",
+        "--test-dir",
+        "{project}/verification/release_20260916T214510_a9f72f/build/cpp_debug",
+        "-C",
+        "Debug",
+        "--output-on-failure"
+      ],
+      "started": "2026-09-16T21:45:42.304605+00:00",
+      "finished": "2026-09-16T21:45:42.540103+00:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "reason": "",
+      "log": "{project}/verification/release_20260916T214510_a9f72f/logs/cpp_debug_ctest.log"
+    },
+    {
+      "check_id": "weka_clean_build_tests",
+      "scope": "build correctness",
+      "command": [
+        "python",
+        "-c",
+        "from src.weka_bridge.runner import build; print(build(force=True))"
+      ],
+      "started": "2026-09-16T21:45:42.541102+00:00",
+      "finished": "2026-09-16T21:46:03.960599+00:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "reason": "",
+      "log": "{project}/verification/release_20260916T214510_a9f72f/logs/weka_clean_build_tests.log"
+    },
+    {
+      "check_id": "active_unit_tests",
+      "scope": "build correctness",
+      "command": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "tests"
+      ],
+      "started": "2026-09-16T21:46:03.961600+00:00",
+      "finished": "2026-09-16T21:46:08.567557+00:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "reason": "",
+      "log": "{project}/verification/release_20260916T214510_a9f72f/logs/active_unit_tests.log"
+    },
+    {
+      "check_id": "historical_unit_tests",
+      "scope": "packaging completeness",
+      "command": [],
+      "started": "2026-09-16T21:46:08.750556+00:00",
+      "finished": "2026-09-16T21:46:08.750556+00:00",
+      "exit_code": null,
+      "status": "PASS",
+      "reason": "Reused verified historical suite; no expensive historical model search",
+      "log": null,
+      "evidence": {
+        "proof": "{project}/verification/historical_release_check/historical_validation.json",
+        "archive_manifest_sha256": "736a80edd835724dab30de70af7c0e971b701852cd64c8e54c044fb78096a261"
+      }
+    },
+    {
+      "check_id": "reuse_current_benchmark",
+      "scope": "runtime evidence",
+      "command": [],
+      "started": "2026-09-16T21:46:10.293042+00:00",
+      "finished": "2026-09-16T21:46:10.293042+00:00",
+      "exit_code": null,
+      "status": "PASS",
+      "reason": "Sources/configuration/data and all prediction/benchmark evidence match; no repeated benchmark",
+      "log": null,
+      "evidence": {
+        "rows_per_implementation": 6000,
+        "implementations": [
+          "baseline_python_v5_1",
+          "final_python",
+          "final_sklearn",
+          "final_cpp",
+          "final_weka"
+        ],
+        "prediction_sha256": {
+          "baseline_python_v5_1": "d88337b83d619ba12968bd08c74e1e9340f5ab985e954051db38d33469d655ea",
+          "final_python": "42765e7c55bc05930d21e402eef87e1894d5d66510e0e46b35836760d4184ac0",
+          "final_sklearn": "ec733097d0f9492c85966d19cd1f277d87090e476ac77546c5e8eea9c33078c2",
+          "final_cpp": "1b17fa234e3e7d123a2331bb039c1e6e3c9b8d275667383aac812b86e07f252d",
+          "final_weka": "516a6cb2b8bfae04957d8b7139138e33cd60d7005753b01d1dd315acdac1e5f2"
+        },
+        "manual_cpp_max_score_difference": 7.771561172376096e-16,
+        "external_numerical_differences": true,
+        "benchmark_rows": 140,
+        "timed_prediction_trials": 20,
+        "warmups": 3,
+        "prepared_pipeline_trials": 5,
+        "run_id": "20260916T205945.220601_0000_b410e8a7"
+      }
+    },
+    {
+      "check_id": "all_row_contract_metrics",
+      "scope": "real-data reproduction",
+      "command": [],
+      "started": "2026-09-16T21:46:10.294542+00:00",
+      "finished": "2026-09-16T21:46:10.294542+00:00",
+      "exit_code": null,
+      "status": "PASS",
+      "reason": "",
+      "log": null,
+      "evidence": {
+        "rows_per_implementation": 6000,
+        "implementations": [
+          "baseline_python_v5_1",
+          "final_python",
+          "final_sklearn",
+          "final_cpp",
+          "final_weka"
+        ],
+        "prediction_sha256": {
+          "baseline_python_v5_1": "d88337b83d619ba12968bd08c74e1e9340f5ab985e954051db38d33469d655ea",
+          "final_python": "42765e7c55bc05930d21e402eef87e1894d5d66510e0e46b35836760d4184ac0",
+          "final_sklearn": "ec733097d0f9492c85966d19cd1f277d87090e476ac77546c5e8eea9c33078c2",
+          "final_cpp": "1b17fa234e3e7d123a2331bb039c1e6e3c9b8d275667383aac812b86e07f252d",
+          "final_weka": "516a6cb2b8bfae04957d8b7139138e33cd60d7005753b01d1dd315acdac1e5f2"
+        },
+        "manual_cpp_max_score_difference": 7.771561172376096e-16,
+        "external_numerical_differences": true,
+        "benchmark_rows": 140,
+        "timed_prediction_trials": 20,
+        "warmups": 3,
+        "prepared_pipeline_trials": 5,
+        "run_id": "20260916T205945.220601_0000_b410e8a7"
+      }
+    },
+    {
+      "check_id": "manual_python_cpp",
+      "scope": "same-semantics numerical correctness",
+      "command": [],
+      "started": "2026-09-16T21:46:10.296043+00:00",
+      "finished": "2026-09-16T21:46:10.296043+00:00",
+      "exit_code": null,
+      "status": "PASS",
+      "reason": "",
+      "log": null,
+      "evidence": {
+        "rows": 6000,
+        "max_absolute_score_difference": 7.771561172376096e-16,
+        "tolerance": 1e-12
+      }
+    },
+    {
+      "check_id": "genuine_toolkits",
+      "scope": "toolkit comparability",
+      "command": [],
+      "started": "2026-09-16T21:46:10.297043+00:00",
+      "finished": "2026-09-16T21:46:10.297043+00:00",
+      "exit_code": null,
+      "status": "PASS",
+      "reason": "All rows from genuine sklearn and Weka; native differences retained",
+      "log": null,
+      "evidence": {
+        "differences_observed": true
+      }
+    },
+    {
+      "check_id": "numerical_investigation",
+      "scope": "toolkit comparability",
+      "command": [],
+      "started": "2026-09-16T21:46:10.299043+00:00",
+      "finished": "2026-09-16T21:46:10.299043+00:00",
+      "exit_code": null,
+      "status": "PASS",
+      "reason": "Preserved existing investigation with checked run/config identity; existing output seals are verified before reuse",
+      "log": null,
+      "evidence": {
+        "path": "{project}/results/final/20260916T205945.220601_0000_b410e8a7/diagnostics/numerical_investigation.json",
+        "sha256": "df946e3eb101471287e819e2d69d96fc9db719fac449251f995e0b047fed63db",
+        "identity_matches": true
+      }
+    },
+    {
+      "check_id": "report_regeneration",
+      "scope": "real-data reproduction",
+      "command": [
+        "python",
+        "-m",
+        "src.reporting",
+        "--run-dir",
+        "{project}/results/final/20260916T205945.220601_0000_b410e8a7"
+      ],
+      "started": "2026-09-16T21:46:10.300543+00:00",
+      "finished": "2026-09-16T21:46:13.013517+00:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "reason": "",
+      "log": "{project}/verification/release_20260916T214510_a9f72f/logs/report_regeneration.log"
+    },
+    {
+      "check_id": "clean_working_tree",
+      "scope": "packaging completeness",
+      "command": [
+        "python",
+        "scripts/verify_clean_checkout.py",
+        "--data",
+        "{project}/data/raw/UCI_Credit_Card.csv",
+        "--work-root",
+        "{project}/verification/release_20260916T214510_a9f72f/clean_source",
+        "--reference-run",
+        "{project}/results/final/20260916T205945.220601_0000_b410e8a7"
+      ],
+      "started": "2026-09-16T21:46:13.015017+00:00",
+      "finished": "2026-09-16T21:49:02.656069+00:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "reason": "",
+      "log": "{project}/verification/release_20260916T214510_a9f72f/logs/clean_working_tree.log"
+    },
+    {
+      "check_id": "release_output_provenance",
+      "scope": "packaging completeness",
+      "command": [],
+      "started": "2026-09-16T21:49:02.766106+00:00",
+      "finished": "2026-09-16T21:49:02.766106+00:00",
+      "exit_code": null,
+      "status": "PASS",
+      "reason": "Original inference sources/config preserved; stable outputs hashed and release metadata attached",
+      "log": null,
+      "evidence": {
+        "run_id": "20260916T205945.220601_0000_b410e8a7",
+        "output_files": 26,
+        "metadata_only_configuration_changes": {
+          "baseline": [
+            "implementation_score_semantics",
+            "model_id"
+          ],
+          "final": [
+            "implementation_score_semantics",
+            "model_id",
+            "threshold_source"
+          ]
+        },
+        "release_source_files": 82,
+        "original_inference_provenance_preserved": true
+      }
+    },
+    {
+      "check_id": "submission_export",
+      "scope": "packaging completeness",
+      "command": [
+        "python",
+        "scripts/export_submission.py",
+        "--output",
+        "{project}/dist/3804ICT-final-submission.zip",
+        "--run-dir",
+        "{project}/results/final/20260916T205945.220601_0000_b410e8a7",
+        "--history-output",
+        "{project}/dist/3804ICT-research-history.zip"
+      ],
+      "started": "2026-09-16T21:49:02.768570+00:00",
+      "finished": "2026-09-16T21:49:05.564549+00:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "reason": "",
+      "log": "{project}/verification/release_20260916T214510_a9f72f/logs/submission_export.log"
+    },
+    {
+      "check_id": "clean_submission_zip",
+      "scope": "packaging completeness",
+      "command": [
+        "python",
+        "scripts/verify_clean_checkout.py",
+        "--data",
+        "{project}/data/raw/UCI_Credit_Card.csv",
+        "--work-root",
+        "{project}/verification/release_20260916T214510_a9f72f/clean_zip",
+        "--source-zip",
+        "{project}/dist/3804ICT-final-submission.zip",
+        "--reference-run",
+        "{project}/results/final/20260916T205945.220601_0000_b410e8a7"
+      ],
+      "started": "2026-09-16T21:49:05.566048+00:00",
+      "finished": "2026-09-16T21:51:51.611636+00:00",
+      "exit_code": 0,
+      "status": "PASS",
+      "reason": "",
+      "log": "{project}/verification/release_20260916T214510_a9f72f/logs/clean_submission_zip.log"
+    }
+  ],
+  "run_dir": "{project}/results/final/20260916T205945.220601_0000_b410e8a7",
+  "evidence": {
+    "rows_per_implementation": 6000,
+    "implementations": [
+      "baseline_python_v5_1",
+      "final_python",
+      "final_sklearn",
+      "final_cpp",
+      "final_weka"
+    ],
+    "prediction_sha256": {
+      "baseline_python_v5_1": "d88337b83d619ba12968bd08c74e1e9340f5ab985e954051db38d33469d655ea",
+      "final_python": "42765e7c55bc05930d21e402eef87e1894d5d66510e0e46b35836760d4184ac0",
+      "final_sklearn": "ec733097d0f9492c85966d19cd1f277d87090e476ac77546c5e8eea9c33078c2",
+      "final_cpp": "1b17fa234e3e7d123a2331bb039c1e6e3c9b8d275667383aac812b86e07f252d",
+      "final_weka": "516a6cb2b8bfae04957d8b7139138e33cd60d7005753b01d1dd315acdac1e5f2"
+    },
+    "manual_cpp_max_score_difference": 7.771561172376096e-16,
+    "external_numerical_differences": true,
+    "benchmark_rows": 140,
+    "timed_prediction_trials": 20,
+    "warmups": 3,
+    "prepared_pipeline_trials": 5,
+    "run_id": "20260916T205945.220601_0000_b410e8a7",
+    "submission_sha256": "0b2bb143fcc300e1d495fc70cab9931151c6100b8d337ceb07afcbd643784e68",
+    "history_sha256": "039b5f50dbe49a79d365dd3dc76f231d987768741eb1e093b9f3341e72ad733d"
+  },
+  "limitations": [
+    "Previously inspected test; no new independent ML validation.",
+    "Library-native score and tie rules are comparisons, not identical-semantics oracles.",
+    "Raw build/subprocess logs remain local; exported command paths use portable placeholders."
+  ]
+}

@@ -2,188 +2,211 @@ package project;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.csv.CSVRecord;
-import weka.classifiers.Evaluation;
 import weka.classifiers.lazy.IBk;
-import weka.core.EuclideanDistance;
-import weka.core.ManhattanDistance;
-import weka.core.NormalizableDistance;
-import weka.core.Instance;
-import weka.core.Instances;
-import weka.core.SelectedTag;
-import weka.core.Utils;
-import weka.core.Version;
+import weka.core.*;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.core.neighboursearch.LinearNNSearch;
-
-import java.io.Reader;
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.nio.file.*;
+import java.security.MessageDigest;
+import java.util.*;
 
-/** Genuine Weka IBk over the common numeric features, with no independent split. */
+/** Genuine Weka scores on the shared prepared matrix; thresholding is external to IBk. */
 public final class WekaIBkRunner {
-    private static final Gson JSON = new GsonBuilder().setPrettyPrinting().create();
+    static final double FINAL_THRESHOLD = 0.3315411365543412;
+    private static final Gson JSON = new Gson();
+    private static final Gson PRETTY_JSON = new GsonBuilder().setPrettyPrinting().create();
 
-    private static JsonObject readJson(Path path) throws Exception {
-        return JSON.fromJson(Files.readString(path, StandardCharsets.UTF_8), JsonObject.class);
-    }
-
-    private static void write(Path path, String text) throws Exception {
-        if (path.toAbsolutePath().getParent() != null) Files.createDirectories(path.toAbsolutePath().getParent());
-        Files.writeString(path, text, StandardCharsets.UTF_8);
-    }
-
-    private static void validateData(Instances data) {
+    static void validateData(Instances data, boolean query) {
+        if (data == null || data.numAttributes() < 2 || data.numInstances() == 0)
+            throw new IllegalArgumentException("ARFF must contain predictors and at least one row");
         data.setClassIndex(data.numAttributes() - 1);
         if (!data.classAttribute().isNominal() || data.numClasses() != 2
-                || data.classAttribute().indexOfValue("0") < 0 || data.classAttribute().indexOfValue("1") < 0)
-            throw new IllegalArgumentException("The final class attribute must be nominal {0,1}");
-        if (data.numInstances() == 0) throw new IllegalArgumentException("Empty ARFF dataset");
+                || !data.classAttribute().value(0).equals("0") || !data.classAttribute().value(1).equals("1"))
+            throw new IllegalArgumentException("The final class attribute must be nominal {0,1}, in that order");
         for (int j = 0; j < data.classIndex(); j++) {
             if (!data.attribute(j).isNumeric()) throw new IllegalArgumentException("All predictors must be numeric");
-            String name = data.attribute(j).name();
-            if (name.equalsIgnoreCase("ID") || name.equalsIgnoreCase("target"))
+            if (Set.of("id", "target", "row_id", "original_id", "y_true", "default.payment.next.month")
+                    .contains(data.attribute(j).name().toLowerCase(Locale.ROOT)))
                 throw new IllegalArgumentException("ID/target cannot be predictive features");
         }
-        for (Instance instance : data) {
-            for (int j = 0; j < data.numAttributes(); j++)
-                if (!Double.isFinite(instance.value(j))) throw new IllegalArgumentException("ARFF contains missing/nonfinite values");
+        for (Instance row : data) {
+            for (int j = 0; j < data.classIndex(); j++)
+                if (!Double.isFinite(row.value(j))) throw new IllegalArgumentException("Nonfinite predictor");
+            if (query != row.classIsMissing())
+                throw new IllegalArgumentException(query ? "Query class must be missing" : "Training class must be present");
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        if (args.length == 0 || List.of(args).contains("--help")) {
-            System.out.println("Weka " + Version.VERSION + " genuine IBk runner\n"
-                    + "java -jar weka/target/knn-weka-runner.jar --train <train.arff> --test <test.arff> "
-                    + "--k <selected-k> --predictions <predictions.csv> [--metrics <evaluation.txt>] "
-                    + "[--selected-parameters <selection.json>] [--ids <test_ids.csv>] "
-                    + "[--metric euclidean|manhattan] [--weights uniform|distance]\n"
-                    + "Requires test row IDs from python -m src.preprocessing. "
-                    + "Defaults preserve the accepted no-CV, uniform-vote, "
-                    + "EuclideanDistance dontNormalize=true behavior.");
-            return;
-        }
-        Path localWekaHome = Path.of("weka", "target", "weka-home").toAbsolutePath();
-        Files.createDirectories(localWekaHome);
-        weka.core.Environment.getSystemWide().addVariable("WEKA_HOME", localWekaHome.toString());
-        Set<String> allowed = Set.of("--train", "--test", "--k", "--predictions", "--metrics", "--ids", "--selected-parameters", "--metric", "--weights");
-        Map<String, String> options = new HashMap<>();
-        for (int i = 0; i < args.length; i += 2) {
-            if (i + 1 >= args.length || !allowed.contains(args[i]) || options.put(args[i], args[i + 1]) != null)
-                throw new IllegalArgumentException("Invalid, duplicate or incomplete argument: " + args[i]);
-        }
-        for (String key : List.of("--train", "--test", "--k", "--predictions"))
-            if (!options.containsKey(key)) throw new IllegalArgumentException("Required argument: " + key);
-        Path trainPath = Path.of(options.get("--train")).toAbsolutePath();
-        Path testPath = Path.of(options.get("--test")).toAbsolutePath();
-        Path predictionPath = Path.of(options.get("--predictions")).toAbsolutePath();
-        Path idsPath = Path.of(options.getOrDefault("--ids", testPath.resolveSibling("test_ids.csv").toString()));
-        int k = Integer.parseInt(options.get("--k"));
-        if (k < 1) throw new IllegalArgumentException("k must be >= 1");
-        String metric = options.getOrDefault("--metric", "euclidean");
-        String weights = options.getOrDefault("--weights", "uniform");
-        if (!Set.of("euclidean", "manhattan").contains(metric))
-            throw new IllegalArgumentException("metric must be euclidean or manhattan");
-        if (!Set.of("uniform", "distance").contains(weights))
-            throw new IllegalArgumentException("weights must be uniform or distance");
-        Path selectionPath = options.containsKey("--selected-parameters") ? Path.of(options.get("--selected-parameters")) : null;
-        if (selectionPath != null) {
-            JsonObject selection = readJson(selectionPath);
-            if (selection.get("selected_k").getAsInt() != k)
-                throw new IllegalArgumentException("Selected k mismatch");
-            if (selection.has("metric") && !selection.get("metric").getAsString().equals(metric))
-                throw new IllegalArgumentException("Selected metric mismatch");
-            if (selection.has("weights") && !selection.get("weights").getAsString().equals(weights))
-                throw new IllegalArgumentException("Selected weights mismatch");
-        }
-        Instances train = DataSource.read(trainPath.toString());
-        Instances test = DataSource.read(testPath.toString());
-        validateData(train);
-        validateData(test);
-        if (!train.equalHeaders(test)) throw new IllegalArgumentException(train.equalHeadersMsg(test));
-        if (k > train.numInstances()) throw new IllegalArgumentException("k exceeds training rows");
-        List<CSVRecord> ids;
-        try (Reader reader = Files.newBufferedReader(idsPath, StandardCharsets.UTF_8);
-             CSVParser csv = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).build().parse(reader)) {
-            ids = csv.getRecords();
-        }
-        if (ids.size() != test.numInstances()) throw new IllegalArgumentException("Test IDs have incorrect row count");
-        Set<String> seen = new HashSet<>();
-        for (CSVRecord row : ids) if (!seen.add(row.get("row_id"))) throw new IllegalArgumentException("Duplicate test row ID");
-
-        NormalizableDistance distance = metric.equals("euclidean")
-                ? new EuclideanDistance() : new ManhattanDistance();
+    static IBk createClassifier(int k, Instances train) throws Exception {
+        if (k < 1 || k > train.numInstances()) throw new IllegalArgumentException("k outside training row count");
+        EuclideanDistance distance = new EuclideanDistance();
         distance.setDontNormalize(true);
         LinearNNSearch search = new LinearNNSearch();
         search.setSkipIdentical(false);
         search.setDistanceFunction(distance);
         IBk classifier = new IBk(k);
         classifier.setCrossValidate(false);
-        int weightingMode = weights.equals("uniform") ? IBk.WEIGHT_NONE : IBk.WEIGHT_INVERSE;
-        classifier.setDistanceWeighting(new SelectedTag(weightingMode, IBk.TAGS_WEIGHTING));
+        classifier.setDistanceWeighting(new SelectedTag(IBk.WEIGHT_INVERSE, IBk.TAGS_WEIGHTING));
         classifier.setNearestNeighbourSearchAlgorithm(search);
-        long start = System.nanoTime();
         classifier.buildClassifier(train);
-        double fitSeconds = (System.nanoTime() - start) / 1e9;
-        int positiveIndex = train.classAttribute().indexOfValue("1");
-        double[][] distributions = new double[test.numInstances()][];
-        int[] predictedIndices = new int[test.numInstances()];
-        start = System.nanoTime();
+        return classifier;
+    }
+
+    static int thresholdLabel(double score, double threshold) {
+        if (!Double.isFinite(score) || score < 0 || score > 1)
+            throw new IllegalArgumentException("Invalid class-1 score");
+        if (!Double.isFinite(threshold) || threshold < 0 || threshold > 1)
+            throw new IllegalArgumentException("Invalid threshold");
+        return score >= threshold ? 1 : 0;
+    }
+
+    static final class Prediction {
+        final double[] scores;
+        final int[] labels;
+        final double seconds;
+        Prediction(double[] scores, int[] labels, double seconds) {
+            this.scores = scores; this.labels = labels; this.seconds = seconds;
+        }
+        String checksum() throws Exception {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            ByteBuffer buffer = ByteBuffer.allocate(12).order(ByteOrder.LITTLE_ENDIAN);
+            for (int i = 0; i < scores.length; i++) {
+                buffer.clear(); buffer.putDouble(scores[i]); buffer.putInt(labels[i]);
+                digest.update(buffer.array());
+            }
+            StringBuilder hex = new StringBuilder();
+            for (byte value : digest.digest()) hex.append(String.format("%02x", value & 0xff));
+            return hex.toString();
+        }
+    }
+
+    static Prediction predict(IBk classifier, Instances test, double threshold) throws Exception {
+        long start = System.nanoTime();
+        // Validation, allocation, full neighbour searches and labels are inside the timer.
+        validateData(test, true);
+        double[] scores = new double[test.numInstances()];
+        int[] labels = new int[test.numInstances()];
+        int positiveIndex = test.classAttribute().indexOfValue("1");
         for (int i = 0; i < test.numInstances(); i++) {
             Instance query = (Instance) test.instance(i).copy();
-            query.setDataset(test);
-            query.setClassMissing();
-            distributions[i] = classifier.distributionForInstance(query);
-            predictedIndices[i] = Utils.maxIndex(distributions[i]);
+            query.setDataset(test); query.setClassMissing();
+            double[] distribution = classifier.distributionForInstance(query);
+            if (distribution.length != 2 || !Double.isFinite(distribution[0])
+                    || Math.abs(distribution[0] + distribution[1] - 1.0) > 1e-12)
+                throw new IllegalStateException("Invalid Weka distribution");
+            scores[i] = distribution[positiveIndex];
+            labels[i] = thresholdLabel(scores[i], threshold);
         }
-        double predictionSeconds = (System.nanoTime() - start) / 1e9;
+        return new Prediction(scores, labels, (System.nanoTime() - start) / 1e9);
+    }
 
-        Evaluation evaluation = new Evaluation(train);
-        Files.createDirectories(predictionPath.getParent());
-        try (CSVPrinter csv = new CSVPrinter(Files.newBufferedWriter(predictionPath, StandardCharsets.UTF_8),
-                CSVFormat.DEFAULT.builder().setHeader("test_index", "row_id", "original_id", "y_true", "y_pred",
-                        "probability_class_1", "selected_k").build())) {
-            for (int i = 0; i < test.numInstances(); i++) {
-                csv.printRecord(i, ids.get(i).get("row_id"), ids.get(i).get("original_id"),
-                        test.classAttribute().value((int) test.instance(i).classValue()),
-                        train.classAttribute().value(predictedIndices[i]), distributions[i][positiveIndex],
-                        k);
-                evaluation.evaluateModelOnceAndRecordPrediction(distributions[i], test.instance(i));
+    static Map<String, Object> metadata(IBk classifier, Instances train, Instances test,
+                                         double threshold, double fitSeconds) {
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("implementation", "final_weka"); result.put("k", classifier.getKNN());
+        result.put("threshold", threshold); result.put("decision_rule", "score_class_1 >= threshold");
+        result.put("fit_seconds", fitSeconds); result.put("n_train", train.numInstances());
+        result.put("n_query", test.numInstances()); result.put("d", train.numAttributes() - 1);
+        result.put("weka_version", Version.VERSION); result.put("java_version", System.getProperty("java.version"));
+        result.put("distance_normalization", false); result.put("skip_identical", false);
+        result.put("internal_cross_validation", false); result.put("metric", "euclidean");
+        result.put("distance_weighting", "inverse"); result.put("search", "LinearNNSearch");
+        result.put("classifier_options", Utils.joinOptions(classifier.getOptions()));
+        result.put("compute_threads", 1);
+        result.put("thread_note", "Sequential IBk queries; JVM may use service/JIT/GC threads");
+        result.put("timing_scope", "Ready model and prepared query Instances -> validation, allocation, genuine distributions, threshold labels; excludes load, fit, JVM startup, IPC, checksum and file output");
+        result.put("score_semantics", "Unmodified Weka IBk distribution: native inverse weights, smoothing and boundary ties; not calibrated to custom scores");
+        return result;
+    }
+
+    static void writePredictions(Path path, Prediction prediction) throws Exception {
+        Files.createDirectories(path.toAbsolutePath().getParent());
+        try (CSVPrinter csv = new CSVPrinter(Files.newBufferedWriter(path, StandardCharsets.UTF_8),
+                CSVFormat.DEFAULT.builder().setHeader("test_position", "score_class_1", "y_pred").build())) {
+            for (int i = 0; i < prediction.scores.length; i++)
+                csv.printRecord(i, prediction.scores[i], prediction.labels[i]);
+        }
+    }
+
+    private static void worker(PrintStream protocol, IBk classifier, Instances train, Instances test,
+                               double threshold, int warmups, double fitSeconds) throws Exception {
+        List<Map<String, Object>> warmupResults = new ArrayList<>();
+        for (int i = 0; i < warmups; i++) {
+            Prediction prediction = predict(classifier, test, threshold);
+            warmupResults.add(Map.of("warmup", i, "seconds", prediction.seconds, "checksum", prediction.checksum()));
+        }
+        Map<String, Object> ready = metadata(classifier, train, test, threshold, fitSeconds);
+        ready.put("status", "READY"); ready.put("warmups", warmupResults);
+        protocol.println(JSON.toJson(ready)); protocol.flush();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8))) {
+            String command;
+            while ((command = reader.readLine()) != null) {
+                if (command.equals("EXIT")) { protocol.println("{\"status\":\"EXIT\"}"); protocol.flush(); return; }
+                if (!command.equals("PREDICT")) throw new IllegalArgumentException("Unknown worker command: " + command);
+                Prediction prediction = predict(classifier, test, threshold);
+                protocol.println(JSON.toJson(Map.of("status", "PREDICT", "seconds", prediction.seconds,
+                        "checksum", prediction.checksum(), "n_query", prediction.scores.length)));
+                protocol.flush();
             }
         }
-        Map<String, Object> runtime = new java.util.LinkedHashMap<>();
-        runtime.put("implementation", "weka");
-        runtime.put("selected_k", k);
-        runtime.put("fit_seconds", fitSeconds);
-        runtime.put("prediction_seconds", predictionSeconds);
-        runtime.put("milliseconds_per_sample", 1000 * predictionSeconds / test.numInstances());
-        runtime.put("weka_version", Version.VERSION);
-        runtime.put("java_version", System.getProperty("java.version"));
-        runtime.put("distance_normalization", !distance.getDontNormalize());
-        runtime.put("internal_cross_validation", classifier.getCrossValidate());
-        runtime.put("metric", metric);
-        runtime.put("distance_weighting", weights.equals("uniform") ? "none" : "inverse");
-        runtime.put("search", "LinearNNSearch");
-        runtime.put("classifier_options", Utils.joinOptions(classifier.getOptions()));
-        runtime.put("timing_scope", "one buildClassifier; one distributionForInstance loop plus argmax; I/O/evaluation/JVM startup excluded; no warmup");
-        runtime.put("probability_semantics", "Unmodified Weka IBk nominal distribution; includes native smoothing and boundary distance ties");
-        String stem = predictionPath.getFileName().toString().replaceFirst("\\.csv$", "");
-        write(predictionPath.resolveSibling(stem + ".runtime.json"), JSON.toJson(runtime) + "\n");
-        Path evaluationPath = Path.of(options.getOrDefault("--metrics", predictionPath.resolveSibling("weka_evaluation.txt").toString()));
-        write(evaluationPath, "Weka " + Version.VERSION + "\n" + JSON.toJson(runtime) + "\n"
-                + evaluation.toSummaryString("Native Weka Evaluation\n", false)
-                + evaluation.toClassDetailsString() + evaluation.toMatrixString());
-        System.out.printf(java.util.Locale.ROOT, "Weka %s IBk: k=%d, metric=%s, weights=%s, %d predictions, %.6fs; dontNormalize=%s -> %s%n",
-                Version.VERSION, k, metric, weights, test.numInstances(), predictionSeconds, distance.getDontNormalize(), predictionPath);
+    }
+
+    public static void main(String[] args) throws Exception {
+        // Reserve stdout even if a Weka dependency logs to System.out.
+        PrintStream protocol = System.out;
+        System.setOut(System.err);
+        if (args.length == 0 || List.of(args).contains("--help")) {
+            protocol.println("Genuine Weka 3.8.6 final IBk: --train train.arff --test test.arff "
+                    + "[--k 101] [--threshold 0.3315411365543412] --predictions output.csv "
+                    + "OR --worker [--warmups 3]. Query class must be missing; class order is {0,1}.");
+            return;
+        }
+        Map<String, String> options = new HashMap<>();
+        Set<String> allowed = Set.of("--train", "--test", "--k", "--threshold", "--predictions", "--warmups");
+        boolean workerMode = false;
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equals("--worker") && !workerMode) { workerMode = true; continue; }
+            if (!allowed.contains(args[i]) || i + 1 >= args.length || options.containsKey(args[i]))
+                throw new IllegalArgumentException("Invalid, duplicate or incomplete argument: " + args[i]);
+            String key = args[i]; options.put(key, args[++i]);
+        }
+        for (String key : List.of("--train", "--test"))
+            if (!options.containsKey(key)) throw new IllegalArgumentException("Required argument: " + key);
+        if (!workerMode && !options.containsKey("--predictions")) throw new IllegalArgumentException("Required argument: --predictions");
+        int k = Integer.parseInt(options.getOrDefault("--k", "101"));
+        double threshold = Double.parseDouble(options.getOrDefault("--threshold", Double.toString(FINAL_THRESHOLD)));
+        thresholdLabel(0, threshold);
+        int warmups = Integer.parseInt(options.getOrDefault("--warmups", "3"));
+        if (warmups < 0) throw new IllegalArgumentException("Negative warmups");
+        Path localWekaHome = Path.of("weka", "target", "weka-home").toAbsolutePath();
+        Files.createDirectories(localWekaHome);
+        weka.core.Environment.getSystemWide().addVariable("WEKA_HOME", localWekaHome.toString());
+        Instances train = DataSource.read(Path.of(options.get("--train")).toAbsolutePath().toString());
+        Instances test = DataSource.read(Path.of(options.get("--test")).toAbsolutePath().toString());
+        validateData(train, false); validateData(test, true);
+        if (!train.equalHeaders(test)) throw new IllegalArgumentException(train.equalHeadersMsg(test));
+        long start = System.nanoTime();
+        IBk classifier = createClassifier(k, train);
+        double fitSeconds = (System.nanoTime() - start) / 1e9;
+        if (workerMode) {
+            worker(protocol, classifier, train, test, threshold, warmups, fitSeconds);
+        } else {
+            Prediction prediction = predict(classifier, test, threshold);
+            Path path = Path.of(options.get("--predictions")).toAbsolutePath();
+            writePredictions(path, prediction);
+            Map<String, Object> runtime = metadata(classifier, train, test, threshold, fitSeconds);
+            runtime.put("prediction_seconds", prediction.seconds); runtime.put("checksum", prediction.checksum());
+            runtime.put("warmups", 0);
+            String stem = path.getFileName().toString().replaceFirst("\\.csv$", "");
+            Files.writeString(path.resolveSibling(stem + ".runtime.json"), PRETTY_JSON.toJson(runtime) + "\n", StandardCharsets.UTF_8);
+            protocol.println(JSON.toJson(Map.of("status", "COMPLETE", "n_query", prediction.scores.length,
+                    "checksum", prediction.checksum())));
+        }
     }
 }

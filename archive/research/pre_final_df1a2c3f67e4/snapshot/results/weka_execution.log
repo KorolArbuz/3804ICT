@@ -1,0 +1,5 @@
+Weka 3.8.6 IBk: k=19, 6000 predictions, 3.472220s; dontNormalize=true -> C:\Users\Denis\Desktop\3804ICT\results\predictions_weka.csv
+сент. 16, 2026 3:15:36 PM com.github.fommil.netlib.ARPACK <clinit>
+WARNING: Failed to load implementation from: com.github.fommil.netlib.NativeSystemARPACK
+сент. 16, 2026 3:15:36 PM com.github.fommil.jni.JniLoader liberalLoad
+INFO: successfully loaded C:\Users\Denis\AppData\Local\Temp\jniloader15834737961077343932netlib-native_ref-win-x86_64.dll

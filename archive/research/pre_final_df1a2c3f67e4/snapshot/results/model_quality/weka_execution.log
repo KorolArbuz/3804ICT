@@ -1,0 +1,5 @@
+Weka 3.8.6 IBk: k=25, metric=euclidean, weights=distance, 6000 predictions, 3.611170s; dontNormalize=true -> C:\Users\Denis\Desktop\3804ICT\results\model_quality\predictions_selected_weka.csv
+сент. 16, 2026 4:15:10 PM com.github.fommil.netlib.ARPACK <clinit>
+WARNING: Failed to load implementation from: com.github.fommil.netlib.NativeSystemARPACK
+сент. 16, 2026 4:15:10 PM com.github.fommil.jni.JniLoader liberalLoad
+INFO: successfully loaded C:\Users\Denis\AppData\Local\Temp\jniloader14645141447883655148netlib-native_ref-win-x86_64.dll

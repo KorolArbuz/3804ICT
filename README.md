@@ -1,206 +1,231 @@
-# KNN Credit Default Classification
+# Credit default classification with five KNN implementations
 
-This university Data Mining project predicts whether a credit-card client will
-default in the next month. It compares a manual NumPy KNN classifier,
-scikit-learn's KNeighborsClassifier, and Java/Weka's IBk on one fixed
-experiment. A verified pure C++20 implementation is included as an experimental
-performance candidate.
+This university project compares an original manual Python KNN baseline with four
+implementations of one frozen final model: manual Python, scikit-learn, manual
+C++20 and genuine Java/Weka IBk. Each implementation produces its own scores,
+predictions and measured durations on the same fixed credit-default dataset.
 
-## Dataset
+## Dataset and protocol
 
-The project uses the [UCI Default of Credit Card Clients dataset](https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients):
-30,000 records, 23 original predictors, and a binary default target. ID is
-excluded from the model.
+Use the [UCI Default of Credit Card Clients dataset](https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients):
+30,000 rows, 23 original predictors and a binary target (1 means default next month).
+The original ID is retained for checking row alignment and is excluded from predictors.
+See [dataset placement](data/raw/README.md); CSV, XLS and XLSX are supported.
 
-Download the official spreadsheet and save it as:
+The stratified 80/20 split uses seed 42: 24,000 training rows and 6,000 test rows.
+Both partitions retain sorted source-row order. All imputation, scaling and category
+learning use training rows only. The baseline has 33 transformed features; the final
+representation has 60 for this dataset. No parameter search runs during the final experiment.
 
-```text
-data/raw/default.xls
-```
+The test set has been inspected in earlier studies. These results establish software
+correctness and reproduction on fixed data, not a new independent estimate of
+generalization. The final threshold was selected using training OOF scores; the user
+adopted `balanced_low_fp` after reviewing previous results. Its OOF recall constraint
+does not guarantee test recall of at least 0.50.
 
-## Experiment protocol
+## Frozen models
 
-- stratified 80/20 train/test split with random seed 42;
-- five-fold stratified cross-validation on the training partition;
-- odd candidate values from k=1 through k=31;
-- mean class-1 F1 as the selection measure, with balanced accuracy and smaller
-  k as tie-breakers;
-- selected value **k = 19**;
-- full one-hot encoding for SEX, EDUCATION, and MARRIAGE;
-- median imputation and standard scaling for the remaining features;
-- Euclidean distance and uniform voting;
-- the same untouched 6,000 test rows for every implementation.
+| Implementation ID | Model group | k | Vote / decision |
+|---|---|---:|---|
+| `baseline_python_v5_1` | Original baseline | 19 | Uniform; argmax, class 0 on ties |
+| `final_python` | Final | 101 | Inverse distance; score >= 0.3315411365543412 |
+| `final_sklearn` | Final | 101 | Native scikit-learn distance weights; same threshold |
+| `final_cpp` | Final | 101 | Manual inverse distance; same threshold |
+| `final_weka` | Final | 101 | Native Weka inverse weighting/distribution; same threshold |
 
-## Implementations
+Both groups use Euclidean distance. The baseline preserves its original standard
+scaling, nominal encoding and batch size 64. The final representation uses signed-log
+money variables, structured repayment status, engineered blocks A+B and repayment
+group weight 1.0. [baseline.json](configs/baseline.json) and
+[final.json](configs/final.json) record the exact settings and provenance hashes.
 
-The custom Python package implements exact brute-force KNN with NumPy and
-deterministic boundary handling. It does not call a ready-made neighbour
-classifier. scikit-learn uses brute-force Euclidean search, uniform weights,
-and one worker. The genuine Java project uses Weka 3.8.6 IBk with
-LinearNNSearch; Weka distance normalization and internal cross-validation are
-disabled to match the prepared experiment.
-
-The optional standard-library-only C++20 candidate implements the same exact
-custom prediction semantics and has 6,000/6,000 agreement with accepted Python
-V5.1 for classes, positive-neighbour counts, and vote fractions. It remains
-experimental and does not replace any implementation in run_all.py. See
-[src/cpp_knn/README.md](src/cpp_knn/README.md).
-
-## Project structure
-
-```text
-src/common/        shared settings and model helpers
-src/data/          loading, validation, summary, and splitting
-src/preprocessing/ training-fitted transforms and NPZ/ARFF/C++ export
-src/tuning/        cross-validation and k selection
-src/custom_knn/    manual NumPy classifier and runner
-src/sklearn_knn/   scikit-learn runner
-src/evaluation/    metrics, alignment, and comparisons
-src/reporting/     standard experiment figures
-src/benchmarking/  controlled runtime measurements and report generation
-src/cpp_knn/       experimental exact C++20 candidate
-src/model_quality/ separate training-only k/metric/voting investigation
-weka/              Maven project for genuine Java/Weka IBk
-tests/             C++ correctness tests
-results/           compact experiment and benchmark evidence
-run_all.py         complete three-implementation experiment
-```
+Manual Python and C++ order neighbours by distance then training-row position, use
+only selected exact-zero neighbours when present, and compute binary64 scores.
+scikit-learn uses exact brute-force search with one worker. Weka 3.8.6 uses genuine
+IBk and LinearNNSearch with distance normalization, internal CV and identical-row
+skipping disabled. Its native smoothing and boundary behaviour are preserved;
+neither toolkit is silently forced to match manual probabilities.
+See [technical notes](docs/technical_notes.md) for numerical and timing details.
 
 ## Installation
 
-Python 3.10 or later is recommended.
+The recorded environment uses Python **3.10.14** and the exact numerical versions
+in `requirements.txt`. Create a fresh virtual environment:
 
-```powershell
+```text
 python -m venv .venv
-.venv\Scripts\activate
+```
+
+Activate it with `.venv\Scripts\activate` on Windows or `source .venv/bin/activate`
+on Linux/macOS, then run:
+
+```text
 python -m pip install -r requirements.txt
+python -m pip check
 ```
 
-On macOS or Linux, activate the environment with
-source .venv/bin/activate. Weka also requires JDK 11 or later and Maven on
-PATH.
+Install a C++20 compiler and CMake, plus JDK 11 or later and Maven. The recorded
+native checks use MSVC and JDK 11. The project discovers installed tools and never
+installs compilers or global packages. Other toolchains require their own recorded
+build/test verification; portable builds do not enable host-specific ISA flags.
 
-## Run the complete experiment
+## Run
 
-From the repository root:
+From the repository root, build both native projects and run all five implementations:
 
-```bash
-python run_all.py --data data/raw/default.xls
+```text
+python run_all.py --data data/raw/UCI_Credit_Card.csv --build
 ```
 
-Use --skip-weka when Java or Maven is unavailable. The standard experiment
-writes metrics, agreement, confusion matrices, cross-validation results, and
-figures under results/.
+After a successful build, omit `--build` to reuse verified current-source binaries.
+Every invocation creates a new `results/final/<run_id>/`; previous runs are retained.
+The main comparison uses `balanced_low_fp` and does not refit thresholds.
 
-## Standalone commands
+Collect fresh repeated measurements in the same run:
 
-```bash
-python -m src.data --data data/raw/default.xls
-python -m src.tuning --data data/raw/default.xls
-python -m src.preprocessing --data data/raw/default.xls --selected-parameters results/selected_parameters.json
-python -m src.custom_knn
-python -m src.sklearn_knn
-python -m src.evaluation
-python -m src.reporting
-mvn -f weka/pom.xml clean package
+```text
+python run_all.py --data data/raw/UCI_Credit_Card.csv --build --benchmark --runs 20 --warmups 3
 ```
 
-The optional model-quality experiment is deliberately separate from
-`run_all.py`. It freezes one winner using training-only CV before a one-time
-test evaluation:
-
-```bash
-python -m src.model_quality.search --data data/raw/default.xls
-python -m src.model_quality.evaluate --data data/raw/default.xls
-```
-
-Its artifacts are written only under `results/model_quality/`; see
-[src/model_quality/README.md](src/model_quality/README.md) for the leakage guard,
-manual selected implementation, and threshold-study boundary.
-
-For the C++ candidate:
-
-```bash
-python -m src.cpp_knn.export_data
-cmake -S . -B build-cpp-portable -DCMAKE_BUILD_TYPE=Release
-cmake --build build-cpp-portable --config Release
-ctest --test-dir build-cpp-portable -C Release --output-on-failure
-```
+The benchmark executes sequential randomized rounds, with warmups recorded separately,
+and measures fresh-process prepared-input pipelines separately from resident prediction.
+The baseline is a different workload; direct implementation speedups compare only the
+four final implementations. Ordinary runs produce no repeated-runtime claim.
 
 ## Results
 
-The standard experiment selected k=19.
+Each final run contains `run_manifest.json`, resolved configurations, data/environment
+provenance, five prediction CSVs, `metrics.csv`, `agreement.csv`, row-level diagnostics,
+`summary.md`, and PNG/SVG figures. A benchmark run also contains raw timings, summaries
+and its timing protocol. `validation.json` distinguishes integration checks from full
+release verification. A run is complete only when all five implementations finish;
+numerical toolkit differences remain visible in the agreement table.
 
-| Implementation | Accuracy | F1 | Balanced accuracy | ROC-AUC |
-|---|---:|---:|---:|---:|
-| Custom Python V5.1 | 0.8088 | 0.4391 | 0.6404 | 0.7353 |
-| scikit-learn | 0.8092 | 0.4395 | 0.6406 | 0.7354 |
-| Weka IBk | 0.8090 | 0.4393 | 0.6405 | 0.7353 |
+The selected completed experiment is
+[`20260916T205945.220601_0000_b410e8a7`](results/final/20260916T205945.220601_0000_b410e8a7/run_manifest.json).
+These values come from its independently generated
+[prediction metrics](results/final/20260916T205945.220601_0000_b410e8a7/metrics.csv):
 
-The controlled benchmark retains 20 randomized, interleaved prediction-only
-runs per implementation. The deterministic 95% intervals use 10,000 bootstrap
-resamples of all raw timings, including outliers.
+| Implementation | Accuracy | Precision | Recall | F1 | AP | ROC-AUC | FP | FN |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Python V5.1 baseline | 0.808833 | 0.625348 | 0.338357 | 0.439120 | 0.485337 | 0.735293 | 269 | 878 |
+| Final Custom Python | 0.802000 | 0.559048 | 0.495855 | 0.525559 | 0.532645 | 0.765655 | 519 | 669 |
+| Final scikit-learn | 0.802000 | 0.559048 | 0.495855 | 0.525559 | 0.532630 | 0.765646 | 519 | 669 |
+| Final Custom C++20 | 0.802000 | 0.559048 | 0.495855 | 0.525559 | 0.532645 | 0.765655 | 519 | 669 |
+| Final Java/Weka | 0.802167 | 0.559524 | 0.495855 | 0.525769 | 0.540097 | 0.767100 | 518 | 669 |
 
-| Implementation | Median (s) | Bootstrap 95% CI (s) |
+On all 6,000 rows, manual Python/C++ labels agree exactly and the largest score
+difference is `7.77e-16`. scikit-learn has the same labels but ten score differences
+above `1e-12` (maximum `0.00908349725`); its native boundary choices are retained.
+Weka differs on one label, with native score differences on all rows (maximum
+`0.32717972756`). The full [agreement table](results/final/20260916T205945.220601_0000_b410e8a7/agreement.csv)
+and row-level diagnostics preserve these differences.
+
+Resident prediction, twenty measured passes of 6,000 queries after three warmups:
+
+| Final implementation | Median seconds | IQR seconds |
 |---|---:|---:|
-| Custom Python V5.1 | 1.2617 | 1.2488–1.2688 |
-| scikit-learn | 0.9550 | 0.9537–0.9581 |
-| Weka IBk | 5.9477 | 5.9236–5.9575 |
-| C++20 experimental | 0.6143 | 0.5859–0.6503 |
+| Custom Python | 35.661570 | 0.352449 |
+| scikit-learn | 1.403104 | 0.001843 |
+| Custom C++20 (portable Release) | 3.677404 | 0.006887 |
+| Java/Weka | 13.359275 | 0.047886 |
 
-![Controlled prediction runtime](results/runtime_benchmarks/figures/prediction_runtime_controlled.png)
+The separate V5.1 workload has median **1.256276 s**, IQR **0.005059 s**.
+Prediction timing includes fresh score/label computation, validation and output
+allocation; it excludes setup, fitting, checksum, IPC and file output. See the
+[raw records](results/final/20260916T205945.220601_0000_b410e8a7/benchmark_raw.csv),
+[summary](results/final/20260916T205945.220601_0000_b410e8a7/benchmark_summary.csv), and
+[timing protocol](results/final/20260916T205945.220601_0000_b410e8a7/benchmark_protocol.json)
+for the separately measured fresh-process scope. These are one-machine observations.
+The C++ fresh-process outer median was 2.140769 s (internal prediction 1.774813 s),
+below its resident prediction median despite matching artifact, configuration and
+full score/label vectors. The [timing audit](docs/benchmark_timing_audit.json) found
+consistent timer scopes; the cause of this process-mode difference was not measured.
+Do not subtract these cross-phase medians to infer setup overhead.
+Completed experiment/benchmark evidence does not by itself establish completion of
+clean installation or extracted-ZIP validation; their statuses are recorded separately.
+Full release verification subsequently passed all six mandatory scopes, including
+fresh-source and extracted-ZIP execution with exact reproduction of all five prediction
+vectors. See the selected run's [validation summary](results/final/20260916T205945.220601_0000_b410e8a7/validation.json)
+and [progress record](docs/progress.md). The optional MSVC AddressSanitizer runtime was
+blocked during initialization; portable/native Release and Debug CTest passed.
 
-Trial-index pairing gives a median V5.1/C++ speedup of 2.056×, with C++ faster
-in 19 of 20 pairs. The C++ result remains a one-machine experimental finding.
-See the
-[benchmark report](results/runtime_benchmarks/benchmark_summary.md),
-[paired speedups](results/runtime_benchmarks/paired_speedup_summary.csv), and
-[figure index](results/runtime_benchmarks/figures/README.md).
+## Standalone commands and verification
 
-Core standard outputs are
-[results/metrics_comparison.csv](results/metrics_comparison.csv),
-[results/cv_results_summary.csv](results/cv_results_summary.csv), and
-[results/prediction_agreement.csv](results/prediction_agreement.csv).
-
-## Tests
-
-```bash
+```text
+python run_all.py --data data/raw/UCI_Credit_Card.csv --only final_python
+python run_all.py --data data/raw/UCI_Credit_Card.csv --build --only final_cpp final_weka
+python -m src.reporting --run-dir results/final/<run_id>
 python -m compileall -q src run_all.py
-ctest --test-dir build-cpp-portable -C Release --output-on-failure
-ctest --test-dir build-cpp-native -C Release --output-on-failure
+python -m unittest discover -s tests
+python -m src.validation --data data/raw/UCI_Credit_Card.csv --full
 ```
 
-The runtime suite has a separate validator:
+`--only` intentionally records an incomplete five-way comparison and returns exit code 1;
+the requested implementation's outputs remain available. Report regeneration uses only
+saved scores and measurements, with no dataset loading, prediction, compiler or JVM.
+The full validation command records builds, Python/C++/Java tests, all-row comparisons,
+runtime evidence, clean-install reproduction, archive integrity and package checks.
+Its clean child performs a finite build/test/run sequence without recursively invoking
+the full validator or repeating the full benchmark.
 
-```bash
-python -m src.benchmarking.build_report_data
-python -m src.benchmarking.generate_figures
-python -m src.benchmarking.generate_comprehensive_summary
-python -m src.benchmarking.validate_runtime_suite
+## Project structure and submission
+
+```text
+configs/                immutable baseline and final model settings
+src/data/               dataset validation and fixed split
+src/preprocessing/      two training-fitted representations and canonical export
+src/custom_knn/         original manual Python V5.1 baseline
+src/final_knn/          manual final Python classifier
+src/sklearn_knn/        scikit-learn adapter
+src/cpp_knn/            manual C++20 core, CLI and build/IPC bridge
+src/weka_bridge/        genuine Weka build and execution adapter
+src/evaluation/         shared prediction contract, metrics and diagnostics
+src/reporting/          saved-result tables and figures
+src/benchmarking/       current repeated-measurement workflow
+src/validation/         release verification coordinator
+weka/                  Maven project, Java source and tests
+tests/                 active Python and C++ tests
+scripts/               source/package export, archive and clean-tree checks
+results/final/<run_id>/ authoritative outputs for one final comparison
+docs/                  technical notes and compact verification evidence
+archive/research/      immutable historical source, tests and evidence
 ```
 
-Full benchmark methodology, independent-session commands, and the optional
-explicit CPU-affinity diagnostic are documented in
-[src/benchmarking/README.md](src/benchmarking/README.md).
+The [research archive](archive/README.md) preserves available earlier model, threshold,
+operating-point and runtime studies with a byte-hash manifest. Active inference does
+not read that archive. Historical unit verification is reported separately.
+
+```text
+python scripts/export_submission.py --output dist/3804ICT-final-submission.zip --run-dir results/final/<run_id>
+python scripts/export_appendix.py --output dist/appendix_source_code.md
+python scripts/verify_clean_checkout.py --data data/raw/UCI_Credit_Card.csv --source-zip dist/3804ICT-final-submission.zip --reference-run results/final/<run_id> --work-root verification/zip_check
+```
+
+The deterministic submission ZIP contains current working sources, tests, build
+descriptions, pinned requirements, documentation, one completed run's compact evidence
+and an active-source appendix. The separate `dist/3804ICT-research-history.zip` preserves
+research source and evidence. Raw data, executables, third-party JARs, environments,
+caches and local toolchains are excluded. Dataset placement instructions are included.
+The optional clean-check `--reference-run` compares all five regenerated prediction
+vectors and both prepared-matrix identities against a completed run, excluding timings.
+The appendix does not replace any additional requirements set by the lecturer.
 
 ## Troubleshooting
 
-- If the dataset is missing, confirm data/raw/default.xls exists or pass its
-  path with --data.
-- If Python reports a missing package, activate the environment and reinstall
-  requirements.txt.
-- If Weka cannot build, confirm that java -version and mvn -version both work.
-- If only Python is available, use python run_all.py --skip-weka.
-- Build the C++ input export and executable before running the optional
-  four-implementation benchmark suite.
+- Missing dataset: pass its actual path with `--data`; see `data/raw/README.md`.
+- Missing Python dependency: activate the intended environment, install the pinned
+  requirements and run `python -m pip check`.
+- Missing CMake/compiler: install a C++20 toolchain, put it on PATH, and rerun with
+  `--build`. A stale executable requires rebuilding from current sources.
+- Missing Java/Maven: check `java -version` and `mvn -version`; use `JAVA_HOME` if needed.
+- Unavailable network for dependencies: install the pinned dependencies using your
+  normal package access, then rerun in a new disposable verification directory.
+- A failed or blocked native implementation leaves the comparison incomplete. Inspect
+  the run manifest and validation logs before claiming the five-way result is complete.
+- A verification directory already exists: choose a new `--work-root`; old evidence
+  is retained rather than overwritten or silently removed.
 
-## References
-
-- I-Cheng Yeh, [Default of Credit Card Clients](https://doi.org/10.24432/C55S3H),
-  UCI Machine Learning Repository.
-- I. Yeh and C. Lien, “The comparisons of data mining techniques for the
-  predictive accuracy of probability of default of credit card clients,”
-  *Expert Systems with Applications*, 2009,
-  [doi:10.1016/j.eswa.2007.12.020](https://doi.org/10.1016/j.eswa.2007.12.020).
-- [scikit-learn KNeighborsClassifier documentation](https://scikit-learn.org/1.2/modules/generated/sklearn.neighbors.KNeighborsClassifier.html).
-- [Weka IBk documentation](https://weka.sourceforge.io/doc.stable/weka/classifiers/lazy/IBk.html).
+Reference: I. Yeh and C. Lien, *The comparisons of data mining techniques for the
+predictive accuracy of probability of default of credit card clients*, 2009,
+[doi:10.1016/j.eswa.2007.12.020](https://doi.org/10.1016/j.eswa.2007.12.020).

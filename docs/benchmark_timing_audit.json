@@ -1,0 +1,118 @@
+{
+  "run_id": "20260916T205945.220601_0000_b410e8a7",
+  "status": "integrity_pass_with_process_mode_caveat",
+  "method": "Saved evidence and source review only; no benchmark rerun or sample modification",
+  "checks": {
+    "same_cpp_configuration_in_all_fresh_records": true,
+    "all_fresh_cpp_vectors_exactly_equal_saved_cpp_vectors": true,
+    "all_resident_and_fresh_native_checksums_match_saved_full_vectors": true,
+    "cpp_executable_sha_matches_initial_and_final_protocol": true,
+    "reviewed_source_bytes_unchanged_since_run_start": true
+  },
+  "statistics": {
+    "final_cpp": {
+      "prediction": {
+        "n": 20,
+        "median_seconds": 3.6774041,
+        "minimum_seconds": 3.6739259,
+        "maximum_seconds": 3.7111711,
+        "first_half_median_seconds": 3.6791006,
+        "second_half_median_seconds": 3.6769273499999997,
+        "unique_process_count": 1,
+        "first_sample_end": "2026-09-16T21:04:03.657806+00:00",
+        "last_sample_end": "2026-09-16T21:21:38.528588+00:00"
+      },
+      "prepared_pipeline": {
+        "n": 5,
+        "median_seconds": 2.1407689000479877,
+        "minimum_seconds": 2.1384144000476226,
+        "maximum_seconds": 2.171202400000766,
+        "first_half_median_seconds": 2.155985650024377,
+        "second_half_median_seconds": 2.14067370002158,
+        "unique_process_count": 5,
+        "first_sample_end": "2026-09-16T21:22:18.084124+00:00",
+        "last_sample_end": "2026-09-16T21:26:20.387946+00:00"
+      }
+    },
+    "final_python": {
+      "prediction": {
+        "n": 20,
+        "median_seconds": 35.661570199998096,
+        "minimum_seconds": 35.167595400009304,
+        "maximum_seconds": 36.34434189996682,
+        "first_half_median_seconds": 35.74679435000871,
+        "second_half_median_seconds": 35.41936309999437,
+        "unique_process_count": 1,
+        "first_sample_end": "2026-09-16T21:04:41.408232+00:00",
+        "last_sample_end": "2026-09-16T21:22:13.702175+00:00"
+      },
+      "prepared_pipeline": {
+        "n": 5,
+        "median_seconds": 32.378448500006925,
+        "minimum_seconds": 31.958918299991637,
+        "maximum_seconds": 32.497766499989666,
+        "first_half_median_seconds": 32.175332300015725,
+        "second_half_median_seconds": 32.378448500006925,
+        "unique_process_count": 5,
+        "first_sample_end": "2026-09-16T21:22:50.080250+00:00",
+        "last_sample_end": "2026-09-16T21:26:52.389573+00:00"
+      }
+    }
+  },
+  "cpp_fresh_internal_prediction_seconds": [
+    1.7748134,
+    1.8017701,
+    1.7692286,
+    1.7740073,
+    1.7835628
+  ],
+  "cpp_fresh_internal_median_seconds": 1.7748134,
+  "cpp_fresh_outer_minus_inner_seconds": [
+    0.3659555000479877,
+    0.369432300000766,
+    0.37144510002157993,
+    0.36440710004762256,
+    0.3651534999692374
+  ],
+  "cpp_resident_over_fresh_internal_median": 2.071994779845588,
+  "cpp_checksum_verified_from_saved_full_vectors": "fnv1a64:f72460ae0302ef26",
+  "cpp_configuration": {
+    "model_id": "final_cpp",
+    "config_id": "2652117a4ee78ff9ca3af25e0b14630333dee5e7f037dd51297219109b837111",
+    "training_rows": 24000,
+    "test_rows": 6000,
+    "feature_count": 60,
+    "k": 101,
+    "batch_size": 32,
+    "weights": "distance",
+    "threshold": 0.3315411365543412,
+    "algorithm": "optimized",
+    "selection": "heap",
+    "source_id": "95e0113d16a7665f0e54632f986b5d010750307958af872f851adbc05a385a2b",
+    "compiler": "MSVC 193532216",
+    "build_mode": "portable",
+    "build_configuration": "Release",
+    "flags": "/DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG /W4 /permissive- /fp:precise",
+    "lto_enabled": false
+  },
+  "findings": [
+    "Both C++ modes call the same predict lambda and ExactKnnClassifier::predict_optimized once per sample. There is no alternate model, cached prediction path, extra search in the resident timer, or different native build in saved evidence.",
+    "Resident internal timer surrounds full query validation, exact search, vote and score/label allocation. Hashing and IPC follow timer stop. Fresh internal timer has the same scope; fresh outer timer additionally includes process startup, CSV loading, fit, serialization and exit.",
+    "Fresh C++ outer time exceeds its own internal prediction by about 0.37 seconds, confirming that scope accounting is consistent. Persistent process prediction itself is slower in this session.",
+    "Resident C++ samples are consistently about 3.68 seconds and fresh internal samples about 1.77 seconds. This is a phase/process-mode regime difference, not an outlier-driven median.",
+    "All resident workers and Python models coexist during the resident phase; native workers are closed before the later fresh-process block. Process residency, scheduler placement and memory/cache state therefore differ between scopes.",
+    "Observed affinity permitted all 20 logical CPUs. Executed core placement, clock frequency, temperature, paging and background JVM activity were not sampled. Scheduling, cache/memory or frequency explanations remain hypotheses; the saved evidence does not identify a cause."
+  ],
+  "limitations": [
+    "The two phases were measured in separate chronological blocks, with 20 resident trials and five fresh-process trials. Cross-phase medians are not matched observations of the same machine state.",
+    "Do not subtract medians across phases to infer startup overhead, claim that fresh execution inherently accelerates the kernel, or generalize these times to other machines/process placement.",
+    "Keep both scopes and every original sample. Main implementation ratios use the declared resident scope and matched final-workload trials; fresh pipeline evidence is a separate scope."
+  ],
+  "inputs": {
+    "benchmark_raw.csv": "b4e22c27bc8e1736b9331c1f525dab0c9f0a358f0b0c1af3cb279fde2622ebf2",
+    "benchmark_setup.json": "eb971c020c07f5e22bcd09e4febe2663c2f3fb5d0c8a590429d1a006203a752d",
+    "benchmark_protocol.json": "98af9bf789a6297d108f0f9efe48733daf024369e5c4025b7dc678baa0f58837",
+    "environment.json": "04c507914aad6623fcd9dd00f637e9378a30562af4927aee7afc78a2f5575b0c",
+    "run_manifest.json": "a0df1160e364a01e4a3ff06d437d84153e54f66c0372ca5315935d1326266d36"
+  }
+}
