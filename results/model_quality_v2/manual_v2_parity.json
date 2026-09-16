@@ -1,0 +1,9 @@
+{
+  "rows": 48,
+  "maximum_absolute_probability_difference": 4.1661118999059e-13,
+  "tolerance": 1e-12,
+  "passed": true,
+  "sample": "first 48 transformed legacy rows after final freeze",
+  "sklearn_algorithm": "brute",
+  "passed_predictions": true
+}
