@@ -1,0 +1,33 @@
+{
+  "test_rows": 6000,
+  "score_differences_above_1e_10": 7,
+  "max_absolute_probability_difference": 0.028652493256651868,
+  "threshold_agreement": {
+    "default_threshold": {
+      "threshold": 0.5,
+      "label_disagreements": 0,
+      "row_ids": [],
+      "threshold_between_differing_scores": 0
+    },
+    "f1_optimized_threshold": {
+      "threshold": 0.2793264882605558,
+      "label_disagreements": 0,
+      "row_ids": [],
+      "threshold_between_differing_scores": 0
+    },
+    "recall_oriented_threshold": {
+      "threshold": 0.35373050977040077,
+      "label_disagreements": 0,
+      "row_ids": [],
+      "threshold_between_differing_scores": 0
+    }
+  },
+  "weka_exploratory_status": "not run; Weka native scores are not assumed equivalent",
+  "cost_sensitive_analysis": "not run; no business costs supplied",
+  "enhanced_repeatable": true,
+  "reference_default_label_differences": 0,
+  "exact_half_score_count": 0,
+  "reference_score_max_absolute_difference": 0.0,
+  "reference_score_hash": "70ae6d6a9276ac8dda9afcdfdfa51c037724597d6e6b25bc3dd8426c80947a83",
+  "threshold_freeze_sha256": "56b2821d40cbb6704d194d22d1aa6bc4482061e79525c590fee3c869037d504b"
+}

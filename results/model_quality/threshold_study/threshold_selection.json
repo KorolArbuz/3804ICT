@@ -1,0 +1,128 @@
+{
+  "frozen_model": {
+    "selected_k": 25,
+    "metric": "euclidean",
+    "weights": "distance"
+  },
+  "selection_source": "training-only OOF",
+  "decision_rule": "predict class 1 if probability_class_1 >= threshold",
+  "default_threshold": 0.5,
+  "f1_optimized_threshold": 0.2793264882605558,
+  "recall_oriented_threshold": 0.35373050977040077,
+  "precision_floor": 0.55,
+  "primary_rule": "max F1; max balanced accuracy; max recall; closest to 0.5; larger threshold",
+  "secondary_rule": "precision >= 0.55; max recall; max F1; max balanced accuracy; larger threshold",
+  "secondary_status": "available",
+  "candidate_method": "exact unique OOF scores plus 0, 0.5, 1 and nextafter(1,+inf) all-negative boundary",
+  "candidate_count": 22527,
+  "oof_rows": 24000,
+  "oof_class_counts": {
+    "0": 18691,
+    "1": 5309
+  },
+  "oof_fold_counts": {
+    "1": 4800,
+    "2": 4800,
+    "3": 4800,
+    "4": 4800,
+    "5": 4800
+  },
+  "oof_metrics": [
+    {
+      "threshold_name": "default_threshold",
+      "threshold": 0.5,
+      "TP": 1818.0,
+      "TN": 17686.0,
+      "FP": 1005.0,
+      "FN": 3491.0,
+      "accuracy": 0.8126666666666666,
+      "precision": 0.6439957492029755,
+      "recall": 0.34243737050291956,
+      "specificity": 0.9462308062703975,
+      "f1": 0.4471224790949336,
+      "balanced_accuracy": 0.6443340883866585,
+      "predicted_positive_rate": 0.117625,
+      "false_positive_rate": 0.05376919372960254,
+      "false_negative_rate": 0.6575626294970804
+    },
+    {
+      "threshold_name": "f1_optimized_threshold",
+      "threshold": 0.2793264882605558,
+      "TP": 2896.0,
+      "TN": 15672.0,
+      "FP": 3019.0,
+      "FN": 2413.0,
+      "accuracy": 0.7736666666666666,
+      "precision": 0.4896027049873204,
+      "recall": 0.5454887926163119,
+      "specificity": 0.8384784120699802,
+      "f1": 0.5160370634354954,
+      "balanced_accuracy": 0.691983602343146,
+      "predicted_positive_rate": 0.24645833333333333,
+      "false_positive_rate": 0.1615215879300198,
+      "false_negative_rate": 0.4545112073836881
+    },
+    {
+      "threshold_name": "recall_oriented_threshold",
+      "threshold": 0.35373050977040077,
+      "TP": 2482.0,
+      "TN": 16661.0,
+      "FP": 2030.0,
+      "FN": 2827.0,
+      "accuracy": 0.797625,
+      "precision": 0.5500886524822695,
+      "recall": 0.4675080052740629,
+      "specificity": 0.8913915788347333,
+      "f1": 0.505447510436819,
+      "balanced_accuracy": 0.679449792054398,
+      "predicted_positive_rate": 0.188,
+      "false_positive_rate": 0.1086084211652667,
+      "false_negative_rate": 0.5324919947259371
+    }
+  ],
+  "oof_score_metrics": {
+    "roc_auc": 0.7467713939901895,
+    "average_precision": 0.5072914107248834
+  },
+  "split_seed": 42,
+  "cv_folds": 5,
+  "dataset_sha256": "a0f0ab49d6326671d6cd83be5c88dcf18007025fe9a53ecd699119c871176ca1",
+  "model_selection_sha256": "6074e3c0423e9db6203c46e7d346950b7bd1d41fac9f22e7995f4c3a4e72eebf",
+  "cv_artifact_sha256": "90938b4a203aca168c9967476c45d80a00ba70a308a7510b9697b2331611c934",
+  "reference_artifact_hashes": {
+    "test_quality_comparison.csv": "ad9fcfaa72a2bc5dbe0216a7f1041473cc7e5ac58e9385968b92e227bbee77a4",
+    "predictions_enhanced_custom.csv": "70ae6d6a9276ac8dda9afcdfdfa51c037724597d6e6b25bc3dd8426c80947a83"
+  },
+  "source_hashes": {
+    "src/custom_knn/classifier.py": "7d1a675e7a0b15e4e43ff521cd2137e0481a7f58c5a70557c9c45dd2b5929652",
+    "src/model_quality/enhanced_custom_knn.py": "d9e6eef1d14c4c180996187cda74bd10833adfb11074a66148fa81c826f30aa8",
+    "src/preprocessing/pipeline.py": "84d6afe286864bcee286ff1b5792e9614934c66acbb7a81035c5296eaafd3458",
+    "src/data/dataset.py": "36834017abddea37d5aca2a7dd25ba3b241b45c3764980c25ea118e03785a33f",
+    "src/common/config.py": "472c3a87244e9a23aa86daa2a3ba6375b6358b240df7551b20112b0328df7869",
+    "src/model_quality/threshold.py": "fc2e6948da65cc39708da8db78a67a933a2c63ab72ed8379cd7fdf27ff0ba6f9",
+    "src/evaluation/metrics.py": "6a01ea6abd04132bbba55a24ae93d9e25cd8cdcab3dc900ae4fd4cc0953d8a09"
+  },
+  "package_versions": {
+    "numpy": "1.26.0",
+    "pandas": "1.5.3",
+    "scikit-learn": "1.2.1",
+    "threadpoolctl": "3.5.0"
+  },
+  "bootstrap": {
+    "resamples": 10000,
+    "seed": 20260916
+  },
+  "test_evaluated": true,
+  "artifact_hashes": {
+    "oof_scores.csv": "3e8e9c4bee43bd6de34369a68a09591e50853222939619f26ab7dccae1822df6",
+    "threshold_confusion_tradeoff.png": "0c5c04b0d25bab2d7b28508176c7e5b561115a8d4fba15ce7aa452f442520aff",
+    "threshold_confusion_tradeoff.svg": "bb3b33794c899c03b9ff7a6f8cce272b822bb1263305b6802bedf59cabe33ab8",
+    "threshold_grid.csv": "7936f07f41116a63e878f7cafcef672436e4d80b56a75c5eae0d1d9857f50f61",
+    "threshold_metrics_by_value.png": "2f84f24079da9ce38cac76eadd1527d0a9c4932e416eb6dabdd82b444a31783b",
+    "threshold_metrics_by_value.svg": "a8bcbd4a2be8d1c430ac453e9336281bcc2f02b00589de9a02a597ba84bfd7b7",
+    "threshold_oof_report.md": "cfd8d6d46afe489a427bfe7da3e8f2bc7901e910c83af1a5f562ff2a77cf795a",
+    "threshold_precision_recall_curve.png": "9eb88a7e20b409f3f27c48bc22a9e4196722e9e35094e31fa85be1340661158c",
+    "threshold_precision_recall_curve.svg": "0a56565f874fd3a394ea521323503c3b9495015d2a4c41e41bd3fbeba9aa5e9d"
+  },
+  "freeze_sha256": "56b2821d40cbb6704d194d22d1aa6bc4482061e79525c590fee3c869037d504b"
+}

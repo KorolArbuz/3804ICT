@@ -29,6 +29,40 @@ voting: when one or more selected neighbours have zero distance, all nonzero
 neighbours receive zero effective weight. Ties at the k boundary are resolved
 by original training order.
 
-The optional threshold study is deliberately disabled. It can be investigated
-later with training out-of-fold probabilities without changing this primary
-k/metric/voting experiment.
+## Separate decision-threshold study
+
+The model is selected first and remains frozen at **k=25, Euclidean distance,
+distance weighting**. A separate study selects thresholds from five-fold
+training-only out-of-fold class-1 scores, with preprocessing fitted inside each
+fold. It maximizes F1 and separately maximizes recall subject to a predeclared
+OOF precision floor of 0.55. This floor does not guarantee test-set precision.
+
+Generate OOF scores, freeze the thresholds and create the training-only report:
+
+```bash
+python -m src.model_quality.threshold --data data/raw/UCI_Credit_Card.csv --oof-only
+```
+
+The held-out partition is excluded from threshold selection. Only after the
+thresholds and input hashes are frozen can the final evaluation run:
+
+```bash
+python -m src.model_quality.threshold --data data/raw/UCI_Credit_Card.csv --evaluate-test
+```
+
+Results are written separately under `results/model_quality/threshold_study/`.
+Normal commands refuse to overwrite a completed study. To verify a completed
+evaluation using the same frozen thresholds and hashes:
+
+```bash
+python -m src.model_quality.threshold --data data/raw/UCI_Credit_Card.csv --verify-rerun
+```
+
+The rule is `probability_class_1 >= threshold`. A threshold changes the operating
+point, not the neighbours, weighting, or model configuration. ROC-AUC and average
+precision are score-ranking metrics and remain unchanged when only the decision
+threshold changes. The default 0.5 result remains the reference, and reports
+separate model-configuration gains from threshold-only gains. Enhanced Custom
+supplies the primary test scores; scikit-learn is checked for agreement. Weka's
+native probability semantics are not assumed equivalent, and no Weka threshold
+evaluation is included.

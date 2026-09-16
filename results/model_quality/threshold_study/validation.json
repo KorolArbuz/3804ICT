@@ -1,0 +1,53 @@
+{
+  "frozen_model": {
+    "selected_k": 25,
+    "metric": "euclidean",
+    "weights": "distance"
+  },
+  "baseline_v5_1_sha256": "7d1a675e7a0b15e4e43ff521cd2137e0481a7f58c5a70557c9c45dd2b5929652",
+  "training_rows": 24000,
+  "oof_scores_per_training_row": 1,
+  "oof_folds": 5,
+  "oof_candidates": 22527,
+  "oof_regeneration": {
+    "compared_artifacts": 10,
+    "byte_identical": true
+  },
+  "pretest_selection_sha256": "b15de0369926351dc582ab792d8dd437084e74e75986f4e1d694c537f1c5aa48",
+  "pretest_evaluated": false,
+  "completed_selection_changed_keys": [
+    "test_evaluated"
+  ],
+  "completed_test_evaluated": true,
+  "tests": {
+    "passed": 35,
+    "failures": 0,
+    "skipped": 0
+  },
+  "independent_grid_validation": {
+    "count_invariants_all_rows": true,
+    "sklearn_metric_checks": 25
+  },
+  "compileall_passed": true,
+  "git_diff_check_passed": true,
+  "completed_study_overwrite_guards_passed": true,
+  "changed_existing_files": [
+    "src/model_quality/README.md"
+  ],
+  "unchanged_existing_files": 280,
+  "existing_results_preserved": true,
+  "runtime_files_preserved": true,
+  "verify_rerun_artifacts": 17,
+  "verify_rerun_mismatches": [],
+  "enhanced_repeatable": true,
+  "default_labels_preserved": 6000,
+  "enhanced_sklearn_label_agreement": {
+    "default_threshold": 6000,
+    "f1_optimized_threshold": 6000,
+    "recall_oriented_threshold": 6000
+  },
+  "thresholds_selected_using_test": false,
+  "model_search_rerun": false,
+  "weka_threshold_exploration": false,
+  "cost_sensitive_analysis": false
+}
